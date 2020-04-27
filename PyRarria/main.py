@@ -54,6 +54,7 @@ class Game:
                 if self.playing:
                     self.playing = False
                 self.running = False
+
             
 
     def draw(self):
