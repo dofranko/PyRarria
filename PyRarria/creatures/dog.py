@@ -1,8 +1,12 @@
 from PyRarria.creatures.creature import Creature
-from PyRarria.creatures.creatures_attributes import DOG, LEFT, RIGHT
+from PyRarria.creatures.creatures_attributes import DOG
+from PyRarria.creatures.creatures_attributes import LEFT, RIGHT, DEAD, ALIVE
+from PyRarria.settings import *
 
 import pygame as pg
 import random
+
+
 
 load = pg.image.load
 rand = random.random
@@ -29,8 +33,8 @@ class Dog(Creature):
         self.create(x, y, **DOG)
 
     def create(self, x, y, w, h, v,
-               jump_count, walk_count, hit_count,
-               hp, items, attack, defense):
+               jump_timer, walk_timer, bite_timer, anim_timer,
+               hp, items, damage, defense):
 
         # position
         self.x = x
@@ -38,48 +42,71 @@ class Dog(Creature):
         self.w = w
         self.h = h
         self.v = v
-        self.hbox = []
+        self.hbox = (0, 0, 0, 0)
 
         # counters
-        self.jump_count = jump_count
-        self.walk_count = walk_count
-        self.hit_count = hit_count
-        self.anime_count = 0
+        self.jump_count = 0
+        self.walk_count = 0
+        self.bite_count = 0
+        self.anim_count = 0
+        self.temp_count = 0
 
-        # boolean
+        # timers
+        self.jump_timer = jump_timer
+        self.walk_timer = walk_timer
+        self.bite_timer = bite_timer
+        self.anim_timer = anim_timer
+
+        # flags
         self.is_left = False
         self.is_right = False
+        self.is_enemy = True
         self.is_jump = False
         self.is_hpbar = False
 
         # specific for creature
         self.hp = hp
         self.items = items
-        self.attack = attack
+        self.damage = damage
         self.defense = defense
 
         # generated in time
         self.steps = 0
         self.direction = 0
 
-    def draw(self, win):
-
-        # TODO sprawdzic czy jeszcze zyje
-
-        self.move(None)
-
-        # creature
-        self.anime_count %= self.speed * self.frames
-        if self.direction == RIGHT:
-            win.blit(self.right[self.anime_count // self.speed], (self.x, self.y))
-        else:
-            win.blit(self.left[self.anime_count // self.speed], (self.x, self.y))
-        self.anime_count += 1
+    def draw(self, win, player):
 
         # hitbox
-        self.hitbox = (self.x + self.w * 0.2, self.y + self.h * 0.2,
-                       self.w * 0.6, self.h * 0.75)
-        pg.draw.rect(win, (255,0,0), self.hitbox, 2)
+        self.hbox = (self.x + self.w * 0.2,
+                     self.y + self.h * 0.2,
+                     self.w * 0.6, self.h * 0.75)
+        pg.draw.rect(win, (255,0,0), self.hbox, 2)
+
+        # TODO sprawdzic czy jeszcze zyje
+        if self.hp <= 0:
+            return DEAD
+
+        self.collision(player)
+        # self.move(player)
+
+        # creature
+        self.anim_count %= self.speed * self.frames
+        if self.direction == RIGHT:
+            win.blit(self.right[self.anim_count // self.speed], (self.x, self.y))
+        else:
+            win.blit(self.left[self.anim_count // self.speed], (self.x, self.y))
+        self.anim_count += 1
+
+        # hbbar
+        if self.is_hpbar:
+            hpbar_out = (self.hbox[0], self.hbox[1] - 30,
+                         self.hbox[2], 15)
+            hpbar_in = (self.hbox[0] + 1, self.hbox[1] - 29,
+                        (self.hbox[2] - 2) * self.hp/100, 13)
+            win.fill(GREY, hpbar_out)
+            win.fill(GREEN, hpbar_in)
+
+        return ALIVE
 
     def move(self, player):
 
@@ -110,20 +137,44 @@ class Dog(Creature):
         # new move
         else:
             self.steps = randi(50,100)
+
             if rand() > 0.5:
                 self.direction = LEFT
             else:
                 self.direction = RIGHT
 
-    def hit(self, attack):
-        self.is_enemy = True
-        self.is_hpbar = True
+    def hit(self, weapon):
+        if (
+            weapon.hbox[0] < self.hbox[0] + self.hbox[2] and
+            weapon.hbox[0] + weapon.hbox[2] > self.hbox[0] and
+            weapon.hbox[1] < self.hbox[1] + self.hbox[3] and
+            weapon.hbox[1] + weapon.hbox[3] > self.hbox[1]
+        ):
+            self.is_enemy = True
+            self.is_hpbar = True
 
-        # TODO liczyc hp zmiennoprzecinkowo
-        self.hp -= int((101 - self.defense) * attack / 101)
+            self.hp -= (101 - self.defense) * weapon.damage / 101
+            print(self.hp)
 
     def bite(self, player):
-        player.hit(self.attack)
+        if self.bite_count > 0:
+            self.bite_count -= 1
+        else:
+            player.hit(self.damage)
+            self.bite_count = self.bite_timer
+
+    def collision(self, player):
+        if self.is_enemy and (
+            player.hbox[0] < self.hbox[0] + self.hbox[2] and
+            player.hbox[0] + player.hbox[2] > self.hbox[0] and
+            player.hbox[1] < self.hbox[1] + self.hbox[3] and
+            player.hbox[1] + player.hbox[3] > self.hbox[1]
+        ):
+            self.bite(player)
+
+    def die(self):
+        print("Dog is dead!")
+        pass
 
 def test():
     dog = Dog(1, 2)

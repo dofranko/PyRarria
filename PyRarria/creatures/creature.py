@@ -11,15 +11,21 @@ class Creature(object):
         self.w = None
         self.h = None
         self.v = None
-        self.hbox = []
+        self.hbox = (0, 0, 0, 0)
 
         # counters
-        self.jump_count = None
-        self.walk_count = None
-        self.hit_count = None
-        self.anime_count = 0
+        self.jump_count = 0
+        self.walk_count = 0
+        self.bite_count = 0
+        self.anim_count = 0
 
-        # boolean
+        # timers
+        self.jump_timer = None
+        self.walk_timer = None
+        self.bite_timer = None
+        self.anim_timer = None
+
+        # flags
         self.is_left = False
         self.is_right = False
         self.is_enemy = False
@@ -39,7 +45,7 @@ class Creature(object):
     def create(self, **attr):
         pass
 
-    def draw(self, win):
+    def draw(self, win, player):
         pass
 
     def hit(self, attack):
@@ -49,5 +55,11 @@ class Creature(object):
         pass
 
     def move(self, player):
+        pass
+
+    def collision(self, player):
+        pass
+
+    def die(self):
         pass
 

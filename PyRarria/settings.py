@@ -19,6 +19,7 @@ PLATFORM_LIST = [(0, HEIGHT - 40, WIDTH, 40),
 # define colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+GREY = (105,105,105)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
