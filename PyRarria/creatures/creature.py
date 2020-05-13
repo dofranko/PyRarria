@@ -1,9 +1,10 @@
-class Creature(object):
+import pygame as pg
 
-    left = []
-    right = []
 
-    def __init__(self, x, y):
+class AbstractCreature(pg.sprite.Sprite):
+
+    def __init__(self):
+        super(AbstractCreature, self).__init__()
 
         # position
         self.x = None
@@ -11,7 +12,8 @@ class Creature(object):
         self.w = None
         self.h = None
         self.v = None
-        self.hbox = (0, 0, 0, 0)
+        self.rect = pg.rect.Rect(0, 0, 0, 0)
+        self.hpbar = None
 
         # counters
         self.jump_count = 0
@@ -28,14 +30,18 @@ class Creature(object):
         # flags
         self.is_left = False
         self.is_right = False
+        self.is_stand = False
         self.is_enemy = False
         self.is_jump = False
         self.is_hpbar = False
+        self.is_hitbox = True
+        self.is_fixpos = False
 
         # specific for creature
-        self.hp = None
+        self.curr_hp = None
+        self.max_hp = None
         self.items = []
-        self.attack = None
+        self.damage = None
         self.defense = None
 
         # generated in time
@@ -45,13 +51,16 @@ class Creature(object):
     def create(self, **attr):
         pass
 
-    def draw(self, win, player):
+    def draw(self, win):
         pass
 
     def hit(self, attack):
         pass
 
     def bite(self, enemy):
+        pass
+
+    def update(self, player):
         pass
 
     def move(self, player):

@@ -1,7 +1,7 @@
-LEFT = -1
+# global constants
+LEFT = 0
 RIGHT = 1
-DEAD = 0
-ALIVE = 1
+CENTER = 2
 
 # attack [0,100]
 # defense [0,100]
