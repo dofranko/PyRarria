@@ -1,6 +1,8 @@
 import pygame as pg
 from pygame.rect import Rect
 
+from PyRarria.creatures.vector import PVector
+
 walk_right = [
     pg.image.load('images/R1.png'), pg.image.load('images/R2.png'), pg.image.load('images/R3.png'),
     pg.image.load('images/R4.png'), pg.image.load('images/R5.png'), pg.image.load('images/R6.png'),
@@ -27,6 +29,7 @@ class Player(pg.sprite.Sprite):
         self.standing = True
         self.rect = Rect(self.x + 20, self.y, 28, 60)
         self.hp = 100
+        self.location = PVector(0, 0)
 
     def draw(self, win):
         if self.walk_count + 1 >= 27:
@@ -49,7 +52,6 @@ class Player(pg.sprite.Sprite):
 
     def hit(self, attack):
         self.hp -= attack
-        print('hp', self.hp)
         # self.jump = False
         # self.jump_count = 10
         # self.x = 60

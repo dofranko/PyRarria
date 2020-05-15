@@ -1,10 +1,14 @@
 import pygame as pg
 from pygame.sprite import Group
+
+from PyRarria.creatures.arrow import Arrow
 from PyRarria.creatures.global_settings import *
 from pygame.sprite import spritecollide
 from PyRarria.creatures.dog import Dog
 from PyRarria.creatures.player_test import Player
+from PyRarria.creatures.test_creature import TestCreature
 from PyRarria.weapon import Weapon
+import random
 
 from pygame.locals import (
     K_UP,
@@ -36,16 +40,33 @@ clock = pg.time.Clock()
 # groups
 all_sprites = Group()
 creatures = Group()
+arrows = Group()
 
 # objects
 man = Player(300, 300, 64, 64)
-dog = Dog(300, 325)
+# dog = Dog(300, 325)
 weapon = Weapon(200, 200, 20, 20)
 
 # sprites
-creatures.add(dog)
-all_sprites.add(dog)
+# creatures.add(dog)
+# all_sprites.add(dog)
 all_sprites.add(man)
+temp = TestCreature(SCREEN_WIDTH//2, SCREEN_HEIGHT//2, 50)
+creatures.add(temp)
+all_sprites.add(temp)
+
+arrow = Arrow()
+arrows.add(arrow)
+all_sprites.add(arrow)
+
+# for i in range(10):
+#     temp = TestCreature(
+#         random.randint(0, SCREEN_WIDTH),
+#         SCREEN_HEIGHT//2,
+#         random.randint(10, 50))
+#     creatures.add(temp)
+#     all_sprites.add(temp)
+
 
 
 score = 0
@@ -59,6 +80,9 @@ def update_engine():
     # update creatures
     for creature in creatures:
         creature.update(man)
+
+    for arr in arrows:
+        arr.update()
 
 
 def redraw_engine():
@@ -75,13 +99,12 @@ def redraw_engine():
     for creature in creatures:
         creature.draw(win)
 
+    # arrows
+    for arr in arrows:
+        arr.draw(win)
+
     # update
     pg.display.update()
-
-
-def redraw_window():
-    update_engine()
-    redraw_engine()
 
 
 run = True
@@ -124,6 +147,8 @@ while run:
         man.y += man.v
         man.standing = False
 
+    man.location.x = man.x
+    man.location.y = man.y
     # repair
     if man.x < 0:
         man.x = 0
