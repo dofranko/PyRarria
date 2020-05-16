@@ -69,6 +69,22 @@ class PVector:
         mag = self.mag() * v.mag()
         return math.acos(dot / mag)
 
+    def xdirection(self):
+        if self.x < 0.0:
+            return -1
+        elif self.x > 0.0:
+            return 1
+        else:
+            return 0
+
+    def ydirection(self):
+        if self.y < 0.0:
+            return -1
+        elif self.y > 0.0:
+            return 1
+        else:
+             return 0
+
     def zero(self):
         self.x = 0.0
         self.y = 0.0
@@ -90,6 +106,7 @@ class PVector:
         alpha = random.uniform(0, 2*math.pi)
         return PVector(math.sin(alpha), math.cos(alpha))
 
+# TEST 1
 # u = PVector(1, -1)
 # print('1/2 pi = ', math.pi / 2)
 # print('pi     = ', math.pi)
@@ -97,3 +114,8 @@ class PVector:
 # print()
 # print(u)
 # print(u.angle())
+
+# TEST 2
+# u = PVector(1,1)
+# print(u.xdirection())
+# print(u.ydirection())

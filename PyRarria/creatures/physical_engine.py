@@ -9,10 +9,11 @@ GRAVITY = PVector(0, 0.1)
 
 # constants
 MI = 0.05
-RADIUS = 8
-DISTANCE = 8
-ANGLE_STEP = 0.5
 EDGE_LIMIT = 50
+ARC_LENGTH = 2 * math.pi
+ARC_STEP = ARC_LENGTH / 15
+MOVE_LENGTH = 10
+MOVE_STEP = MOVE_LENGTH / 15
 
 
 def gravity(src):
@@ -20,7 +21,6 @@ def gravity(src):
     Q = m*g
     """
     grav = GRAVITY.copy()
-    # grav *= src.mass
     src.apply_force(grav)
 
 
@@ -44,22 +44,66 @@ def friction(src):
 
 
 def run(src):
-    pass
+    """Random running according to maxspeed and manoeuvrability."""
+
+    # desired velocity
+    desired = src.velocity.copy()
+    step = src.maxspeed * src.manoeuvrability
+    desired.x += random.uniform(-step, step)
+    desired.xflat()
+
+    # steering force
+    steer = desired - src.velocity
+    src.apply_force(steer)
 
 
-def run_away(src):
-    pass
+def run_away(src, target):
+    """Runs away from the target on horizontal line, stops close to it.
+    A greater distance in less force."""
+
+    # desired velocity
+    desired = target.location - src.location
+    desired.xflat()
+    desired *= -1
+    d = desired.mag()
+    desired.normalize()
+    if d:
+        desired *= src.maxspeed * 150 / d
+    else:
+        desired *= src.maxspeed * 150 / 1000
+
+    # steering force
+    steer = desired - src.velocity
+    src.apply_force(steer)
 
 
-def run_after(src):
-    pass
+def run_after(src, target):
+    """Runs to the target only on horizontal line."""
+
+    # desired velocity
+    desired = target.location - src.location
+    desired.xflat()
+    d = desired.mag()
+    desired.normalize()
+
+    if d < src.radius:
+        m = (d*src.maxspeed) / src.radius
+        desired *= m
+    else:
+        desired *= src.maxspeed
+
+    # steering force
+    steer = desired - src.velocity
+    src.apply_force(steer)
 
 
 def jump(src):
     pass
 
 
-def fly(src, target):
+def track(src, target):
+    """Source tracks the target, stops close to it."""
+
     # desired velocity
     desired = target.location - src.location
     desired.normalize()
@@ -67,51 +111,68 @@ def fly(src, target):
 
     # steering force
     steer = desired - src.velocity
-
+    steer /= src.mass
     src.apply_force(steer)
 
 
-def free_fly(src):
-    # desired random
-    src.angle += random.uniform(-ANGLE_STEP, ANGLE_STEP)
-    rand = PVector(math.sin(src.angle), math.cos(src.angle))
-    rand *= RADIUS
+def fly(src):
+    """Random flying according to maxspeed and manoeuvrability."""
 
-    # desired center
+    # desired direction
+    src.angle += random.uniform(-ARC_STEP, ARC_STEP)
+    src.angle = math.fmod(src.angle, ARC_LENGTH)
+
+    rand = PVector(math.sin(src.angle), math.cos(src.angle))
+    rand *= src.maxspeed * src.manoeuvrability
+
+    # desired length
     if src.velocity.mag():
         desired = src.velocity.copy()
         desired.normalize()
-
     else:
         desired = PVector.random()
 
-    desired *= DISTANCE
+    desired *= src.maxspeed
     desired += rand
 
+    # steering force
     steer = desired - src.velocity
     src.apply_force(steer)
 
 
-def fly_away(src, target):
+def fly_after(src, target):
+    """Flies straight to the target, stops close to it."""
+
     # desired velocity
     desired = target.location - src.location
     d = desired.mag()
     desired.normalize()
 
-    if d < DISTANCE:
-        m = (d*src.maxspeed) / DISTANCE
+    if d < src.radius:
+        m = (d*src.maxspeed) / src.radius
         desired *= m
     else:
         desired *= src.maxspeed
 
     # steering force
     steer = desired - src.velocity
-    steer.limit(src.maxforce)
     src.apply_force(steer)
 
 
-def fly_after(src):
-    pass
+def fly_away(src, target):
+    """Flies away from the target, stops close to it.
+    A greater distance in less force."""
+
+    # desired velocity
+    desired = target.location - src.location
+    desired *= -1
+    d = desired.mag()
+    desired.normalize()
+    desired *= src.maxspeed * 150 / d
+
+    # steering force
+    steer = desired - src.velocity
+    src.apply_force(steer)
 
 
 def edges(src):

@@ -21,6 +21,42 @@ class TestCreature(AbstractCreature):
         self.maxforce = 10
         self.mass = 20
 
+        # FLY TEST
+        # self.manoeuvrability = 0.075
+        # self.maxspeed = 3
+        # self.maxforce = 5
+        # self.mass = 20
+
+        # RUN TEST
+        # self.manoeuvrability = 0.02
+        # self.maxspeed = 5
+        # self.maxforce = 2
+        # self.mass = 20
+
+        # TRACK TEST
+        # self.manoeuvrability = 0.02
+        # self.maxspeed = 5
+        # self.maxforce = 5
+        # self.mass = 20
+
+        # FLY AFTER
+        # self.manoeuvrability = 0.02
+        # self.maxspeed = 2
+        # self.maxforce = 5
+        # self.mass = 20
+
+        # FLY AWAY
+        # self.manoeuvrability = 0.02
+        # self.maxspeed = 2
+        # self.maxforce = 5
+        # self.mass = 20
+
+        # RUN AWAY
+        # self.manoeuvrability = 0.02
+        # self.maxspeed = 3
+        # self.maxforce = 5
+        # self.mass = 20
+
         # self.mass = self.radius ** 2
         self.location = PVector(x, y)
         self.velocity = PVector(0, 0)
@@ -46,16 +82,21 @@ class TestCreature(AbstractCreature):
         self.move(player)
 
     def update_forces(self, player):
-        gravity(self)
-        friction(self)
+        # fly(self)
+        # run(self)
+        run_away(self, player)
+        # run_after(self, player)
+        # track(self, player)
+        # fly_after(self, player)
+        # fly_away(self, player)
+        # gravity(self)
+        # friction(self)
         # wind(self)
         edges_ball(self)
         # edges_stop(self)
         # edges(self)
 
     def move(self, player):
-        # fly(self, player)
-        # free_fly(self)
         self.velocity += self.acceleration
         self.velocity.limit(self.maxspeed)
         self.location += self.velocity
