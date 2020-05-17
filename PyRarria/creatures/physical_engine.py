@@ -4,7 +4,7 @@ import random
 import math
 
 # forces
-WIND = PVector(0.1, 0.1)
+WIND = PVector(-0.1, 0.0)
 GRAVITY = PVector(0, 0.1)
 
 # constants
@@ -98,6 +98,12 @@ def run_after(src, target):
 
 
 def jump(src):
+    """Performs single jump"""
+    jmp = PVector(src.velocity.xdirection(), -src.maxforce/4)
+    src.apply_force(jmp)
+
+
+def shoot(src):
     pass
 
 

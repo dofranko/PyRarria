@@ -52,6 +52,7 @@ class Player(pg.sprite.Sprite):
 
     def hit(self, attack):
         self.hp -= attack
+        print(self.hp)
         # self.jump = False
         # self.jump_count = 10
         # self.x = 60

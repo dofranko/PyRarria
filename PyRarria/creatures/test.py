@@ -3,12 +3,9 @@ from pygame.sprite import Group
 
 from PyRarria.creatures.arrow import Arrow
 from PyRarria.creatures.global_settings import *
-from pygame.sprite import spritecollide
-from PyRarria.creatures.dog import Dog
 from PyRarria.creatures.player_test import Player
-from PyRarria.creatures.test_creature import TestCreature
+from PyRarria.creatures.creature import TestCreature
 from PyRarria.weapon import Weapon
-import random
 
 from pygame.locals import (
     K_UP,
@@ -76,6 +73,10 @@ def update_engine():
     # hit creatures
     for creature in creatures:
         creature.hit(weapon)
+
+    # bite by creature
+    for creature in creatures:
+        creature.bite(man)
 
     # update creatures
     for creature in creatures:

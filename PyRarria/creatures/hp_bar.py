@@ -1,25 +1,24 @@
 from pygame.rect import Rect
 
-INNER_WIDTH = 98
-OUTER_WIDTH = 100
-INNER_HEIGHT = 18
-OUTER_HEIGHT = 20
-GREY = (105,105,105)
+
+WIDTH = 50
+HEIGHT = 20
+GREY = (105, 105, 105)
 GREEN = (0, 255, 0)
 
 
 class HpBar(object):
-    def __init__(self, x, y, w, h):
-        self.inner = Rect(0, 0, INNER_WIDTH, INNER_HEIGHT)
-        self.outer = Rect(0, 0, OUTER_WIDTH, OUTER_HEIGHT)
-        self.inner.center = (x+w//2, y+h//2)
-        self.outer.center = (x+w//2, y+h//2)
+    def __init__(self, midtop):
+        self.outer = Rect(0, 0, WIDTH, HEIGHT)
+        self.inner = Rect(0, 0, WIDTH-2, HEIGHT-2)
+        self.inner.center = (midtop[0], midtop[1] - 15)
+        self.outer.center = (midtop[0], midtop[1] - 15)
 
-    def move(self, x, y, w, h):
-        self.outer.center = (x + w//2, y)
+    def center(self, midtop):
+        self.outer.center = (midtop[0], midtop[1] - 15)
         self.inner.topleft = self.outer.x + 1, self.outer.y + 1
 
     def draw(self, win, curr_hp, max_hp):
-        self.inner.width = (INNER_WIDTH * curr_hp) // max_hp
+        self.inner.width = ((WIDTH-2) * curr_hp) // max_hp
         win.fill(GREY, self.outer)
         win.fill(GREEN, self.inner)

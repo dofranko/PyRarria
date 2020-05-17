@@ -1,6 +1,7 @@
 import random
 import math
 
+
 class PVector:
     def __init__(self, x, y):
         self.x = x
@@ -45,6 +46,10 @@ class PVector:
         self.x = x
         self.y = y
 
+    def move(self, dx, dy):
+        self.x += dx
+        self.y += dy
+
     def dot(self, v):
         return self.x*v.x + self.y*v.y
 
@@ -54,12 +59,14 @@ class PVector:
     def normalize(self):
         mag = self.mag()
         if mag:
-            self /= mag
+            self.x /= mag
+            self.y /= mag
 
     def limit(self, maxi):
         if self.mag() > maxi:
             self.normalize()
-            self *= maxi
+            self.x *= maxi
+            self.y *= maxi
 
     def angle(self):
         return math.atan2(self.y, self.x)
@@ -75,7 +82,13 @@ class PVector:
         elif self.x > 0.0:
             return 1
         else:
+            return
+
+    def anim_direction(self):
+        if self.x < 0.0:
             return 0
+        else:
+            return 1
 
     def ydirection(self):
         if self.y < 0.0:
@@ -83,7 +96,7 @@ class PVector:
         elif self.y > 0.0:
             return 1
         else:
-             return 0
+            return 0
 
     def zero(self):
         self.x = 0.0
@@ -119,3 +132,16 @@ class PVector:
 # u = PVector(1,1)
 # print(u.xdirection())
 # print(u.ydirection())
+
+# TEST 3
+# u = PVector(10,10)
+# u.move(1,2)
+# print(u)
+# u.normalize()
+# print(u)
+
+# TEST 4
+# u = PVector(-10, 0)
+# print(u)
+# u.normalize()
+# print(u)

@@ -1,10 +1,41 @@
-# global constants
-LEFT = 0
-RIGHT = 1
-CENTER = 2
+# attack in [0 ... 100]
+# defense in [0 ... 100]
 
-# attack [0,100]
-# defense [0,100]
+BIRD = {
+    'manoeuvrability': 0.075,
+    'maxspeed': 3,
+    'maxforce': 5,
+    'maxhp': 100,
+
+    'mass': 20,
+    'items': [],
+    'damage': 14,
+    'defense': 10,
+}
+
+COW = {
+    'manoeuvrability': 0.075,
+    'maxspeed': 3,
+    'maxforce': 5,
+    'maxhp': 100,
+
+    'mass': 20,
+    'items': [],
+    'damage': 14,
+    'defense': 10,
+}
+
+SHEEP = {
+    'manoeuvrability': 0.075,
+    'maxspeed': 3,
+    'maxforce': 5,
+    'maxhp': 100,
+
+    'mass': 20,
+    'items': [],
+    'damage': 14,
+    'defense': 10,
+}
 
 DOG = {
     'w': 141,
