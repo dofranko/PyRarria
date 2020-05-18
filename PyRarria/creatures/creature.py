@@ -9,7 +9,7 @@ from PyRarria.creatures.hp_bar import HpBar
 from PyRarria.creatures.physical_engine import *
 from PyRarria.creatures.vector import PVector
 
-ANIMATION = SHEEP_ANIMATION
+ANIMATION = BIRD_ANIMATION
 
 
 class TestCreature(AbstractSprite):
@@ -23,9 +23,9 @@ class TestCreature(AbstractSprite):
     animation_ticks = math.floor(FPS * ANIMATION['speed'])
     frame_ticks = math.ceil(FPS * ANIMATION['speed'] / ANIMATION['frames'])
 
-    def __init__(self, x, y, r):
+    def __init__(self, x, y):
         super(TestCreature, self).__init__(x, y)
-        self.create(x, y, **SHEEP)
+        self.create(x, y, **BIRD)
 
         # GRAVITY TEST
         # self.maxspeed = 10
@@ -84,7 +84,7 @@ class TestCreature(AbstractSprite):
 
         # limits
         self.maxspeed = maxspeed
-        self.maxforce = maxforce
+        self.maxforce = 10
         self.maxhp = maxhp
         self.manoeuvrability = manoeuvrability
 
@@ -97,10 +97,11 @@ class TestCreature(AbstractSprite):
         # counters
         self.anim_count = 0
         self.bite_count = 0
+        self.shot_count = 0
 
         # vectors
         self.location = PVector(x, y)
-        self.velocity = PVector(0, 0)
+        self.velocity = PVector(0, 0.001)
         self.acceleration = PVector(0, 0)
 
         # body
@@ -116,11 +117,23 @@ class TestCreature(AbstractSprite):
         self.damage = damage
         self.defense = defense
 
+        # SHOT TEST
+        # self.maxforce = 10
+        # self.maxspeed = 10
+
     def draw(self, win):
         # body
+        # frame = self.anim_count // self.frame_ticks
+        # direction = self.velocity.anim_direction()
+        # win.blit(self.animation[direction][frame], self.body)
+
+        # TEST ROTATE BODY
         frame = self.anim_count // self.frame_ticks
         direction = self.velocity.anim_direction()
-        win.blit(self.animation[direction][frame], self.body)
+        image = pg.transform.rotate(
+            self.animation[direction][frame],
+            -self.velocity.angle_deg())
+        win.blit(image, self.body)
 
         # hitbox
         # TODO, moze sie roznic od obrazka
@@ -147,18 +160,22 @@ class TestCreature(AbstractSprite):
                 player.hit(self.damage)
                 self.bite_count = 10
 
-    def update(self, player):
+    def update(self, player, platforms):
         # dead
         if self.hp <= 0:
             self.die()
             return
 
         # alive
-        self.update_forces(player)
+        self.update_forces(player, platforms)
         self.move(player)
 
-    def update_forces(self, player):
-        fly(self)
+    def update_forces(self, player, platforms):
+        # if self.shot_count == 0:
+        #     shoot(self, self.location, player.location)
+        #     self.shot_count = 10
+
+        # fly(self)
         # run(self)
         # run_away(self, player)
         # gravity(self)
@@ -166,9 +183,15 @@ class TestCreature(AbstractSprite):
         # track(self, player)
         # fly_after(self, player)
         # fly_away(self, player)
-        # gravity(self)
+        # if self.velocity.y == 0:
+        init_move(self)
+
+        gravity(self)
+        # keep_on_platform(self, platforms)
+        # push_from_platform(self, platforms)
+        jump_from_platform(self, platforms)
         # friction(self)
-        wind(self)
+        # wind(self)
         edges_ball(self)
         # edges_stop(self)
         # edges(self)

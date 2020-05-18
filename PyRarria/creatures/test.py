@@ -3,6 +3,7 @@ from pygame.sprite import Group
 
 from PyRarria.creatures.arrow import Arrow
 from PyRarria.creatures.global_settings import *
+from PyRarria.creatures.platforms_test import Platform
 from PyRarria.creatures.player_test import Player
 from PyRarria.creatures.creature import TestCreature
 from PyRarria.weapon import Weapon
@@ -21,14 +22,13 @@ from pygame.locals import (
     MOUSEMOTION,
 )
 
+# pygame init
 pg.init()
 
-
-
-# images / fonts
-bg = pg.image.load('images/bg.jpg')
-char = pg.image.load('images/standing.png')
-font = pg.font.SysFont('comicsans', 30, True, False)
+# test constants
+BACKGORUND = pg.image.load('images/bg.jpg')
+CHAR = pg.image.load('images/standing.png')
+FONT = pg.font.SysFont('comicsans', 30, True, False)
 
 # window / clock
 win = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -38,35 +38,20 @@ clock = pg.time.Clock()
 all_sprites = Group()
 creatures = Group()
 arrows = Group()
-
-# objects
-man = Player(300, 300, 64, 64)
-# dog = Dog(300, 325)
-weapon = Weapon(200, 200, 20, 20)
+platforms = Group()
 
 # sprites
-# creatures.add(dog)
-# all_sprites.add(dog)
+man = Player(50, 300, 64, 64)
+weapon = Weapon(200, 200, 20, 20)
+creature = TestCreature(SCREEN_WIDTH//2, 100)
+platform = Platform(100, SCREEN_HEIGHT/2, SCREEN_WIDTH - 200, 30)
+
+# groups init
 all_sprites.add(man)
-temp = TestCreature(SCREEN_WIDTH//2, SCREEN_HEIGHT//2, 50)
-creatures.add(temp)
-all_sprites.add(temp)
-
-arrow = Arrow()
-arrows.add(arrow)
-all_sprites.add(arrow)
-
-# for i in range(10):
-#     temp = TestCreature(
-#         random.randint(0, SCREEN_WIDTH),
-#         SCREEN_HEIGHT//2,
-#         random.randint(10, 50))
-#     creatures.add(temp)
-#     all_sprites.add(temp)
-
-
-
-score = 0
+creatures.add(creature)
+all_sprites.add(creature)
+all_sprites.add(platform)
+platforms.add(platform)
 
 
 def update_engine():
@@ -80,7 +65,7 @@ def update_engine():
 
     # update creatures
     for creature in creatures:
-        creature.update(man)
+        creature.update(man, platforms)
 
     for arr in arrows:
         arr.update()
@@ -88,7 +73,11 @@ def update_engine():
 
 def redraw_engine():
     # background
-    win.blit(bg, (0, 0))
+    win.blit(BACKGORUND, (0, 0))
+
+    # platforms
+    for plat in platforms:
+        plat.draw(win)
 
     # player
     man.draw(win)

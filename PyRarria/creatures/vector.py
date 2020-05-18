@@ -69,7 +69,21 @@ class PVector:
             self.y *= maxi
 
     def angle(self):
+        if self.x == 0.0 and self.y >= 0:
+            return math.pi / 2
+        elif self.x == 0.0 and self.y < 0:
+            return -math.pi / 2
+        else:
+            return math.atan(self.y / self.x)
+
+    def angle2(self):
         return math.atan2(self.y, self.x)
+
+    def angle_deg(self):
+        return self.angle() * 180 / math.pi
+
+    def angle_deg2(self):
+        return self.angle2() * 180 / math.pi
 
     def angle_between(self, v):
         dot = self.dot(v)

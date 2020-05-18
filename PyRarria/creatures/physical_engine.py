@@ -1,11 +1,13 @@
 from PyRarria.creatures.global_settings import *
 from PyRarria.creatures.vector import PVector
+import pygame as pg
 import random
 import math
 
 # forces
-WIND = PVector(-0.1, 0.0)
+WIND = PVector(0.000001, 0.0)
 GRAVITY = PVector(0, 0.1)
+REACTION = PVector(0, -0.1)
 
 # constants
 MI = 0.05
@@ -22,6 +24,15 @@ def gravity(src):
     """
     grav = GRAVITY.copy()
     src.apply_force(grav)
+
+
+def reaction(src, platform):
+    """Reaction force.
+    R = Q
+    """
+    reac = REACTION.copy()
+    src.apply_force(reac)
+    src.velocity.y = 0
 
 
 def wind(src):
@@ -103,8 +114,14 @@ def jump(src):
     src.apply_force(jmp)
 
 
-def shoot(src):
-    pass
+def shoot(src, src_location, dest_location):
+    """Calculates and applies force to reach dest from src."""
+    dx = dest_location.x - src_location.x
+    dy = dest_location.y - src_location.y
+    s = math.sqrt(0.1 * (dx**2) / (dx - dy))
+    s *= 0.7
+    force = PVector(s, -s)
+    src.apply_force(force)
 
 
 def track(src, target):
@@ -246,3 +263,57 @@ def edges_ball(src):
     elif src.location.y > SCREEN_HEIGHT:
         src.velocity.y *= -1
         src.location.y = SCREEN_HEIGHT
+
+
+def init_move(src):
+    """Initializes velocity if creature isn't moving."""
+    if src.velocity.y == 0 and src.velocity.x == 0:
+        force = PVector(-src.maxspeed, 0)
+        src.apply_force(force)
+
+
+def keep_on_platform(src, platforms):
+    """Inverts speed vector if creature reaches platform edge."""
+    hits = pg.sprite.spritecollide(src, platforms, False)
+    if hits:
+        reaction(src, hits[0])
+        right = hits[0].rect.right
+        left = hits[0].rect.left
+
+        if src.location.x > right:
+            src.velocity.x *= -1
+            src.location.x = right
+
+        elif src.location.x < left:
+            src.velocity.x *= -1
+            src.location.x = left
+
+
+def push_from_platform(src, platforms):
+    """Adds extra force if creature reaches platform edge to push it out."""
+    hits = pg.sprite.spritecollide(src, platforms, False)
+    if hits:
+        reaction(src, hits[0])
+        right = hits[0].rect.right
+        left = hits[0].rect.left
+
+        if src.location.x > right:
+            src.apply_force(PVector(src.maxforce, 0))
+
+        elif src.location.x < left:
+            src.apply_force(PVector(-src.maxforce, 0))
+
+
+def jump_from_platform(src, platforms):
+    """If creature is on edge, jumps forward."""
+    hits = pg.sprite.spritecollide(src, platforms, False)
+    if hits:
+        reaction(src, hits[0])
+        right = hits[0].rect.right
+        left = hits[0].rect.left
+
+        if src.location.x > right:
+            jump(src)
+
+        elif src.location.x < left:
+            jump(src)

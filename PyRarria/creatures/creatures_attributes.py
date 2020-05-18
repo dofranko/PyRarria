@@ -2,7 +2,7 @@
 # defense in [0 ... 100]
 
 BIRD = {
-    'manoeuvrability': 0.075,
+    'manoeuvrability': 0.05,
     'maxspeed': 3,
     'maxforce': 5,
     'maxhp': 100,

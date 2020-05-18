@@ -28,6 +28,7 @@ class AbstractSprite(pg.sprite.Sprite):
         # counters
         self.anim_count = None
         self.bite_count = None
+        self.shot_count = None
 
         # vectors
         self.location = PVector(x, y)
@@ -57,10 +58,10 @@ class AbstractSprite(pg.sprite.Sprite):
     def bite(self, player):
         pass
 
-    def update(self, player):
+    def update(self, player, platforms):
         pass
 
-    def update_forces(self, player):
+    def update_forces(self, player, platforms):
         pass
 
     def apply_force(self, player):
