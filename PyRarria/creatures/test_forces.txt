@@ -3,7 +3,7 @@
 # friction(self)
 # init_move(self)
 # jump(self)
-# shoot(self, self.location, player.location)
+# bullet(self, self.location, player.location)
 # track(self, player)
 # run(self)
 # run_away(self, player)

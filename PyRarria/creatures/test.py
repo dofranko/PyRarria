@@ -3,6 +3,7 @@ from pygame.sprite import Group
 
 from PyRarria.creatures.sprites_tree.arrow import Arrow
 from PyRarria.creatures.sprites_tree.bird import Bird
+from PyRarria.creatures.sprites_tree.skeleton import Skeleton
 from PyRarria.creatures.test_global_settings import *
 from PyRarria.creatures.test_platforms import Platform
 from PyRarria.creatures.test_player import Player
@@ -37,6 +38,7 @@ clock = pg.time.Clock()
 # groups
 all_sprites = Group()
 creatures = Group()
+archers = Group()
 arrows = Group()
 platforms = Group()
 
@@ -44,27 +46,39 @@ platforms = Group()
 man = Player(400, 300, 64, 64)
 weapon = Weapon(200, 200, 20, 20)
 bird = Bird(50, 300)
+skeleton = Skeleton(200, 200)
 arrow = Arrow(50, 50)
-platform = Platform(100, SCREEN_HEIGHT/2, SCREEN_WIDTH - 200, 30)
+# platform = Platform(100, SCREEN_HEIGHT/2, SCREEN_WIDTH - 200, 30)
 
 # groups init
 all_sprites.add(man)
-creatures.add(bird)
+
 all_sprites.add(bird)
+creatures.add(bird)
+
+all_sprites.add(skeleton)
+creatures.add(skeleton)
+archers.add(skeleton)
+
 all_sprites.add(arrow)
 arrows.add(arrow)
+
 # all_sprites.add(platform)
 # platforms.add(platform)
 
 
 def update_engine():
-    # hit creatures
+    # hit
     for creature in creatures:
         creature.hit(weapon)
 
-    # bite by creature
+    # bite
     for creature in creatures:
         creature.bite(man)
+
+    # shot
+    for archer in archers:
+        archer.shoot(man, arrows)
 
     # update creatures
     for creature in creatures:

@@ -29,8 +29,8 @@ class Sprite(AbstractSprite):
 
         # flags
         self.is_enemy = True
-        self.is_hpbar = True
-        self.is_hitbox = True
+        self.is_hpbar = False
+        self.is_hitbox = False
         self.is_fixpos = True
 
         # counters
@@ -109,4 +109,5 @@ class Sprite(AbstractSprite):
         self.acceleration += force
 
     def die(self):
+        print('die')
         self.kill()

@@ -114,8 +114,10 @@ def jump(src):
     src.apply_force(jmp)
 
 
-def shoot(src, src_location, dest_location):
+def bullet(src, src_location, dest_location):
     """Calculates and applies force to reach dest from src."""
+
+    # TODO zero division error
 
     # TEST
     x0 = src_location.x
@@ -133,17 +135,17 @@ def shoot(src, src_location, dest_location):
     vy = vx * abs(dy/dx) + 0.5 * g * abs(dx/vx)
 
     # STATS
-    print('x0 = ', x0)
-    print('y0 = ', y0)
-    print('x1 = ', x1)
-    print('y1 = ', y1)
-
-    print('sx = ', sx)
-    print('dx = ', dx)
-    print('dy = ', dy)
-
-    print('vx = ', vx)
-    print('vy = ', vy)
+    # print('x0 = ', x0)
+    # print('y0 = ', y0)
+    # print('x1 = ', x1)
+    # print('y1 = ', y1)
+    #
+    # print('sx = ', sx)
+    # print('dx = ', dx)
+    # print('dy = ', dy)
+    #
+    # print('vx = ', vx)
+    # print('vy = ', vy)
 
     # TEMP
     # a = dy/dx + 0.1*sx
@@ -290,9 +292,19 @@ def edges_stop(src):
         src.velocity.y = 0
         src.location.y = SCREEN_HEIGHT
 
+
+def edges_delete(src):
+    """Deletes object if it goes off the screen."""
+
+    if src.location.x < 0 or src.location.x > SCREEN_WIDTH:
+        src.die()
+
+    elif src.location.y > SCREEN_HEIGHT:
+        src.die()
+
     
 def edges_ball(src):
-    """Checks if the object does not go beyond the screen.
+    """Checks if the object goes off the screen.
     Bounces off the edge like a ball."""
 
     # horizontal
@@ -314,6 +326,7 @@ def edges_ball(src):
 
 def init_move(src):
     """Initializes velocity if creature isn't moving."""
+
     if src.velocity.y == 0 and src.velocity.x == 0:
         force = PVector(-src.maxspeed, 0)
         src.apply_force(force)
@@ -321,6 +334,7 @@ def init_move(src):
 
 def keep_on_platform(src, platforms):
     """Inverts speed vector if creature reaches platform edge."""
+
     hits = pg.sprite.spritecollide(src, platforms, False)
     if hits:
         reaction(src, hits[0])
@@ -338,6 +352,7 @@ def keep_on_platform(src, platforms):
 
 def push_from_platform(src, platforms):
     """Adds extra force if creature reaches platform edge to push it out."""
+
     hits = pg.sprite.spritecollide(src, platforms, False)
     if hits:
         reaction(src, hits[0])
@@ -353,6 +368,7 @@ def push_from_platform(src, platforms):
 
 def jump_from_platform(src, platforms):
     """If creature is on edge, jumps forward."""
+
     hits = pg.sprite.spritecollide(src, platforms, False)
     if hits:
         reaction(src, hits[0])

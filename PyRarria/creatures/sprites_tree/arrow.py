@@ -27,3 +27,4 @@ class Arrow(FlyingSprite):
 
     def update_forces(self, player, platforms):
         gravity(self)
+        edges_delete(self)

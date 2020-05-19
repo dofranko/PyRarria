@@ -67,6 +67,9 @@ class AbstractSprite(pg.sprite.Sprite):
     def bite(self, player):
         pass
 
+    def shoot(self, player, arrows):
+        pass
+
     def update(self, player, platforms):
         pass
 
