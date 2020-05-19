@@ -1,4 +1,5 @@
 import pygame as pg
+
 load = pg.image.load
 
 
@@ -26,22 +27,11 @@ SHEEP_RIGHT = [
     load('img/sheep_13.png'), load('img/sheep_14.png'),
     load('img/sheep_15.png'), load('img/sheep_16.png')]
 
+SKELETON_LEFT = [load('img/skeleton_01.png'), load('img/skeleton_02.png')]
+SKELETON_RIGHT = [load('img/skeleton_03.png'), load('img/skeleton_04.png')]
 
-DOG_LEFT = [
-    load('img/dogL01.png'), load('img/dogL02.png'),
-    load('img/dogL03.png'), load('img/dogL04.png'),
-    load('img/dogL05.png'), load('img/dogL06.png'),
-    load('img/dogL07.png'), load('img/dogL08.png'),
-    load('img/dogL09.png'), load('img/dogL10.png')]
-
-DOG_RIGHT = [
-    load('img/dogR01.png'), load('img/dogR02.png'),
-    load('img/dogR03.png'), load('img/dogR04.png'),
-    load('img/dogR05.png'), load('img/dogR06.png'),
-    load('img/dogR07.png'), load('img/dogR08.png'),
-    load('img/dogR09.png'), load('img/dogR10.png')]
-
-DOG_FRAMES = 10
+ARROW_LEFT = [load('img/arrow_01.png')]
+ARROW_RIGHT = [load('img/arrow_02.png')]
 
 
 BIRD_ANIMATION = {
@@ -69,4 +59,22 @@ SHEEP_ANIMATION = {
     'width': SHEEP_LEFT[0].get_rect().width,
     'height': SHEEP_LEFT[0].get_rect().height,
     'speed': 0.5,
+}
+
+SKELETON_ANIMATION = {
+    'left': SKELETON_LEFT,
+    'right': SKELETON_RIGHT,
+    'frames': len(SKELETON_LEFT),
+    'width': SKELETON_LEFT[0].get_rect().width,
+    'height': SKELETON_LEFT[0].get_rect().height,
+    'speed': 0.5,
+}
+
+ARROW_ANIMATION = {
+    'left': ARROW_LEFT,
+    'right': ARROW_RIGHT,
+    'frames': len(ARROW_LEFT),
+    'width': ARROW_LEFT[0].get_rect().width,
+    'height': ARROW_LEFT[0].get_rect().height,
+    'speed': 2,
 }

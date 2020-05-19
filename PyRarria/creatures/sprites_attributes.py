@@ -1,6 +1,8 @@
 # attack in [0 ... 100]
 # defense in [0 ... 100]
 
+INFINITY = 100000
+
 BIRD = {
     'manoeuvrability': 0.05,
     'maxspeed': 3,
@@ -37,18 +39,26 @@ SHEEP = {
     'defense': 10,
 }
 
-DOG = {
-    'w': 141,
-    'h': 113,
-    'v': 2,
+SKELETON = {
+    'manoeuvrability': 0.075,
+    'maxspeed': 3,
+    'maxforce': 5,
+    'maxhp': 100,
 
-    'jump_timer': 10,
-    'walk_timer': 10,
-    'bite_timer': 30,
-    'anim_timer': 4,
-
-    'hp': 100,
+    'mass': 20,
     'items': [],
     'damage': 14,
-    'defense': 5,
+    'defense': 10,
+}
+
+ARROW = {
+    'manoeuvrability': 0.075,
+    'maxspeed': INFINITY,
+    'maxforce': INFINITY,
+    'maxhp': INFINITY,
+
+    'mass': 20,
+    'items': [],
+    'damage': 14,
+    'defense': INFINITY,
 }

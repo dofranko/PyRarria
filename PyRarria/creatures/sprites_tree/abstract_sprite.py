@@ -5,6 +5,15 @@ from PyRarria.creatures.vector import PVector
 
 class AbstractSprite(pg.sprite.Sprite):
 
+    # static variables
+    animation = None
+    frames = None
+    width = None
+    height = None
+    radius = None
+    animation_ticks = None
+    frame_ticks = None
+
     def __init__(self, x, y):
         super(AbstractSprite, self).__init__()
 
@@ -67,7 +76,7 @@ class AbstractSprite(pg.sprite.Sprite):
     def apply_force(self, player):
         pass
 
-    def move(self, player):
+    def move(self):
         pass
 
     def map_move(self, dx, dy):

@@ -1,4 +1,4 @@
-from PyRarria.creatures.global_settings import *
+from PyRarria.creatures.test_global_settings import *
 from PyRarria.creatures.vector import PVector
 import pygame as pg
 import random
@@ -116,11 +116,58 @@ def jump(src):
 
 def shoot(src, src_location, dest_location):
     """Calculates and applies force to reach dest from src."""
-    dx = dest_location.x - src_location.x
-    dy = dest_location.y - src_location.y
-    s = math.sqrt(0.1 * (dx**2) / (dx - dy))
-    s *= 0.7
-    force = PVector(s, -s)
+
+    # TEST
+    x0 = src_location.x
+    y0 = src_location.y
+
+    x1 = dest_location.x
+    y1 = dest_location.y
+
+    dx = x1 - x0
+    dy = y1 - y0
+    sx = x0 + x1
+
+    g = 0.1
+    vx = dx/100
+    vy = vx * abs(dy/dx) + 0.5 * g * abs(dx/vx)
+
+    # STATS
+    print('x0 = ', x0)
+    print('y0 = ', y0)
+    print('x1 = ', x1)
+    print('y1 = ', y1)
+
+    print('sx = ', sx)
+    print('dx = ', dx)
+    print('dy = ', dy)
+
+    print('vx = ', vx)
+    print('vy = ', vy)
+
+    # TEMP
+    # a = dy/dx + 0.1*sx
+    # b = src_location.y + 0.1*(src_location.x**2) - a*src_location.x
+    # print('a = ', a)
+    # print('b = ', b)
+    # print('real y = ', src_location.y)
+    # print('test y = ', -0.1*src_location.x**2 + a*src_location.x + b)
+
+    # p = dy/dx + 0.5 * g * sx
+    # q = y0 + x0 * (0.5*g*x0 - p)
+
+    # a = -g*x0 + p
+    # alpha = 180 * math.atan(a) / math.pi
+
+    # a = (y0*dx + x0*dy) / (x0*x1*dx)
+    # b = dy/dx + a*sx
+
+    # a = dy/dx + 0.5*g*sx
+    # alpha = -g*x0 + a
+    # s = math.sqrt(0.1 * (dx**2) / (dx - dy))
+    # s *= 0.7
+
+    force = PVector(vx, -vy)
     src.apply_force(force)
 
 

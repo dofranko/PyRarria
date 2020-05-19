@@ -1,11 +1,11 @@
 import pygame as pg
 from pygame.sprite import Group
 
-from PyRarria.creatures.arrow import Arrow
-from PyRarria.creatures.global_settings import *
-from PyRarria.creatures.platforms_test import Platform
-from PyRarria.creatures.player_test import Player
-from PyRarria.creatures.creature import TestCreature
+from PyRarria.creatures.sprites_tree.arrow import Arrow
+from PyRarria.creatures.sprites_tree.bird import Bird
+from PyRarria.creatures.test_global_settings import *
+from PyRarria.creatures.test_platforms import Platform
+from PyRarria.creatures.test_player import Player
 from PyRarria.weapon import Weapon
 
 from pygame.locals import (
@@ -41,17 +41,20 @@ arrows = Group()
 platforms = Group()
 
 # sprites
-man = Player(50, 300, 64, 64)
+man = Player(400, 300, 64, 64)
 weapon = Weapon(200, 200, 20, 20)
-creature = TestCreature(SCREEN_WIDTH//2, 100)
+bird = Bird(50, 300)
+arrow = Arrow(50, 50)
 platform = Platform(100, SCREEN_HEIGHT/2, SCREEN_WIDTH - 200, 30)
 
 # groups init
 all_sprites.add(man)
-creatures.add(creature)
-all_sprites.add(creature)
-all_sprites.add(platform)
-platforms.add(platform)
+creatures.add(bird)
+all_sprites.add(bird)
+all_sprites.add(arrow)
+arrows.add(arrow)
+# all_sprites.add(platform)
+# platforms.add(platform)
 
 
 def update_engine():
@@ -67,8 +70,9 @@ def update_engine():
     for creature in creatures:
         creature.update(man, platforms)
 
+    # update arrows
     for arr in arrows:
-        arr.update()
+        arr.update(man, platforms)
 
 
 def redraw_engine():
