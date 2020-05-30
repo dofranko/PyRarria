@@ -1,11 +1,12 @@
 import pygame
 from settings import *
-
+from Items import *
+from copy import copy
 
 
 # Klasa, która tworzy ekwipunek i zarządza nim
 class Equipment:
-    def __init__(self, game, player, *, eq_size=18):
+    def __init__(self, game, player, *, eq_size=21):
         self.game = game
         self.active_tool_number = 1  # Number aktualnie wybranego narzędzia
         self.base_x, self.base_y = 5, 5  # Współrzędne (x, y) położenia eq
@@ -21,43 +22,67 @@ class Equipment:
         self.offset_x = None  # pomocnicze zmienne do przenoszenia
         self.offset_y = None
         self.font = pygame.font.SysFont("dejavusans", 15, 0, 0)
+        self.armour_description = ["Drop a helmet here",
+                                   "Drop a breastplate here",
+                                   "Drop boots here"]
         self.base_eq = pygame.sprite.Group()  # Sprite eq 1-6
         self.extended_eq = pygame.sprite.Group()  # Sprite eq powyżej 6
-        self.extra_sprites = pygame.sprite.Group()  # Sprite'y dodatkowe, takie jak przycisk czy suwak
+        self.list_base_eq = []
+        self.extra_sprites = []  # Sprite'y dodatkowe, takie jak przycisk czy suwak
         self.__create_eq_GUI()
         # Tablica przechowująca zebrane itemy gracza
-        self.collected_items = [{} for i in range(self.eq_size)]
+        self.collected_items = [[] for i in range(self.eq_size)]
         # TODO do testów; wyrzucić potem PS TAK WYGLĄDA MINIMUM ATRYBUTÓW PRZEDMIOTU.
         # PS (Moja -prymitywna- aktualna propozycja. Można zmieniać :P)
-        self.collected_items[8] = {"name": "example_tool", "number": 12}
-        self.collected_items[9] = {"name": "example_tool_2", "number": 3}
+        self.collected_items[8] = [self.game.fabryka.create("kilof", 0, 0), self.game.fabryka.create("kilof", 0, 0)]
 
     # Stworzenie wyglądu eq
     def __create_eq_GUI(self):
-        eq_panel_image = pygame.image.load(
+        self.eq_panel_image = pygame.image.load(
             "resources/images/eq_square.png").convert_alpha()  # =====Tu można zmienić sprite===============
-        self.base_width, self.base_height = eq_panel_image.get_rect().size
+        self.base_width, self.base_height = self.eq_panel_image.get_rect().size
         for i in range(6):
             new_eq = pygame.sprite.Sprite()
-            new_eq.image = eq_panel_image
+            new_eq.image = copy(self.eq_panel_image)
             new_eq.rect = new_eq.image.get_rect()
             new_eq.rect.x, new_eq.rect.y = (self.base_x + i * self.base_width, self.base_y)
+            self.list_base_eq.append(new_eq)
             self.base_eq.add(new_eq)
-        for pos in range(6, self.eq_size):
+        for pos in range(6, self.eq_size - 3):
             i = pos % 6
             j = pos // 6
             new_eq = pygame.sprite.Sprite()
-            new_eq.image = eq_panel_image
+            new_eq.image = self.eq_panel_image
             new_eq.rect = new_eq.image.get_rect()
             new_eq.rect.x, new_eq.rect.y = (self.base_x + i * self.base_width, self.base_y + j * self.base_height)
             self.extended_eq.add(new_eq)
+        for j in range(3):
+            new_eq = pygame.sprite.Sprite()
+            new_eq.image = self.eq_panel_image
+            new_eq.rect = new_eq.image.get_rect()
+            new_eq.rect.x, new_eq.rect.y = (15 * self.base_width - 20,
+                                            3 * self.base_height + 5 + j * self.base_height)
+            self.extended_eq.add(new_eq)
+        self.open_eq_word = self.font.render("Click to unroll your stuff", True, WHITE)
+        self.bin_word = self.font.render("Drop to delete a item", True, WHITE)
         # Przycisk otwierania TODO =======Tu można zmienić sprite=======
-        self.open_button = pygame.sprite.Sprite()
-        self.open_button.image = pygame.image.load("resources/images/open_eq.png").convert_alpha()
-        self.open_button.rect = self.open_button.image.get_rect()
-        self.open_button.rect.x = 5 + self.base_x + len(self.base_eq) * self.base_width
-        self.open_button.rect.y = 5 + self.base_y
-        self.extra_sprites.add(self.open_button)
+        self.open_eq = pygame.sprite.Sprite()
+        self.open_eq.image = pygame.image.load("resources/images/open_eq.png").convert_alpha()
+        self.open_eq.rect = self.open_eq.image.get_rect()
+        self.open_eq.rect.x = 5 + self.base_x + len(self.base_eq) * self.base_width
+        self.open_eq.rect.y = 5 + self.base_y
+        # kosz
+        self.bin = pygame.sprite.Sprite()
+        self.bin_image = pygame.image.load("resources/images/bin.png").convert_alpha()
+        self.bin_image = pygame.transform.scale(self.bin_image, (40, 40))
+        self.bin.rect = self.bin_image.get_rect()
+        self.bin.rect.x = 5 + len(self.base_eq) * self.base_width
+        self.bin.rect.y = 10 + self.base_height
+        self.list_armour = []
+        for name in ["helmet", "breastplate", "boot"]:
+            image = pygame.image.load("resources/images/" + name + ".png").convert_alpha()
+            image = pygame.transform.scale(image, (35, 35))
+            self.list_armour.append(image)
 
     def update(self):
         keys_pressed = pygame.key.get_pressed()
@@ -68,62 +93,115 @@ class Equipment:
                 break
         else:
             return
-        
+
     def draw(self):
         # Rysowanie pierwszych 6 paneli (zawsze są pokazywane) i ekwipunku (jeśli jakiś jest)
         self.base_eq.draw(self.game.screen)
         for i in range(len(self.base_eq)):
+            eq = self.list_base_eq[i]
             if self.collected_items[i]:
                 if i != self.change_tool:  # nie rysujemy przedmiotu przenoszonego
-                    if i + 1 == self.active_tool_number:    # podświetlenie przedmiotu
-                        image = self.get_image(self.collected_items[i]["name"])
-                        image = pygame.transform.scale(image, (43, 43))
+                    if i + 1 == self.active_tool_number:  # podświetlenie przedmiotu
+                        eq.image = copy(self.eq_panel_image)  # znika podświetlenie całego square
+                        image = self.collected_items[i][0].image
+                        image = pygame.transform.scale(image, (44, 44))
                         image.fill(GREEN, special_flags=pygame.BLEND_MAX)
                         self.game.screen.blit(image, (5 + self.base_x + i * self.base_width - 2, 5 + self.base_y - 2))
-                    image = self.get_image(self.collected_items[i]["name"])
+
+                    image = self.collected_items[i][0].image
+                    image = pygame.transform.scale(image, (40, 40))
                     self.game.screen.blit(image, (5 + self.base_x + i * self.base_width, 5 + self.base_y))
-                    if self.collected_items[i].get("number") > 1:
-                        num = str(self.collected_items[i].get("number"))
+                    if len(self.collected_items[i]) > 1:
+                        num = str(len(self.collected_items[i]))
                         number = self.font.render(num, True, WHITE)
                         self.game.screen.blit(number, (5 + self.base_x + i * self.base_width + image.get_width() -
                                                        7 * len(num), 5 + self.base_y + image.get_height() - 15))
-        # Rysowanie przycisku otwierania eq i znacznika aktywnego eq
-        self.extra_sprites.draw(self.game.screen)
+                elif i + 1 == self.active_tool_number:  # gdy przemieszczamy to podświetla
+                    eq.image.fill(GREEN, special_flags=pygame.BLEND_MIN)
+                elif self.active_tool_number is not None:
+                    eq.image = copy(self.eq_panel_image)  # trzymając jakiś przedmiot można zmieniać
+            elif i + 1 == self.active_tool_number:  # wybrany square bez przedmiotu
+                eq.image.fill(GREEN, special_flags=pygame.BLEND_MIN)
+            elif self.active_tool_number is not None:
+                eq.image = copy(self.eq_panel_image)  # niewybrany square staje się normalny
+        # Rysowanie przycisku otwierania eq
+        self.game.screen.blit(self.open_eq.image, self.open_eq.rect)
+        if self.open_eq.rect.collidepoint(pygame.mouse.get_pos()):
+            x, y = pygame.mouse.get_pos()
+            self.game.screen.blit(self.open_eq_word, (x - 15, y - 15))
         # Rysowanie paneli i ekwipunku, gdy eq jest otwarte
         if self.is_opened:
             self.extended_eq.draw(self.game.screen)
-            for pos in range(6, self.eq_size):
+            for pos in range(6, self.eq_size - 3):
                 i = pos % 6  # Położenie panelu na osi x
                 j = pos // 6  # Położenie panelu na osi y
                 if self.collected_items[pos]:
                     if pos != self.change_tool:  # nie rysujemy przedmiotu przenoszonego
-                        image = self.get_image(self.collected_items[pos]["name"])
+                        image = self.collected_items[pos][0].image
+                        image = pygame.transform.scale(image, (40, 40))
                         self.game.screen.blit(image, (5 + self.base_x + i * self.base_width,
                                                       5 + self.base_y + j * self.base_height))
-                        if self.collected_items[pos].get("number") > 1:
-                            num = str(self.collected_items[pos].get("number"))
+                        if len(self.collected_items[pos]) > 1:
+                            num = str(len(self.collected_items[pos]))
                             number = self.font.render(num, True, WHITE)
                             self.game.screen.blit(number, (5 + self.base_x + i * self.base_width + image.get_width() -
                                                            7 * len(num), 5 + self.base_y +
                                                            j * self.base_height + image.get_height() - 15))
-        # Rysowanie przenoszonego przedmiotu
+             # Rysowanie kosza
+            if self.equipment_moving:
+                if self.bin.rect.collidepoint(pygame.mouse.get_pos()):
+                    self.bin.image = pygame.transform.scale(self.bin_image, (42, 42))
+                    self.game.screen.blit(self.bin.image, (self.bin.rect.x - 2, self.bin.rect.y - 2))
+                    self.game.screen.blit(self.bin_word, (self.eq_x + 40, self.eq_y + 40))
+                else:
+                    self.bin.image = pygame.transform.scale(self.bin_image, (40, 40))
+                    self.game.screen.blit(self.bin.image, self.bin.rect)
 
+            # rysowanie zbroi
+            for j in [18, 19, 20]:
+                if self.collected_items[j]:
+                    if j != self.change_tool:
+                        image = self.collected_items[j][0].image
+                        self.game.screen.blit(image, (15 * self.base_width - 20,
+                                                      3 * self.base_height + 5 + (j - 18) * self.base_height))
+                        continue
+                self.game.screen.blit(self.list_armour[j - 18], (15 * self.base_width - 13,
+                                                                 3 * self.base_height + 12 + (
+                                                                         j - 18) * self.base_height))
+
+        # Rysowanie przenoszonego przedmiotu
         if self.equipment is not None:
             self.game.screen.blit(self.equipment, (self.eq_x, self.eq_y))
-            num = str(self.collected_items[self.change_tool].get("number"))
+            num = str(len(self.collected_items[self.change_tool]))
             number = self.font.render(num, True, WHITE)
-            self.game.screen.blit(number, (self.eq_x + self.equipment.get_width() - 7 * len(num),
-                                           self.eq_y + self.equipment.get_height() - 15))
+            if num != '1':
+                self.game.screen.blit(number, (self.eq_x + self.equipment.get_width() - 7 * len(num),
+                                               self.eq_y + self.equipment.get_height() - 15))
+        elif self.is_opened:                        # rysowanie opisów
+            x, y = pygame.mouse.get_pos()
+            i = None
+            for k, eq in enumerate(self.base_eq):
+                if eq.rect.collidepoint(pygame.mouse.get_pos()):
+                    i = k
+            for k, eq in enumerate(self.extended_eq, 6):
+                if eq.rect.collidepoint(pygame.mouse.get_pos()):
+                    i = k
+            if i is not None and self.collected_items[i]:
+                words = self.font.render(self.collected_items[i][0].description, True, WHITE)
+                self.game.screen.blit(words, (x + 15, y + 15))
+            elif i in [18, 19, 20]:
+                words = self.font.render(self.armour_description[i - 18], True, WHITE)
+                self.game.screen.blit(words, (x - 120, y - 15))
 
     # Return: if item was added
     def add_item(self, new_item):
-        for item in self.collected_items:
-            if item and item["name"] == new_item["name"]:
-                item["number"] += new_item["number"]
+        for items in self.collected_items:
+            if items and items[0].name == new_item.name:
+                items.append(new_item)
                 return True
-        for item in self.collected_items:
-            if not bool(item):  # if empty
-                item = new_item
+        for i in range(len(self.collected_items)):
+            if not bool(self.collected_items[i]):  # if empty
+                self.collected_items[i] = [new_item]
                 return True
         return False  # EQ is FULL
 
@@ -131,18 +209,20 @@ class Equipment:
     # 1)Podanie "active" - usuwa aktualnie wybrany przedmiot
     # 2)Podanie nazwy przedmiotu - usunie pierwszy
     # Jeszcze do rozbudowy
-    def remove_item(self, item, number=1):
+    def remove_item(self, item):
         if item == "active":
-            self.collected_items[self.active_tool_number - 1]["number"] -= number
-            if self.collected_items[self.active_tool_number - 1]["number"] == 0:
-                self.collected_items[self.active_tool_number - 1].clear()
-        elif type(item) == str:
+            active = copy(self.collected_items[self.active_tool_number - 1])
+            if self.collected_items[self.active_tool_number - 1]:
+                self.collected_items[self.active_tool_number - 1].pop(0)
+                return active[0]
+        elif isinstance(item, Items):
             for el in self.collected_items:
-                if el["name"] == item:
+                if el["item"] == item:
                     el["number"] -= number
                     if el["number"] == 0:
                         el.clear()
                     break
+        return None
 
     def open(self):
         self.is_opened = True
@@ -160,14 +240,17 @@ class Equipment:
 
     # Return: atkualnie wybrany item
     def get_active_item(self):
-        return self.collected_items[self.active_tool_number - 1]
+        try:
+            return self.collected_items[self.active_tool_number - 1][0]
+        except IndexError:
+            return None
 
     # Przechwycenie zdarzeń myszki: -otwarcie/zamknięcie eq; -zmiana pozycji przedmiotów
     # (wysyła main, ponieważ wywołanie kilka razy pobrania eventu myszki daje inne rezultaty)
     def handle_mouse(self, event):
         if (event.type == pygame.MOUSEBUTTONDOWN and
                 event.button == 1):  # sprawdza, czy to lewy przycisk
-            if self.open_button.rect.collidepoint(event.pos):
+            if self.open_eq.rect.collidepoint(event.pos):
                 self.change_state()
                 return
             if self.is_opened:
@@ -182,15 +265,18 @@ class Equipment:
                         i = k
                 if i is not None:
                     self.equipment_moving = True
-                    self.equipment = self.get_image(self.collected_items[i]["name"])
+                    self.equipment = pygame.transform.scale(self.collected_items[i][0].image, (40, 40))
                     if i < 6:
                         self.eq_x = 5 + self.base_x + i * self.base_width
                         self.eq_y = 5 + self.base_y
-                    else:
+                    elif i < 18:
                         k = i % 6  # Położenie na osi x
                         j = i // 6  # Położenie na osi y
                         self.eq_x = 5 + self.base_x + k * self.base_width
                         self.eq_y = 5 + self.base_y + j * self.base_height
+                    else:
+                        self.eq_x = 15 * self.base_width - 20
+                        self.eq_y = 3 * self.base_height + 5 + (i - 18) * self.base_height
                     self.offset_x = self.eq_x - event.pos[0]
                     self.offset_y = self.eq_y - event.pos[1]
                     self.change_positions(i)
@@ -205,6 +291,8 @@ class Equipment:
                     for i, eq in enumerate(self.extended_eq, 6):
                         if eq.rect.collidepoint(event.pos):
                             self.change_positions(i)
+                    if self.bin.rect.collidepoint(event.pos):
+                        self.collected_items[self.change_tool] = []
                     self.change_tool = None
         elif event.type == pygame.MOUSEMOTION:
             if self.equipment_moving:
@@ -218,16 +306,9 @@ class Equipment:
             if self.collected_items[position]:
                 self.change_tool = position
         else:  # Swap items
+            # warunek
+            #if self.collected_items[self.change_tool].name = 'armour' and
             self.collected_items[self.change_tool], self.collected_items[position] = self.collected_items[position], \
                                                                                      self.collected_items[
                                                                                          self.change_tool]
             self.change_tool = None
-
-    # Metoda zwracająca obrazy z pamięci (cele optymalizacyjne, żeby nie powielać wczytywania obrazków)
-    def get_image(self, name):
-        if name not in self.loaded_images.keys():
-            image = pygame.image.load("resources/images/" + name + ".png").convert_alpha()
-            image = pygame.transform.scale(image, (40, 40))
-            self.loaded_images[name] = image
-        return self.loaded_images[name]
-

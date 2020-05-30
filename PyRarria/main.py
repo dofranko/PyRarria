@@ -3,37 +3,71 @@ import random
 import sys
 from settings import *
 from platforms import *
-from player import  *
+from player import *
 from equipment import *
+from spells_icon import *
 from background import *
 from health_mana_bar import *
+from FabrykaItemow import *
+from boosters import *
+
 vector = pygame.math.Vector2
+
 
 class Game:
     def __init__(self):
-        #Initialize game window
+        # Initialize game window
         pygame.init()
-        pygame.mixer.init()
+        #pygame.mixer.init()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption(TITLE)
         self.clock = pygame.time.Clock()
         self.running = True
         self.loaded_images = {}
-        
+        self.pause = False
+
     def new_game(self):
         # start a new game
         self.all_sprites = pygame.sprite.Group()
         self.platforms = pygame.sprite.Group()
+        self.boosters = pygame.sprite.Group()
+        self.active_boosters = pygame.sprite.Group()
+        self.magics = pygame.sprite.Group()
+        self.explosions = pygame.sprite.Group()
+        self.items = pygame.sprite.Group()
+        self.trzymany = None
+        self.fabryka = Fabryka(self)
         self.player = Player(self)
         self.equipment = Equipment(self, self.player)
+        self.spells = Spells(self)
         self.background = Background(self, self.player)
-        self.health_bar = Health_bar(self)
-        self.mana_bar = Mana_bar(self)
+        self.health_bar = HealthBar(self)
+        self.mana_bar = ManaBar(self)
         self.waiting = True
         for plat in PLATFORM_LIST:
             p = Platform(*plat, self)
             self.all_sprites.add(p)
             self.platforms.add(p)
+
+        # test
+        ziemniak = self.fabryka.create("ziemniak", 1000, 300)
+        self.all_sprites.add(ziemniak)
+        self.items.add(ziemniak)
+
+        # Tutaj testowanie dodawania boosterów
+        position = vector(1193, 478)
+        position2 = vector(1294, 487)
+        position3 = vector(500, 170)
+        position4 = vector(400, 10)
+        position5 = vector(500, 470)
+        position6 = vector(1400, 470)
+
+        boost_test1 = TweeningBooster(self, position, 'health')
+        boost_test2 = TweeningBooster(self, position2, 'mana')
+        boost_test3 = PlayerSpeedBooster(self, position3)
+        boost_test4 = DamageBooster(self, position4)
+        boost_test5 = DefenseBooster(self, position5)
+        boost_test6 = AccuracyBooster(self, position6)
         self.all_sprites.add(self.player)
         self.run()
 
@@ -55,7 +89,11 @@ class Game:
         self.platforms.update()
         self.health_bar.update()
         self.mana_bar.update()
-
+        self.boosters.update()
+        self.active_boosters.update()
+        self.magics.update()
+        self.explosions.update()
+        self.items.update()
 
     def events(self):
         # Game Loop - events
@@ -66,24 +104,33 @@ class Game:
                     self.playing = False
                 self.running = False
                 self.waiting = False
-                
-            if (event.type == pygame.MOUSEBUTTONDOWN
-                 or event.type == pygame.MOUSEBUTTONUP 
-                   or event.type == pygame.MOUSEMOTION):
+            elif (event.type == pygame.MOUSEBUTTONDOWN
+                    or event.type == pygame.MOUSEBUTTONUP
+                    or event.type == pygame.MOUSEMOTION):
                 self.equipment.handle_mouse(event)
+                self.spells.handle_mouse(event)
+                self.player.handle_mouse_cast_spell(event)
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_p]:
+            self.pause = True
+            self.paused()
 
     def draw(self):
         # Game Loop - draw
-        #Kolejność ma znaczenie
+        # Kolejność ma znaczenie
         self.background.draw()
-        self.all_sprites.draw(self.screen)
-        self.equipment.draw()
         self.health_bar.draw()
         self.mana_bar.draw()
+        self.all_sprites.draw(self.screen)
+        self.spells.draw()
+        self.equipment.draw()
+        if self.trzymany:
+            self.trzymany.draw()
+        # żeby przenoszony itemik był widoczny, nic go nie ma przykrywać, więc rysuje się na końcu
+        self.spells.draw_moving_item()
         # *after* drawing everything, flip the display
         # #NieZmieniaćBoNieBędzieDziałaćINawetTwórcyNieWiedząCzemu
         pygame.display.flip()
-        
 
     def show_start_screen(self):
         waiting = True
@@ -154,20 +201,42 @@ class Game:
                     self.waiting = False
                     self.running = False
 
-    #Funkcja potrzebna platformom, żeby mogły dostosować swoją pozcję
+    def paused(self):
+        large_text = pygame.font.SysFont("comicsansms", 115)
+        text = large_text.render("Paused", True, (255, 255, 255))
+        alpha_surface = pygame.Surface((WIDTH, HEIGHT))
+        alpha_surface.fill((0, 0, 0))
+        alpha_surface.set_alpha(120)
+        self.screen.blit(alpha_surface, (0, 0))
+        self.screen.blit(text, (WIDTH / 3, HEIGHT / 3))
+
+        while self.pause:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_SPACE]:
+                self.pause = False
+
+            self.screen.set_alpha(0)
+
+            pygame.display.update()
+            self.clock.tick(15)
+
+    # Funkcja potrzebna platformom, żeby mogły dostosować swoją pozcję
     def get_main_stage_position(self):
-        #Try dla zasady, jakby coś się namieszało w kodzie
+        # Try dla zasady, jakby coś się namieszało w kodzie
         try:
             return self.background.main_stage.position
         except:
             print(f"{sys.exc_info()}[0]\n Continuing program with values (0,0)")
             return vector(0, 0)
-    
-    
-    
+
+
 if __name__ == "__main__":
     g = Game()
-    g.show_start_screen()
+    # g.show_start_screen()
     while g.running:
         g.new_game()
         g.show_game_over_screen()
