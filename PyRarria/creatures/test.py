@@ -1,13 +1,13 @@
 import pygame as pg
 from pygame.sprite import Group
 
+from PyRarria.creatures.creatures_engine import CreaturesEngine
 from PyRarria.creatures.sprites_tree.arrow import Arrow
 from PyRarria.creatures.sprites_tree.bird import Bird
 from PyRarria.creatures.sprites_tree.skeleton import Skeleton
 from PyRarria.creatures.test_global_settings import *
-from PyRarria.creatures.test_platforms import Platform
 from PyRarria.creatures.test_player import Player
-from PyRarria.weapon import Weapon
+from PyRarria.creatures.teat_weapon import Weapon
 
 from pygame.locals import (
     K_UP,
@@ -37,6 +37,7 @@ clock = pg.time.Clock()
 
 # groups
 all_sprites = Group()
+all_creatures = Group()
 creatures = Group()
 archers = Group()
 arrows = Group()
@@ -53,40 +54,44 @@ arrow = Arrow(50, 50)
 # groups init
 all_sprites.add(man)
 
-all_sprites.add(bird)
-creatures.add(bird)
+# all_sprites.add(bird)
+# creatures.add(bird)
 
-all_sprites.add(skeleton)
-creatures.add(skeleton)
-archers.add(skeleton)
+# all_sprites.add(skeleton)
+# creatures.add(skeleton)
+# archers.add(skeleton)
 
-all_sprites.add(arrow)
-arrows.add(arrow)
+# all_sprites.add(arrow)
+# arrows.add(arrow)
 
 # all_sprites.add(platform)
 # platforms.add(platform)
 
+# creatures engine
+creatures_engine = CreaturesEngine(win, platforms, man,
+                                   all_creatures, archers, arrows)
 
 def update_engine():
-    # hit
-    for creature in creatures:
-        creature.hit(weapon)
+    # # hit
+    # for creature in creatures:
+    #     creature.hit(weapon)
 
-    # bite
-    for creature in creatures:
-        creature.bite(man)
+    # # bite
+    # for creature in creatures:
+    #     creature.bite(man)
 
-    # shot
-    for archer in archers:
-        archer.shoot(man, arrows)
+    # # shot
+    # for archer in archers:
+    #     archer.shoot(man, arrows)
 
-    # update creatures
-    for creature in creatures:
-        creature.update(man, platforms)
-
-    # update arrows
-    for arr in arrows:
-        arr.update(man, platforms)
+    # # update creatures
+    # for creature in creatures:
+    #     creature.update(man, platforms)
+    #
+    # # update arrows
+    # for arr in arrows:
+    #     arr.update(man, platforms)
+    creatures_engine.update()
 
 
 def redraw_engine():
@@ -103,13 +108,14 @@ def redraw_engine():
     # weapon
     weapon.draw(win)
 
-    # creatures
-    for creature in creatures:
-        creature.draw(win)
-
-    # arrows
-    for arr in arrows:
-        arr.draw(win)
+    # # creatures
+    # for creature in creatures:
+    #     creature.draw(win)
+    #
+    # # arrows
+    # for arr in arrows:
+    #     arr.draw(win)
+    creatures_engine.draw()
 
     # update
     pg.display.update()
@@ -119,6 +125,7 @@ run = True
 while run:
     # clock
     clock.tick(FPS)
+
 
     # events
     for event in pg.event.get():
