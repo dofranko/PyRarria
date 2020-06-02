@@ -67,8 +67,8 @@ all_sprites.add(man)
 # platforms.add(platform)
 
 # creatures engine
-creatures_engine = CreaturesEngine(win, platforms, man,
-                                   all_creatures, arrows)
+
+creatures_engine = CreaturesEngine(game)
 
 def update_engine():
     # # hit

@@ -1,8 +1,9 @@
+from pygame.math import Vector2
 import random
 import math
 
 
-class PVector:
+class PVector(Vector2):
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -45,6 +46,10 @@ class PVector:
     def set(self, x, y):
         self.x = x
         self.y = y
+
+    def set_from_vector(self, v):
+        self.x = v.x
+        self.y = v.y
 
     def move(self, dx, dy):
         self.x += dx
@@ -115,6 +120,12 @@ class PVector:
     def zero(self):
         self.x = 0.0
         self.y = 0.0
+
+    def is_zero(self):
+        if self.x == 0.0 and self.y == 0.0:
+            return True
+        else:
+            return False
 
     def xflat(self):
         self.y = 0.0

@@ -82,7 +82,7 @@ class AbstractSprite(pg.sprite.Sprite):
     def move(self):
         pass
 
-    def map_move(self, dx, dy):
+    def map_move(self, delta):
         pass
 
     def die(self):

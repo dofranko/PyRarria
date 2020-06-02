@@ -34,20 +34,20 @@ SPAWN_DISTANCE = 100
 
 class CreaturesEngine:
 
-    def __init__(self, window, platforms, player,
-                 all_creatures, arrows):
+    def __init__(self, game):
 
-        # window, clock
-        self.window = window
+        # window, clock, main coords
+        self.window = game.screen
         self.clock = 0
+        self.main_position = game.main_position
 
         # map, player, arrows
-        self.platforms = platforms
-        self.player = player
+        self.platforms = game.platforms
+        self.player = game.player
 
         # creatures, arrows
-        self.all_creatures = all_creatures
-        self.arrows = arrows
+        self.all_creatures = game.all_creatures
+        self.arrows = game.arrows
 
         # groups
         self.groups = {
@@ -61,8 +61,8 @@ class CreaturesEngine:
         self.clock += 1
 
         # hit
-        for creature in self.all_creatures:
-            creature.hit(self.player)
+        # for creature in self.all_creatures:
+        #     creature.hit(self.player)
 
         # bite (if doesn't bite nothing happens)
         for creature in self.all_creatures:
@@ -113,6 +113,10 @@ class CreaturesEngine:
             self.all_creatures.add(new_creature)
 
             self.print_stats()
+
+    def map_move(self, delta):
+        for creature in self.all_creatures:
+            creature.map_move(delta)
 
     def print_stats(self):
         for group, name in zip(self.groups.values(), NAMES):

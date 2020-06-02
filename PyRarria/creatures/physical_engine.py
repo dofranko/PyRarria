@@ -6,8 +6,10 @@ import math
 
 # forces
 WIND = PVector(0.000001, 0.0)
-GRAVITY = PVector(0, 50)
-REACTION = PVector(0, -0.1)
+GRAVITY = PVector(0, 2.0)
+# GRAVITY = PVector(0, 0.1)
+# REACTION = PVector(0, -0.1)
+REACTION = PVector(0,-3)
 
 # constants
 MI = 0.05
@@ -26,7 +28,7 @@ def gravity(src):
     src.apply_force(grav)
 
 
-def reaction(src, platform):
+def reaction(src):
     """Reaction force.
     R = Q
     """
@@ -340,7 +342,7 @@ def keep_on_platform(src, platforms):
 
     hits = pg.sprite.spritecollide(src, platforms, False)
     if hits:
-        reaction(src, hits[0])
+        reaction(src)
         right = hits[0].rect.right
         left = hits[0].rect.left
 
@@ -358,7 +360,7 @@ def push_from_platform(src, platforms):
 
     hits = pg.sprite.spritecollide(src, platforms, False)
     if hits:
-        reaction(src, hits[0])
+        reaction(src)
         right = hits[0].rect.right
         left = hits[0].rect.left
 
@@ -374,7 +376,7 @@ def jump_from_platform(src, platforms):
 
     hits = pg.sprite.spritecollide(src, platforms, False)
     if hits:
-        reaction(src, hits[0])
+        reaction(src)
         right = hits[0].rect.right
         left = hits[0].rect.left
 

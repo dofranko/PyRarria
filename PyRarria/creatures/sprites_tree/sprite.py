@@ -89,6 +89,8 @@ class Sprite(AbstractSprite):
         pass
 
     def move(self):
+        print(self.acceleration)
+
         # move
         self.velocity += self.acceleration
         self.velocity.limit(self.maxspeed)
@@ -101,8 +103,11 @@ class Sprite(AbstractSprite):
         self.hpbar.center(self.body.midtop)
 
         # update animation counter
-        self.anim_count += 1
+        self.anim_count -= 1
         self.anim_count %= self.animation_ticks
+
+    def map_move(self, delta):
+        self.location += delta
 
     def apply_force(self, force):
         force.limit(self.maxforce)
