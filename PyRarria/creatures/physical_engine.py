@@ -132,6 +132,9 @@ def bullet(src, src_location, dest_location):
 
     g = 0.1
     vx = dx/100
+
+    if dx == 0:
+        return
     vy = vx * abs(dy/dx) + 0.5 * g * abs(dx/vx)
 
     # STATS

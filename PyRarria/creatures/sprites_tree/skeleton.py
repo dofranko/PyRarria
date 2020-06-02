@@ -29,6 +29,9 @@ class Skeleton(WalkingSprite):
     def update_forces(self, player, platforms):
         pass
 
+    def bite(self, player):
+        pass
+
     def shoot(self, player, arrows):
         if self.shot_count > 0:
             self.shot_count -= 1

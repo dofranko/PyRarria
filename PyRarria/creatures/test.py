@@ -39,7 +39,6 @@ clock = pg.time.Clock()
 all_sprites = Group()
 all_creatures = Group()
 creatures = Group()
-archers = Group()
 arrows = Group()
 platforms = Group()
 
@@ -69,7 +68,7 @@ all_sprites.add(man)
 
 # creatures engine
 creatures_engine = CreaturesEngine(win, platforms, man,
-                                   all_creatures, archers, arrows)
+                                   all_creatures, arrows)
 
 def update_engine():
     # # hit

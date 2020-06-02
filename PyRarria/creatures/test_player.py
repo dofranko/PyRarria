@@ -30,6 +30,7 @@ class Player(pg.sprite.Sprite):
         self.rect = Rect(self.x + 20, self.y, 28, 60)
         self.hp = 100
         self.location = PVector(x, y)
+        self.damage = 1
 
     def draw(self, win):
         if self.walk_count + 1 >= 27:

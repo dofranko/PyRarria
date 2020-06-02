@@ -9,13 +9,18 @@ LIMITS = {
 }
 
 FREQUENCIES = {
-    'birds': 5,
-    'skeletons': 5,
+    'birds': 1,
+    'skeletons': 1,
 }
 
 CREATURES = {
     'bird': Bird,
     'skeleton': Skeleton,
+}
+
+NAMES = {
+    'bird': 'birds',
+    'skeleton': 'skeletons',
 }
 
 SPAWN_DISTANCE = 100
@@ -24,7 +29,7 @@ SPAWN_DISTANCE = 100
 class CreaturesEngine:
 
     def __init__(self, window, platforms, player,
-                 all_creatures, archers, arrows):
+                 all_creatures, arrows):
 
         # window, clock
         self.window = window
@@ -34,9 +39,8 @@ class CreaturesEngine:
         self.platforms = platforms
         self.player = player
 
-        # creatures, archers, arrows
+        # creatures, arrows
         self.all_creatures = all_creatures
-        self.archers = archers
         self.arrows = arrows
 
         # groups
@@ -58,7 +62,7 @@ class CreaturesEngine:
             creature.bite(self.player)
 
         # shot
-        for archer in self.archers:
+        for archer in self.all_creatures:
             archer.shoot(self.player, self.arrows)
 
         # update creatures
@@ -71,6 +75,9 @@ class CreaturesEngine:
 
         # spawn
         self.spawn()
+
+        # print stats
+        # self.print_stats()
 
     def draw(self):
         # redraw creatures
@@ -87,15 +94,20 @@ class CreaturesEngine:
                 FREQUENCIES.values(),
                 LIMITS.values(),
                 CREATURES.values()):
+
             if len(group) >= limit:
                 continue
+
             if self.clock % (frequency*FPS) != 0:
                 continue
 
-            print(Creature(100, 100))
+            new_creature = Creature(self.player.location.x, self.player.location.y)
+            group.add(new_creature)
+            self.all_creatures.add(new_creature)
 
-            print(group)
-            print(frequency)
-            print(limit)
-            # multiple by FPS
+            self.print_stats()
 
+    def print_stats(self):
+        for group, name in zip(self.groups.values(), NAMES):
+            print(f'{name:10}:{len(group)}')
+        print()
