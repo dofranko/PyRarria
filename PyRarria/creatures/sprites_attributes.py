@@ -51,6 +51,18 @@ SKELETON = {
     'defense': 10,
 }
 
+ZOMBIE = {
+    'manoeuvrability': 0.075,
+    'maxspeed': 6,
+    'maxforce': 5,
+    'maxhp': 100,
+
+    'mass': 20,
+    'items': [],
+    'damage': 14,
+    'defense': 10,
+}
+
 ARROW = {
     'manoeuvrability': 0.075,
     'maxspeed': INFINITY,

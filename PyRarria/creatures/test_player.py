@@ -33,6 +33,9 @@ class Player(pg.sprite.Sprite):
         self.damage = 1
 
     def draw(self, win):
+        self.x = self.location.x - self.width//2
+        self.y = self.location.y - self.height//2
+
         if self.walk_count + 1 >= 27:
             self.walk_count = 0
 

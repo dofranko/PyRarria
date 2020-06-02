@@ -142,27 +142,25 @@ while run:
         run = False
 
     if keys[K_LEFT] or keys[K_a]:
-        man.x -= man.v
+        man.location.x -= man.v
         man.left = True
         man.right = False
         man.standing = False
 
     if keys[K_RIGHT] or keys[K_d]:
-        man.x += man.v
+        man.location.x += man.v
         man.right = True
         man.left = False
         man.standing = False
 
     if keys[K_UP] or keys[K_w]:
-        man.y -= man.v
+        man.location.y -= man.v
         man.standing = False
 
     if keys[K_DOWN] or keys[K_s]:
-        man.y += man.v
+        man.location.y += man.v
         man.standing = False
 
-    man.location.x = man.x
-    man.location.y = man.y
     # repair
     if man.x < 0:
         man.x = 0

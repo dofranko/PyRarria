@@ -6,7 +6,7 @@ import math
 
 # forces
 WIND = PVector(0.000001, 0.0)
-GRAVITY = PVector(0, 0.1)
+GRAVITY = PVector(0, 50)
 REACTION = PVector(0, -0.1)
 
 # constants

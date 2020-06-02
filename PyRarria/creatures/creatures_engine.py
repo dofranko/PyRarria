@@ -1,26 +1,32 @@
 from PyRarria.creatures.sprites_tree.bird import Bird
 from PyRarria.creatures.sprites_tree.skeleton import Skeleton
+from PyRarria.creatures.sprites_tree.zombie import Zombie
 from PyRarria.creatures.test_global_settings import FPS
 from pygame.sprite import Group
 
 LIMITS = {
-    'birds': 10,
-    'skeletons': 5,
+    'birds': 0,
+    'skeletons': 0,
+    'zombies': 1,
 }
 
 FREQUENCIES = {
     'birds': 1,
     'skeletons': 1,
+    'zombies': 1,
 }
 
 CREATURES = {
     'bird': Bird,
     'skeleton': Skeleton,
+    'zombies': Zombie,
+
 }
 
 NAMES = {
     'bird': 'birds',
     'skeleton': 'skeletons',
+    'zombies': 'zombie',
 }
 
 SPAWN_DISTANCE = 100
@@ -47,6 +53,7 @@ class CreaturesEngine:
         self.groups = {
             'birds': Group(),
             'skeletons': Group(),
+            'zombies': Group(),
         }
 
     def update(self):
@@ -57,11 +64,11 @@ class CreaturesEngine:
         for creature in self.all_creatures:
             creature.hit(self.player)
 
-        # bite
+        # bite (if doesn't bite nothing happens)
         for creature in self.all_creatures:
             creature.bite(self.player)
 
-        # shot
+        # shot (if doesn't shoot nothing happens)
         for archer in self.all_creatures:
             archer.shoot(self.player, self.arrows)
 

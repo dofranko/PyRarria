@@ -27,6 +27,14 @@ SHEEP_RIGHT = [
     load('img/sheep_13.png'), load('img/sheep_14.png'),
     load('img/sheep_15.png'), load('img/sheep_16.png')]
 
+ZOMBIE_LEFT = [
+    load('img/zombie_01.png'), load('img/zombie_02.png'),
+    load('img/zombie_03.png'), load('img/zombie_04.png')]
+
+ZOMBIE_RIGHT = [
+    load('img/zombie_05.png'), load('img/zombie_06.png'),
+    load('img/zombie_07.png'), load('img/zombie_08.png')]
+
 SKELETON_LEFT = [load('img/skeleton_01.png'), load('img/skeleton_02.png')]
 SKELETON_RIGHT = [load('img/skeleton_03.png'), load('img/skeleton_04.png')]
 
@@ -68,6 +76,15 @@ SKELETON_ANIMATION = {
     'width': SKELETON_LEFT[0].get_rect().width,
     'height': SKELETON_LEFT[0].get_rect().height,
     'speed': 0.5,
+}
+
+ZOMBIE_ANIMATION = {
+    'left': ZOMBIE_LEFT,
+    'right': ZOMBIE_RIGHT,
+    'frames': len(ZOMBIE_LEFT),
+    'width': ZOMBIE_LEFT[0].get_rect().width,
+    'height': ZOMBIE_LEFT[0].get_rect().height,
+    'speed': 1.0,
 }
 
 ARROW_ANIMATION = {
