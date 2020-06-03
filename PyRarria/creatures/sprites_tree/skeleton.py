@@ -27,7 +27,12 @@ class Skeleton(WalkingSprite):
         self.create(x, y, **OBJECT)
 
     def update_forces(self, player, platforms):
-        pass
+        gravity(self)
+        if (player.location - self.location).mag() > 200:
+            run_after(self, player)
+        else:
+            self.velocity.zero()
+        jump_from_platform(self, platforms)
 
     def bite(self, player):
         pass

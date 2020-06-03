@@ -101,7 +101,7 @@ class PVector(Vector2):
         elif self.x > 0.0:
             return 1
         else:
-            return
+            return 0
 
     def anim_direction(self):
         if self.x < 0.0:

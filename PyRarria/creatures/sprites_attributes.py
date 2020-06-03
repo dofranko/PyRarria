@@ -15,6 +15,18 @@ BIRD = {
     'defense': 10,
 }
 
+BAT = {
+    'manoeuvrability': 0.05,
+    'maxspeed': 3,
+    'maxforce': 5,
+    'maxhp': 100,
+
+    'mass': 20,
+    'items': [],
+    'damage': 14,
+    'defense': 10,
+}
+
 COW = {
     'manoeuvrability': 0.075,
     'maxspeed': 3,

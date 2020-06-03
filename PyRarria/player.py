@@ -158,7 +158,7 @@ class Player(pygame.sprite.Sprite):
 
     def update(self):
 
-        self.location.set(self.rect.x, self.rect.y)
+        self.location.set(self.rect.centerx, self.rect.centery)
 
         # Równania ruchu. Zabawa na własną odpowiedzialność :v
         self.vel.y += self.acc.y

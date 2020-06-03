@@ -1,4 +1,5 @@
-from PyRarria.creatures.test_global_settings import *
+# from PyRarria.creatures.test_global_settings import *
+from PyRarria.settings import *
 from PyRarria.creatures.vector import PVector
 import pygame as pg
 import random
@@ -7,13 +8,13 @@ import math
 # forces
 WIND = PVector(0.000001, 0.0)
 GRAVITY = PVector(0, 2.0)
-# GRAVITY = PVector(0, 0.1)
-# REACTION = PVector(0, -0.1)
-REACTION = PVector(0,-3)
+GRAVITY_BULLET = PVector(0, 0.1)
+REACTION = PVector(0, -3)
 
 # constants
 MI = 0.05
 EDGE_LIMIT = 50
+EDGE_BUFOR = 200
 ARC_LENGTH = 2 * math.pi
 ARC_STEP = ARC_LENGTH / 15
 MOVE_LENGTH = 10
@@ -25,6 +26,14 @@ def gravity(src):
     Q = m*g
     """
     grav = GRAVITY.copy()
+    src.apply_force(grav)
+
+
+def gravity_bullet(src):
+    """Simple force of gravity. Only for flying objects.
+    Q = m*g
+    """
+    grav = GRAVITY_BULLET.copy()
     src.apply_force(grav)
 
 
@@ -67,6 +76,7 @@ def run(src):
 
     # steering force
     steer = desired - src.velocity
+    steer.xflat()
     src.apply_force(steer)
 
 
@@ -87,6 +97,7 @@ def run_away(src, target):
 
     # steering force
     steer = desired - src.velocity
+    steer.xflat()
     src.apply_force(steer)
 
 
@@ -107,6 +118,7 @@ def run_after(src, target):
 
     # steering force
     steer = desired - src.velocity
+    steer.xflat()
     src.apply_force(steer)
 
 
@@ -132,12 +144,11 @@ def bullet(src, src_location, dest_location):
     dy = y1 - y0
     sx = x0 + x1
 
-    g = 0.1
     vx = dx/100
 
     if dx == 0:
         return
-    vy = vx * abs(dy/dx) + 0.5 * g * abs(dx/vx)
+    vy = vx * abs(dy/dx) + 0.5 * GRAVITY_BULLET.y * abs(dx/vx)
 
     # STATS
     # print('x0 = ', x0)
@@ -261,7 +272,7 @@ def edges(src):
         desired = PVector(src.maxspeed, src.velocity.y)
         steer = desired - src.velocity
         src.apply_force(steer)
-    elif src.location.x > SCREEN_WIDTH - EDGE_LIMIT:
+    elif src.location.x > WIDTH - EDGE_LIMIT:
         desired = PVector(-src.maxspeed, src.velocity.y)
         steer = desired - src.velocity
         src.apply_force(steer)
@@ -271,7 +282,7 @@ def edges(src):
         desired = PVector(src.velocity.x, src.maxspeed)
         steer = desired - src.velocity
         src.apply_force(steer)
-    elif src.location.y > SCREEN_HEIGHT - EDGE_LIMIT:
+    elif src.location.y > HEIGHT - EDGE_LIMIT:
         desired = PVector(src.velocity.x, -src.maxspeed)
         steer = desired - src.velocity
         src.apply_force(steer)
@@ -285,26 +296,26 @@ def edges_stop(src):
     if src.location.x < 0:
         src.velocity.x = 0
         src.location.x = 0
-    elif src.location.x > SCREEN_WIDTH:
+    elif src.location.x > WIDTH:
         src.velocity.x = 0
-        src.location.x = SCREEN_WIDTH
+        src.location.x = WIDTH
 
     # vertical
     if src.location.y < 0:
         src.velocity.y = 0
         src.location.y = 0
-    elif src.location.y > SCREEN_HEIGHT:
+    elif src.location.y > HEIGHT:
         src.velocity.y = 0
-        src.location.y = SCREEN_HEIGHT
+        src.location.y = HEIGHT
 
 
 def edges_delete(src):
     """Deletes object if it goes off the screen."""
 
-    if src.location.x < 0 or src.location.x > SCREEN_WIDTH:
+    if src.location.x < 0 or src.location.x > WIDTH:
         src.die()
 
-    elif src.location.y > SCREEN_HEIGHT:
+    elif src.location.y > HEIGHT:
         src.die()
 
     
@@ -316,17 +327,38 @@ def edges_ball(src):
     if src.location.x < 0:
         src.velocity.x *= -1
         src.location.x = 0
-    elif src.location.x > SCREEN_WIDTH:
+    elif src.location.x > WIDTH:
         src.velocity.x *= -1
-        src.location.x = SCREEN_WIDTH
+        src.location.x = WIDTH
 
     # vertical
     if src.location.y < 0:
         src.velocity.y *= -1
         src.location.y = 0
-    elif src.location.y > SCREEN_HEIGHT:
+    elif src.location.y > HEIGHT:
         src.velocity.y *= -1
-        src.location.y = SCREEN_HEIGHT
+        src.location.y = HEIGHT
+
+
+def soft_edges_ball(src):
+    """Checks if the object goes off the screen.
+    Bounces off the edge like a ball."""
+
+    # horizontal
+    if src.location.x < -EDGE_BUFOR:
+        src.velocity.x *= -1
+        src.location.x = -EDGE_BUFOR
+    elif src.location.x > WIDTH + EDGE_BUFOR:
+        src.velocity.x *= -1
+        src.location.x = WIDTH + EDGE_BUFOR
+
+    # vertical
+    if src.location.y < -EDGE_BUFOR:
+        src.velocity.y *= -1
+        src.location.y = -EDGE_BUFOR
+    elif src.location.y > HEIGHT + EDGE_BUFOR:
+        src.velocity.y *= -1
+        src.location.y = HEIGHT + EDGE_BUFOR
 
 
 def init_move(src):
@@ -385,3 +417,25 @@ def jump_from_platform(src, platforms):
 
         elif src.location.x < left:
             jump(src)
+
+
+def bounce_from_platform(src, platforms):
+    """If creature collides with platforms, moves in opposite direction."""
+    hits = pg.sprite.spritecollide(src, platforms, False)
+    if hits:
+        top = hits[0].rect.top
+        bottom = hits[0].rect.bottom
+
+        if src.location.y < top:
+            src.apply_force(PVector(0, -src.maxforce))
+
+        elif src.location.y > bottom:
+            src.apply_force(PVector(0, src.maxforce))
+
+
+def platrofm_stop(src, platforms):
+    """If creature collides with platforms, stopes."""
+    hits = pg.sprite.spritecollide(src, platforms, False)
+    if hits:
+        src.velocity.zero()
+

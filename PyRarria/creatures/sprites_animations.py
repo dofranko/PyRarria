@@ -35,6 +35,16 @@ ZOMBIE_RIGHT = [
     load('img/zombie_05.png'), load('img/zombie_06.png'),
     load('img/zombie_07.png'), load('img/zombie_08.png')]
 
+BAT_LEFT = [
+    load('img/bat_06.png'), load('img/bat_07.png'),
+    load('img/bat_08.png'), load('img/bat_09.png'),
+    load('img/bat_10.png')]
+
+BAT_RIGHT = [
+    load('img/bat_21.png'), load('img/bat_22.png'),
+    load('img/bat_23.png'), load('img/bat_24.png'),
+    load('img/bat_25.png')]
+
 SKELETON_LEFT = [load('img/skeleton_01.png'), load('img/skeleton_02.png')]
 SKELETON_RIGHT = [load('img/skeleton_03.png'), load('img/skeleton_04.png')]
 
@@ -49,6 +59,15 @@ BIRD_ANIMATION = {
     'width': BIRD_LEFT[0].get_rect().width,
     'height': BIRD_LEFT[0].get_rect().height,
     'speed': 0.5,  # animation duration in seconds
+}
+
+BAT_ANIMATION = {
+    'left': BAT_LEFT,
+    'right': BAT_RIGHT,
+    'frames': len(BAT_LEFT),
+    'width': BAT_LEFT[0].get_rect().width,
+    'height': BAT_LEFT[0].get_rect().height,
+    'speed': 0.75,  # animation duration in seconds
 }
 
 COW_ANIMATION = {

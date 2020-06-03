@@ -1,16 +1,15 @@
-from PyRarria.creatures.sprites_attributes import ARROW
-from PyRarria.creatures.sprites_animations import ARROW_ANIMATION
+from PyRarria.creatures.sprites_attributes import BAT
+from PyRarria.creatures.sprites_animations import BAT_ANIMATION
 from PyRarria.creatures.sprites_tree.flying_sprite import FlyingSprite
-from PyRarria.creatures.physical_engine import *
 from PyRarria.creatures.test_global_settings import FPS
 
 import math
 
-ANIMATION = ARROW_ANIMATION
-OBJECT = ARROW
+ANIMATION = BAT_ANIMATION
+OBJECT = BAT
 
 
-class Arrow(FlyingSprite):
+class Bat(FlyingSprite):
 
     # static variables
     animation = [ANIMATION['left'], ANIMATION['right']]
@@ -22,15 +21,5 @@ class Arrow(FlyingSprite):
     frame_ticks = math.ceil(FPS * ANIMATION['speed'] / ANIMATION['frames'])
 
     def __init__(self, x, y):
-        super(Arrow, self).__init__(x, y)
+        super(Bat, self).__init__(x, y)
         self.create(x, y, **OBJECT)
-
-    def apply_force(self, force):
-        force.limit(self.maxforce)
-        self.acceleration += force
-
-    def update_forces(self, player, platforms):
-        gravity_bullet(self)
-        edges_delete(self)
-        platrofm_stop(self, platforms)
-

@@ -1,4 +1,7 @@
+from PyRarria.creatures.sprites_tree.bat import Bat
 from PyRarria.creatures.sprites_tree.bird import Bird
+from PyRarria.creatures.sprites_tree.cow import Cow
+from PyRarria.creatures.sprites_tree.sheep import Sheep
 from PyRarria.creatures.sprites_tree.skeleton import Skeleton
 from PyRarria.creatures.sprites_tree.zombie import Zombie
 from PyRarria.creatures.test_global_settings import FPS
@@ -6,28 +9,40 @@ from pygame.sprite import Group
 
 LIMITS = {
     'birds': 0,
-    'skeletons': 0,
-    'zombies': 1,
+    'skeletons': 1,
+    'zombies': 0,
+    'cows': 0,
+    'sheeps': 0,
+    'bats': 0,
 }
 
 FREQUENCIES = {
     'birds': 1,
     'skeletons': 1,
     'zombies': 1,
+    'cows': 1,
+    'sheeps': 1,
+    'bats': 1,
 }
 
 CREATURES = {
     'bird': Bird,
     'skeleton': Skeleton,
     'zombies': Zombie,
-
+    'cows': Cow,
+    'sheep': Sheep,
+    'bats': Bat,
 }
 
 NAMES = {
     'bird': 'birds',
     'skeleton': 'skeletons',
     'zombies': 'zombie',
+    'cows': 'cow',
+    'sheeps': 'sheep',
+    'bats': 'bat',
 }
+
 
 SPAWN_DISTANCE = 100
 
@@ -54,6 +69,9 @@ class CreaturesEngine:
             'birds': Group(),
             'skeletons': Group(),
             'zombies': Group(),
+            'cows': Group(),
+            'sheeps': Group(),
+            'bats': Group(),
         }
 
     def update(self):
@@ -115,6 +133,9 @@ class CreaturesEngine:
     def map_move(self, delta):
         for creature in self.all_creatures:
             creature.map_move(delta)
+
+        for arrow in self.arrows:
+            arrow.map_move(delta)
 
     def print_stats(self):
         for group, name in zip(self.groups.values(), NAMES):
