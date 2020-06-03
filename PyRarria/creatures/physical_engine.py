@@ -67,6 +67,7 @@ def run(src):
 
     # steering force
     steer = desired - src.velocity
+    steer.xflat()
     src.apply_force(steer)
 
 
@@ -87,6 +88,7 @@ def run_away(src, target):
 
     # steering force
     steer = desired - src.velocity
+    steer.xflat()
     src.apply_force(steer)
 
 
