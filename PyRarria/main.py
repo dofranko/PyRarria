@@ -258,7 +258,6 @@ class Game:
         self.main_position.set(*self.get_main_stage_position())
         self.delta.set_from_vector(self.main_position - self.last_main_position)
         self.last_main_position.set_from_vector(self.main_position)
-        print(self.delta)
 
 
 if __name__ == "__main__":
