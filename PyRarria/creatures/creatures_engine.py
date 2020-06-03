@@ -1,5 +1,6 @@
 from PyRarria.creatures.sprites_tree.bat import Bat
 from PyRarria.creatures.sprites_tree.bird import Bird
+from PyRarria.creatures.sprites_tree.chicken import Chicken
 from PyRarria.creatures.sprites_tree.cow import Cow
 from PyRarria.creatures.sprites_tree.sheep import Sheep
 from PyRarria.creatures.sprites_tree.skeleton import Skeleton
@@ -9,11 +10,12 @@ from pygame.sprite import Group
 
 LIMITS = {
     'birds': 0,
-    'skeletons': 1,
+    'skeletons': 0,
     'zombies': 0,
     'cows': 0,
     'sheeps': 0,
-    'bats': 0,
+    'bats': 1,
+    'chickens': 0,
 }
 
 FREQUENCIES = {
@@ -23,6 +25,7 @@ FREQUENCIES = {
     'cows': 1,
     'sheeps': 1,
     'bats': 1,
+    'chickens': 1,
 }
 
 CREATURES = {
@@ -32,6 +35,7 @@ CREATURES = {
     'cows': Cow,
     'sheep': Sheep,
     'bats': Bat,
+    'chickens': Chicken,
 }
 
 NAMES = {
@@ -41,6 +45,7 @@ NAMES = {
     'cows': 'cow',
     'sheeps': 'sheep',
     'bats': 'bat',
+    'chickens': 'chicken',
 }
 
 
@@ -72,6 +77,7 @@ class CreaturesEngine:
             'cows': Group(),
             'sheeps': Group(),
             'bats': Group(),
+            'chickens': Group(),
         }
 
     def update(self):
@@ -123,7 +129,7 @@ class CreaturesEngine:
             if len(group) >= limit:
                 continue
 
-            if self.clock % (frequency*FPS) != 0:
+            if self.clock % (frequency) != 0:
                 continue
 
             new_creature = Creature(self.player.location.x, self.player.location.y)

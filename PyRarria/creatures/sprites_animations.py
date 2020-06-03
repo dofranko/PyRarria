@@ -35,6 +35,14 @@ ZOMBIE_RIGHT = [
     load('img/zombie_05.png'), load('img/zombie_06.png'),
     load('img/zombie_07.png'), load('img/zombie_08.png')]
 
+CHICKEN_LEFT = [
+    load('img/chicken_05.png'), load('img/chicken_06.png'),
+    load('img/chicken_07.png'), load('img/chicken_08.png')]
+
+CHICKEN_RIGHT = [
+    load('img/chicken_13.png'), load('img/chicken_14.png'),
+    load('img/chicken_15.png'), load('img/chicken_16.png')]
+
 BAT_LEFT = [
     load('img/bat_06.png'), load('img/bat_07.png'),
     load('img/bat_08.png'), load('img/bat_09.png'),
@@ -112,5 +120,14 @@ ARROW_ANIMATION = {
     'frames': len(ARROW_LEFT),
     'width': ARROW_LEFT[0].get_rect().width,
     'height': ARROW_LEFT[0].get_rect().height,
+    'speed': 2,
+}
+
+CHICKEN_ANIMATION = {
+    'left': CHICKEN_LEFT,
+    'right': CHICKEN_RIGHT,
+    'frames': len(CHICKEN_LEFT),
+    'width': CHICKEN_LEFT[0].get_rect().width,
+    'height': CHICKEN_LEFT[0].get_rect().height,
     'speed': 2,
 }
