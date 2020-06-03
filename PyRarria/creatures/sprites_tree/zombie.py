@@ -26,6 +26,7 @@ class Zombie(WalkingSprite):
         self.create(x, y, **OBJECT)
 
     def apply_force(self, force):
+        print(force)
         self.acceleration += force
 
     def update_forces(self, player, platforms):
@@ -34,3 +35,4 @@ class Zombie(WalkingSprite):
         # run(self)
         gravity(self)
         jump_from_platform(self, platforms)
+        print()

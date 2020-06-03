@@ -107,6 +107,7 @@ def run_after(src, target):
 
     # steering force
     steer = desired - src.velocity
+    steer.xflat()
     src.apply_force(steer)
 
 

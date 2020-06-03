@@ -53,7 +53,7 @@ SKELETON = {
 
 ZOMBIE = {
     'manoeuvrability': 0.075,
-    'maxspeed': 3,
+    'maxspeed': 4,
     'maxforce': 5,
     'maxhp': 100,
 
