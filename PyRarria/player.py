@@ -4,6 +4,8 @@ from settings import *
 from magic_spells import *
 import random
 
+from PyRarria.creatures.vector import PVector
+
 vector = pygame.math.Vector2
 
 
@@ -27,6 +29,10 @@ class Player(pygame.sprite.Sprite):
         self.trzymany = None
         self.last_shift = 0
         self.spell_cast_ready = False
+
+        # TODO usunac location i damage
+        self.location = PVector(self.position.x, self.position.y)
+        self.damage = 10
 
         # info kiedy gracz ostatnio użył danego zaklęcia
         self.last_cast = {
@@ -151,6 +157,9 @@ class Player(pygame.sprite.Sprite):
         self.game.items.add(wyrzucony)
 
     def update(self):
+
+        self.location.set(self.rect.x, self.rect.y)
+
         # Równania ruchu. Zabawa na własną odpowiedzialność :v
         self.vel.y += self.acc.y
         if self.vel.y > MAX_VEL_Y:
@@ -268,3 +277,6 @@ class Player(pygame.sprite.Sprite):
                     self.game.mana_bar.decrease_mana(SPELL_COST[self.spell_key])
                 else:
                     self.spell_cast_ready = True
+
+    def hit(self, attack):
+        print(f'attack: {attack}')

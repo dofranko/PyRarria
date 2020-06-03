@@ -1,0 +1,71 @@
+# gravity(self)
+# wind(self)
+# friction(self)
+# init_move(self)
+# jump(self)
+# bullet(self, self.location, player.location)
+# track(self, player)
+# run(self)
+# run_away(self, player)
+# run_after(self, player)
+# fly(self)
+# fly_away(self, player)
+# fly_after(self, player)
+# keep_on_platform(self, platforms)
+# push_from_platform(self, platforms)
+# jump_from_platform(self, platforms)
+# edges(self)
+# edges_ball(self)
+# edges_stop(self)
+
+
+# GRAVITY TEST
+# self.maxspeed = 10
+# self.maxforce = 10
+# self.mass = 20
+
+# JUMP TEST
+# self.is_jump = False
+# self.maxspeed = 10
+# self.maxforce = 10
+# self.mass = 20
+
+# FLY TEST
+# self.manoeuvrability = 0.075
+# self.maxspeed = 3
+# self.maxforce = 5
+# self.mass = 20
+
+# RUN TEST
+# self.manoeuvrability = 0.02
+# self.maxspeed = 5
+# self.maxforce = 2
+# self.mass = 20
+
+# TRACK TEST
+# self.manoeuvrability = 0.02
+# self.maxspeed = 5
+# self.maxforce = 5
+# self.mass = 20
+
+# FLY AFTER
+# self.manoeuvrability = 0.02
+# self.maxspeed = 2
+# self.maxforce = 5
+# self.mass = 20
+
+# FLY AWAY
+# self.manoeuvrability = 0.02
+# self.maxspeed = 2
+# self.maxforce = 5
+# self.mass = 20
+
+# RUN AWAY
+# self.manoeuvrability = 0.02
+# self.maxspeed = 3
+# self.maxforce = 5
+# self.mass = 20
+
+# SHOT TEST
+# self.maxforce = 10
+# self.maxspeed = 10

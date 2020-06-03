@@ -11,6 +11,9 @@ from health_mana_bar import *
 from FabrykaItemow import *
 from boosters import *
 
+from PyRarria.creatures.creatures_engine import CreaturesEngine
+from PyRarria.creatures.vector import PVector
+
 vector = pygame.math.Vector2
 
 
@@ -25,6 +28,9 @@ class Game:
         self.running = True
         self.loaded_images = {}
         self.pause = False
+        self.creatures_engine = None
+        self.main_position = None
+        self.last_main_position = None
 
     def new_game(self):
         # start a new game
@@ -35,6 +41,8 @@ class Game:
         self.magics = pygame.sprite.Group()
         self.explosions = pygame.sprite.Group()
         self.items = pygame.sprite.Group()
+        self.all_creatures = pygame.sprite.Group()
+        self.arrows = pygame.sprite.Group()
         self.trzymany = None
         self.fabryka = Fabryka(self)
         self.player = Player(self)
@@ -43,6 +51,12 @@ class Game:
         self.background = Background(self, self.player)
         self.health_bar = HealthBar(self)
         self.mana_bar = ManaBar(self)
+
+        self.main_position = PVector(*self.get_main_stage_position())
+        self.last_main_position = PVector(*self.get_main_stage_position())
+        self.delta = PVector(0, 0)
+        self.creatures_engine = CreaturesEngine(self)
+
         self.waiting = True
         for plat in PLATFORM_LIST:
             p = Platform(*plat, self)
@@ -83,6 +97,7 @@ class Game:
     def update(self):
         # Game Loop - Update
         # make update() for every sprite (players/enemy)
+
         self.player.update()
         self.equipment.update()
         self.background.update()
@@ -94,6 +109,11 @@ class Game:
         self.magics.update()
         self.explosions.update()
         self.items.update()
+
+
+        self.update_delta()
+        self.creatures_engine.map_move(self.delta)
+        self.creatures_engine.update()
 
     def events(self):
         # Game Loop - events
@@ -128,6 +148,7 @@ class Game:
             self.trzymany.draw()
         # żeby przenoszony itemik był widoczny, nic go nie ma przykrywać, więc rysuje się na końcu
         self.spells.draw_moving_item()
+        self.creatures_engine.draw()
         # *after* drawing everything, flip the display
         # #NieZmieniaćBoNieBędzieDziałaćINawetTwórcyNieWiedząCzemu
         pygame.display.flip()
@@ -232,6 +253,12 @@ class Game:
         except:
             print(f"{sys.exc_info()}[0]\n Continuing program with values (0,0)")
             return vector(0, 0)
+
+    def update_delta(self):
+        self.main_position.set(*self.get_main_stage_position())
+        self.delta.set_from_vector(self.main_position - self.last_main_position)
+        self.last_main_position.set_from_vector(self.main_position)
+        print(self.delta)
 
 
 if __name__ == "__main__":
