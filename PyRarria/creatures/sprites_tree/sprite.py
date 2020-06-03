@@ -89,8 +89,6 @@ class Sprite(AbstractSprite):
         pass
 
     def move(self):
-        print(self.acceleration)
-
         # move
         self.velocity += self.acceleration
         self.velocity.limit(self.maxspeed)

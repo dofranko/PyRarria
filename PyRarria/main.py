@@ -54,6 +54,7 @@ class Game:
 
         self.main_position = PVector(*self.get_main_stage_position())
         self.last_main_position = PVector(*self.get_main_stage_position())
+        self.delta = PVector(0, 0)
         self.creatures_engine = CreaturesEngine(self)
 
         self.waiting = True
@@ -97,11 +98,6 @@ class Game:
         # Game Loop - Update
         # make update() for every sprite (players/enemy)
 
-        self.main_position.set(*self.get_main_stage_position())
-        delta = self.main_position - self.last_main_position
-        self.creatures_engine.map_move(delta)
-        self.last_main_position.set_from_vector(self.main_position)
-
         self.player.update()
         self.equipment.update()
         self.background.update()
@@ -113,13 +109,17 @@ class Game:
         self.magics.update()
         self.explosions.update()
         self.items.update()
+
+
+        self.update_delta()
+        self.creatures_engine.map_move(self.delta)
         self.creatures_engine.update()
-
-
 
     def events(self):
         # Game Loop - events
         for event in pygame.event.get():
+            # TODO test
+            print('jump now!')
             # check for closing window
             if event.type == pygame.QUIT:
                 if self.playing:
@@ -255,6 +255,12 @@ class Game:
         except:
             print(f"{sys.exc_info()}[0]\n Continuing program with values (0,0)")
             return vector(0, 0)
+
+    def update_delta(self):
+        self.main_position.set(*self.get_main_stage_position())
+        self.delta.set_from_vector(self.main_position - self.last_main_position)
+        self.last_main_position.set_from_vector(self.main_position)
+        print(self.delta)
 
 
 if __name__ == "__main__":

@@ -112,8 +112,6 @@ class CreaturesEngine:
             group.add(new_creature)
             self.all_creatures.add(new_creature)
 
-            self.print_stats()
-
     def map_move(self, delta):
         for creature in self.all_creatures:
             creature.map_move(delta)

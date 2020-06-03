@@ -30,7 +30,7 @@ class Zombie(WalkingSprite):
 
     def update_forces(self, player, platforms):
         pass
-        # run_after(self, player)
+        run_after(self, player)
         # run(self)
-        # gravity(self)
-        # keep_on_platform(self, platforms)
+        gravity(self)
+        jump_from_platform(self, platforms)
