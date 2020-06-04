@@ -34,10 +34,28 @@ IMAGES_LIST = {
     "open_eq": IMAGES + "/open_eq.png",
     "bin": IMAGES + "/bin.png",
     "helmet": IMAGES + "/helmet.png",
-    "breastplate": IMAGES + "/breastplate.png",
-    "boot": IMAGES + "/boot.png",
     "start_screen": IMAGES + "/random_start.png",
     "game_over_screen": IMAGES + "/index.png",
+    # START ITEMS
+    # Food
+    "potato": IMAGES + "/example_tool_2.png",
+    # Tools
+    "pickaxe_diamond": IMAGES + "/diaxowy.png",
+    # Armor
+    "breastplate": IMAGES + "/breastplate.png",
+    "boot": IMAGES + "/boot.png",
+    # END ITEMS
+    # Spells
+    "smallfire": IMAGES + "/smallfire.png",
+    "smallthunder": IMAGES + "/smallthunder.png",
+    "boulder": IMAGES + "/boulder.png",
+    "magicshield": IMAGES + "/magicshield.png",
+    "selfheal": IMAGES + "/selfheal.png",
+    "bard": IMAGES + "/bard.png",
+    "freeze": IMAGES + "/freeze.png",
+    "blank": IMAGES + "/blank.png",
+    "fireball": IMAGES + "/fireball.png",
+    "frostbullet": IMAGES + "/frostbullet.png",
 }
 
 SPELL_DELAYS = {

@@ -4,7 +4,7 @@ from settings import *
 from magic_spells import *
 import random
 
-from PyRarria.creatures.vector import PVector
+from creatures.vector import PVector
 
 vector = pygame.math.Vector2
 
@@ -14,9 +14,10 @@ class Player(pygame.sprite.Sprite):
 
     # Standardowo:   ^ position.x, position.y - pozycja względem całej mapy gry
     #               ^ rect.x, rect.y - pozycja względem monitora
-    def __init__(self, game):
-        pygame.sprite.Sprite.__init__(self)
+    def __init__(self, game, equipment, health_bar, mana_bar, spells):
+        super().__init__()
         self.game = game
+        self.equipment = equipment
         self.image = pygame.image.load(IMAGES_LIST["player"])
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH / 2, HEIGHT / 2)
@@ -25,12 +26,15 @@ class Player(pygame.sprite.Sprite):
         self.acc = vector(0, PLAYER_GRAV)
         self.mask = pygame.mask.from_surface(self.image)
         self.facing = 1
-        self.standing = False
+        self.standing = False  # TODO jakie mialo byc tego przeznaczenie?
         self.q_trigger = False
         self.held_item = None
         self.last_shift = 0
         self.spell_cast_ready = False
 
+        self.health_bar = health_bar
+        self.mana_bar = mana_bar
+        self.spells = spells
         # TODO usunac location i damage
         self.location = PVector(self.position.x, self.position.y)
         self.damage = 10
@@ -110,10 +114,10 @@ class Player(pygame.sprite.Sprite):
         for hit in hits:
             kill = False
             if hit.name == "health":
-                if self.game.health_bar.add_heart():
+                if self.health_bar.add_heart():
                     kill = True
             elif hit.name == "mana":
-                if self.game.mana_bar.add_star():
+                if self.mana_bar.add_star():
                     kill = True
             elif hit.name in ["boost_damage", "boost_defense", "boost_player_speed", "boost_accuracy"]:
                 # Sprawdzanie prawdziwej kolizji (mask collision)
@@ -131,31 +135,32 @@ class Player(pygame.sprite.Sprite):
                 # Castowanie tylko na potwory
                 for sprite in self.game.all_creatures:
                     if sprite.rect.collidepoint(event.pos):
-                        if self.game.mana_bar.decrease_mana(SPELL_COST[self.spell_key]):
+                        if self.mana_bar.decrease_mana(SPELL_COST[self.spell_key]):
                             self.last_cast[self.spell_key] = pygame.time.get_ticks()
                             cur_pos = vector(event.pos[0], event.pos[1])
                             if self.spell_key == "smallthunder":
-                                SmallThunder(self.game, cur_pos)
+                                thrown_spell = SmallThunder(self.game, cur_pos)
                             elif self.spell_key == "smallfire":
-                                SmallFire(self.game, cur_pos)
+                                thrown_spell = SmallFire(self.game, cur_pos)
                             elif self.spell_key == "boulder":
-                                Boulder(self.game, cur_pos)
+                                thrown_spell = Boulder(self.game, cur_pos)
                             elif self.spell_key == "freeze":
-                                Freeze(self.game, cur_pos)
-                            self.game.spells.chosen = None
+                                thrown_spell = Freeze(self.game, cur_pos)
+                            sprite.hit(thrown_spell.damage)
+                            self.spells.chosen = None
                             self.spell_cast_ready = False
 
     def collect(self):
         """Adding item to eq that was collided"""
         collected = pygame.sprite.spritecollide(self, self.game.items, False)
         for it in collected:
-            if self.game.equipment.add_item(it):
+            if self.equipment.add_item(it):
                 self.game.all_sprites.remove(it)
                 self.game.items.remove(it)
 
     def throw(self):
         """Throwing item from eq"""
-        thrown = self.game.equipment.remove_item("active")
+        thrown = self.equipment.remove_item("active")
         if not thrown:
             return
 
@@ -184,7 +189,7 @@ class Player(pygame.sprite.Sprite):
         self.location.set(self.rect.x, self.rect.y)
 
         self.collect()
-        self.held_item = self.game.equipment.get_active_item()
+        self.held_item = self.equipment.get_active_item()
 
         # Sprawdzanie kolizji z boosterami
         self.check_collision_boosters()
@@ -225,10 +230,10 @@ class Player(pygame.sprite.Sprite):
             if self.spell_ctrl is not None:
                 now_ctrl = pygame.time.get_ticks()
                 if now_ctrl - self.last_cast[self.spell_ctrl] > SPELL_DELAYS[self.spell_ctrl]:
-                    if self.game.mana_bar.decrease_mana(SPELL_COST[self.spell_ctrl]):
+                    if self.mana_bar.decrease_mana(SPELL_COST[self.spell_ctrl]):
                         self.last_cast[self.spell_ctrl] = now_ctrl
-                        self.game.spells.flag_ctrl = True
-                        self.game.spells.last_ctrl = now_ctrl
+                        self.spells.flag_ctrl = True
+                        self.spells.last_ctrl = now_ctrl
                         if self.facing == 1:
                             cur_pos = vector(self.position.x, self.rect.centery + 10)
                         else:
@@ -248,40 +253,40 @@ class Player(pygame.sprite.Sprite):
                 self.last_shift = now_shift
                 if self.spell_ctrl is None:
                     self.spell_ctrl = "fireball"
-                    self.game.spells.special += 1
+                    self.spells.special += 1
                 elif self.spell_ctrl == "fireball":
                     self.spell_ctrl = "frostbullet"
-                    self.game.spells.special += 1
+                    self.spells.special += 1
                 else:
                     self.spell_ctrl = None
-                    self.game.spells.special = 7
+                    self.spells.special = 7
 
         # Tutaj w zaklęcie "uzbraja się" klawiszami 7, 8, 9, 0
         # lub tymi klawiszami automatycznie się wykonuje zaklęcie
         elif keys[pygame.K_7]:
-            self.spell_key = self.game.spells.get_spell_at(0)
+            self.spell_key = self.spells.get_spell_at(0)
             self.execute_skill(0)
         elif keys[pygame.K_8]:
-            self.spell_key = self.game.spells.get_spell_at(1)
+            self.spell_key = self.spells.get_spell_at(1)
             self.execute_skill(1)
         elif keys[pygame.K_9]:
-            self.spell_key = self.game.spells.get_spell_at(2)
+            self.spell_key = self.spells.get_spell_at(2)
             self.execute_skill(2)
         elif keys[pygame.K_0]:
-            self.spell_key = self.game.spells.get_spell_at(3)
+            self.spell_key = self.spells.get_spell_at(3)
             self.execute_skill(3)
 
     def execute_skill(self, number):
         """Casting or preparing full skills"""
         now_key = pygame.time.get_ticks()
         if now_key - self.last_cast[self.spell_key] > SPELL_DELAYS[self.spell_key]:
-            self.game.spells.chosen = number
+            self.spells.chosen = number
             # Skille rzucane od razu
             if self.spell_key in ["selfheal", "magicshield", "bard"]:
-                if self.game.mana_bar.decrease_mana(SPELL_COST[self.spell_key]):
+                if self.mana_bar.decrease_mana(SPELL_COST[self.spell_key]):
                     self.last_cast[self.spell_key] = now_key
-                    self.game.spells.flag_key = True
-                    self.game.spells.last_key = now_key
+                    self.spells.flag_key = True
+                    self.spells.last_key = now_key
                     if self.spell_key == "selfheal":
                         SelfHeal(self.game)
                     elif self.spell_key == "magicshield":
@@ -289,8 +294,18 @@ class Player(pygame.sprite.Sprite):
                     else:
                         Bard(self.game)
             # Skille rzucane ręcznie
-            elif self.game.mana_bar.mana - SPELL_COST[self.spell_key] >= 0:
+            elif self.mana_bar.mana - SPELL_COST[self.spell_key] >= 0:
                 self.spell_cast_ready = True
 
     def hit(self, attack):
         print(f"attack: {attack}")
+
+    def heal(self, hp_value):
+        return self.health_bar.increase_health(hp_value)
+
+
+# Wywolanie akcji przedmiotu
+# if keys[pygame.K_n]:
+#            item = self.equipment.get_active_item()
+#            if item and item.action():
+#                item = self.equipment.remove_item("active")

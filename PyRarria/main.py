@@ -7,12 +7,13 @@ from player import *
 from equipment import *
 from spells_icon import *
 from background import *
-from health_mana_bar import *
-from FabrykaItemow import *
+from health_bar import *
+from mana_bar import *
+from items_factory import *
 from boosters import *
 
-from PyRarria.creatures.creatures_engine import CreaturesEngine
-from PyRarria.creatures.vector import PVector
+from creatures.creatures_engine import CreaturesEngine
+from creatures.vector import PVector
 
 vector = pygame.math.Vector2
 
@@ -46,13 +47,13 @@ class Game:
         self.items = pygame.sprite.Group()
         self.all_creatures = pygame.sprite.Group()
         self.arrows = pygame.sprite.Group()
-        self.fabryka = Fabryka(self)
-        self.player = Player(self)
-        self.equipment = Equipment(self, self.player)
+        self.factory = Factory(self)
+        self.equipment = Equipment(self)
         self.spells = Spells(self)
-        self.background = Background(self, self.player)
         self.health_bar = HealthBar(self)
         self.mana_bar = ManaBar(self)
+        self.player = Player(self, self.equipment, self.health_bar, self.mana_bar, self.spells)
+        self.background = Background(self, self.player)
 
         self.main_position = PVector(*self.get_main_stage_position())
         self.last_main_position = PVector(*self.get_main_stage_position())
@@ -66,9 +67,9 @@ class Game:
             self.platforms.add(p)
 
         # test
-        ziemniak = self.fabryka.create("ziemniak", 1000, 300)
-        self.all_sprites.add(ziemniak)
-        self.items.add(ziemniak)
+        potato = self.factory.create("potato", 1000, 300)
+        self.all_sprites.add(potato)
+        self.items.add(potato)
 
         # Tutaj testowanie dodawania boosterów
         position = vector(1193, 478)
@@ -150,12 +151,12 @@ class Game:
         self.all_sprites.draw(self.screen)
         self.health_bar.draw()
         self.mana_bar.draw()
-        self.spells.draw()
-        self.equipment.draw()
+        self.spells.draw(self.screen)
+        self.equipment.draw(self.screen)
         if self.player.held_item:
             self.player.held_item.draw_on_player()
         # żeby przenoszony itemik był widoczny, nic go nie ma przykrywać, więc rysuje się na końcu
-        self.spells.draw_moving_item()
+        self.spells.draw_moving_item(self.screen)
         # *after* drawing everything, flip the display
         # #NieZmieniaćBoNieBędzieDziałaćINawetTwórcyNieWiedząCzemu
         pygame.display.flip()

@@ -3,6 +3,8 @@ import pygame
 
 # Klasa przechowująca info o animacjach obrazków
 class SpriteSheet:
+    """Holds informations about animations"""
+
     def __init__(self, filename, cols, rows, frames):
         self.sheet = pygame.image.load(filename).convert_alpha()
         self.cols = cols

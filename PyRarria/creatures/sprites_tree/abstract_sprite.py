@@ -1,6 +1,6 @@
 import pygame as pg
 
-from PyRarria.creatures.vector import PVector
+from creatures.vector import PVector
 
 
 class AbstractSprite(pg.sprite.Sprite):

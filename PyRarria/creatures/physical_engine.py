@@ -1,5 +1,5 @@
-from PyRarria.creatures.test_global_settings import *
-from PyRarria.creatures.vector import PVector
+from creatures.test_global_settings import *
+from creatures.vector import PVector
 import pygame as pg
 import random
 import math
@@ -9,7 +9,7 @@ WIND = PVector(0.000001, 0.0)
 GRAVITY = PVector(0, 2.0)
 # GRAVITY = PVector(0, 0.1)
 # REACTION = PVector(0, -0.1)
-REACTION = PVector(0,-3)
+REACTION = PVector(0, -3)
 
 # constants
 MI = 0.05
@@ -102,7 +102,7 @@ def run_after(src, target):
     desired.normalize()
 
     if d < src.radius:
-        m = (d*src.maxspeed) / src.radius
+        m = (d * src.maxspeed) / src.radius
         desired *= m
     else:
         desired *= src.maxspeed
@@ -115,7 +115,7 @@ def run_after(src, target):
 
 def jump(src):
     """Performs single jump"""
-    jmp = PVector(src.velocity.xdirection(), -src.maxforce/4)
+    jmp = PVector(src.velocity.xdirection(), -src.maxforce / 4)
     src.apply_force(jmp)
 
 
@@ -136,11 +136,11 @@ def bullet(src, src_location, dest_location):
     sx = x0 + x1
 
     g = 0.1
-    vx = dx/100
+    vx = dx / 100
 
     if dx == 0:
         return
-    vy = vx * abs(dy/dx) + 0.5 * g * abs(dx/vx)
+    vy = vx * abs(dy / dx) + 0.5 * g * abs(dx / vx)
 
     # STATS
     # print('x0 = ', x0)
@@ -229,7 +229,7 @@ def fly_after(src, target):
     desired.normalize()
 
     if d < src.radius:
-        m = (d*src.maxspeed) / src.radius
+        m = (d * src.maxspeed) / src.radius
         desired *= m
     else:
         desired *= src.maxspeed
@@ -310,7 +310,7 @@ def edges_delete(src):
     elif src.location.y > SCREEN_HEIGHT:
         src.die()
 
-    
+
 def edges_ball(src):
     """Checks if the object goes off the screen.
     Bounces off the edge like a ball."""

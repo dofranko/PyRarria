@@ -1,10 +1,9 @@
-from PyRarria.creatures.physical_engine import *
-from PyRarria.creatures.sprites_tree.sprite import Sprite
+from creatures.physical_engine import *
+from creatures.sprites_tree.sprite import Sprite
 import pygame as pg
 
 
 class WalkingSprite(Sprite):
-
     def draw(self, win):
         # body
         frame = self.anim_count // self.frame_ticks

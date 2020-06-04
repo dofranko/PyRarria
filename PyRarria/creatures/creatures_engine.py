@@ -1,39 +1,37 @@
-from PyRarria.creatures.sprites_tree.bird import Bird
-from PyRarria.creatures.sprites_tree.skeleton import Skeleton
-from PyRarria.creatures.sprites_tree.zombie import Zombie
-from PyRarria.creatures.test_global_settings import FPS
+from creatures.sprites_tree.bird import Bird
+from creatures.sprites_tree.skeleton import Skeleton
+from creatures.sprites_tree.zombie import Zombie
+from creatures.test_global_settings import FPS
 from pygame.sprite import Group
 
 LIMITS = {
-    'birds': 0,
-    'skeletons': 0,
-    'zombies': 1,
+    "birds": 0,
+    "skeletons": 0,
+    "zombies": 1,
 }
 
 FREQUENCIES = {
-    'birds': 1,
-    'skeletons': 1,
-    'zombies': 1,
+    "birds": 1,
+    "skeletons": 1,
+    "zombies": 1,
 }
 
 CREATURES = {
-    'bird': Bird,
-    'skeleton': Skeleton,
-    'zombies': Zombie,
-
+    "bird": Bird,
+    "skeleton": Skeleton,
+    "zombies": Zombie,
 }
 
 NAMES = {
-    'bird': 'birds',
-    'skeleton': 'skeletons',
-    'zombies': 'zombie',
+    "bird": "birds",
+    "skeleton": "skeletons",
+    "zombies": "zombie",
 }
 
 SPAWN_DISTANCE = 100
 
 
 class CreaturesEngine:
-
     def __init__(self, game):
 
         # window, clock, main coords
@@ -51,9 +49,9 @@ class CreaturesEngine:
 
         # groups
         self.groups = {
-            'birds': Group(),
-            'skeletons': Group(),
-            'zombies': Group(),
+            "birds": Group(),
+            "skeletons": Group(),
+            "zombies": Group(),
         }
 
     def update(self):
@@ -97,15 +95,13 @@ class CreaturesEngine:
 
     def spawn(self):
         for group, frequency, limit, Creature in zip(
-                self.groups.values(),
-                FREQUENCIES.values(),
-                LIMITS.values(),
-                CREATURES.values()):
+            self.groups.values(), FREQUENCIES.values(), LIMITS.values(), CREATURES.values()
+        ):
 
             if len(group) >= limit:
                 continue
 
-            if self.clock % (frequency*FPS) != 0:
+            if self.clock % (frequency * FPS) != 0:
                 continue
 
             new_creature = Creature(self.player.location.x, self.player.location.y)
@@ -118,5 +114,5 @@ class CreaturesEngine:
 
     def print_stats(self):
         for group, name in zip(self.groups.values(), NAMES):
-            print(f'{name:10}:{len(group)}')
+            print(f"{name:10}:{len(group)}")
         print()

@@ -5,6 +5,46 @@ from spritesheet import *
 
 
 class Spell(pygame.sprite.Sprite):
+    """Super class for spells"""
+
+    def __init__(self, game, name, damage=0):
+        self.groups = game.all_sprites, game.magics
+        pygame.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.name = name
+        self.damage = damage
+
+    def check_collision(self):
+        # Detekcja kolizji z przeciwnikami
+        hits = pygame.sprite.spritecollide(self, self.game.all_creatures, False)
+        if hits:
+            self.explode()
+            hits[0].hit(self.damage)
+
+        # Detekcja kolizji ze środowiskiem
+        hits = pygame.sprite.spritecollide(self, self.game.platforms, False)
+        if hits:
+            self.explode()
+
+    def explode(self):
+        """Make explosion after colliding with object (should override)"""
+        self.kill()
+
+
+class SmallSpell(pygame.sprite.Sprite):
+    """Super class for small spells"""
+
+    def __init__(self, game, name, damage=0):
+        self.groups = game.all_sprites, game.magics
+        pygame.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.name = name
+        self.damage = damage
+
+
+class SelfSpell(pygame.sprite.Sprite):
+    """Super class for small spells"""
+
     def __init__(self, game, name):
         self.groups = game.all_sprites, game.magics
         pygame.sprite.Sprite.__init__(self, self.groups)
@@ -69,15 +109,6 @@ class Fireball(Spell):
         self.draw(self.frame)
         self.check_collision()
 
-    def check_collision(self):
-        # Detekcja kolizji ze środowiskiem
-        hits_1 = pygame.sprite.spritecollide(self, self.game.platforms, False)
-        for _ in hits_1:
-            self.explode()
-
-        # TODO: Detekcja kolizji z przeciwnikami
-        pass
-
     def explode(self):
         vect = pygame.math.Vector2(self.stage_pos_x, self.stage_pos_y)
         if self.direction == 1:
@@ -124,7 +155,7 @@ class Explosion(pygame.sprite.Sprite):
 
 
 # Klasa zaklęcia smallfire, czyli podpalanie przeciwników
-class SmallFire(Spell):
+class SmallFire(SmallSpell):
     def __init__(self, game, pos):
         super().__init__(game, "smallfire")
         self.sheet = SpriteSheet(SPELL_SHEETS["smallfire"], 10, 6, 60)
@@ -221,19 +252,9 @@ class FrostBullet(Spell):
         self.draw(self.frame)
         self.check_collision()
 
-    def check_collision(self):
-        # Detekcja kolizji ze środowiskiem
-        hits_1 = pygame.sprite.spritecollide(self, self.game.platforms, False)
-        for _ in hits_1:
-            print("FRB KOL")
-            self.kill()
-
-        # TODO: Detekcja kolizji z przeciwnikami
-        pass
-
 
 # Klasa zaklęcia smallthunder, czyli uderzenie piorunem w przeciwnika
-class SmallThunder(Spell):
+class SmallThunder(SmallSpell):
     def __init__(self, game, pos):
         super().__init__(game, "smallthunder")
         self.sheet = SpriteSheet(SPELL_SHEETS["smallthunder"], 6, 4, 24)
@@ -273,7 +294,7 @@ class SmallThunder(Spell):
 
 
 # Klasa zaklęcia boulder, czyli głaz spada na przeciwnika
-class Boulder(Spell):
+class Boulder(SmallSpell):
     def __init__(self, game, pos):
         super().__init__(game, "boulder")
         self.sheet = SpriteSheet(SPELL_SHEETS["boulder"], 8, 8, 64)
@@ -315,7 +336,7 @@ class Boulder(Spell):
 
 
 # Klasa zaklęcia magicshield, czyli magiczna, ochronna tarcza dla gracza
-class MagicShield(Spell):
+class MagicShield(SelfSpell):
     def __init__(self, game):
         super().__init__(game, "magicshield")
         self.sheet = SpriteSheet(SPELL_SHEETS["magicshield"], 4, 1, 4)
@@ -355,7 +376,7 @@ class MagicShield(Spell):
 
 
 # Klasa zaklęcia selfheal, czyli magiczne odnowienie zdrowia gracza
-class SelfHeal(Spell):
+class SelfHeal(SelfSpell):
     def __init__(self, game):
         super().__init__(game, "selfheal")
         self.sheet = SpriteSheet(SPELL_SHEETS["selfheal"], 4, 2, 8)
@@ -382,7 +403,7 @@ class SelfHeal(Spell):
 
 
 # Klasa zaklęcia bard, czyli magiczne dzwięki instrumentów
-class Bard(Spell):
+class Bard(SelfSpell):
     def __init__(self, game):
         super().__init__(game, "bard")
         index = random.randint(0, 3)
