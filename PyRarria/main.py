@@ -1,6 +1,6 @@
 import pygame
-import random
 import sys
+
 from settings import *
 from platforms import *
 from player import *
@@ -18,10 +18,12 @@ vector = pygame.math.Vector2
 
 
 class Game:
+    """Main class starting game"""
+
     def __init__(self):
         # Initialize game window
         pygame.init()
-        #pygame.mixer.init()
+        # pygame.mixer.init()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption(TITLE)
         self.clock = pygame.time.Clock()
@@ -33,6 +35,7 @@ class Game:
         self.last_main_position = None
 
     def new_game(self):
+        """Start new game"""
         # start a new game
         self.all_sprites = pygame.sprite.Group()
         self.platforms = pygame.sprite.Group()
@@ -43,7 +46,6 @@ class Game:
         self.items = pygame.sprite.Group()
         self.all_creatures = pygame.sprite.Group()
         self.arrows = pygame.sprite.Group()
-        self.trzymany = None
         self.fabryka = Fabryka(self)
         self.player = Player(self)
         self.equipment = Equipment(self, self.player)
@@ -76,8 +78,8 @@ class Game:
         position5 = vector(500, 470)
         position6 = vector(1400, 470)
 
-        boost_test1 = TweeningBooster(self, position, 'health')
-        boost_test2 = TweeningBooster(self, position2, 'mana')
+        boost_test1 = TweeningBooster(self, position, "health")
+        boost_test2 = TweeningBooster(self, position2, "mana")
         boost_test3 = PlayerSpeedBooster(self, position3)
         boost_test4 = DamageBooster(self, position4)
         boost_test5 = DefenseBooster(self, position5)
@@ -86,6 +88,7 @@ class Game:
         self.run()
 
     def run(self):
+        """Run game in loop"""
         # Game Loop
         self.playing = True
         while self.playing:
@@ -95,6 +98,7 @@ class Game:
             self.draw()
 
     def update(self):
+        """Call an update for every class that needs it"""
         # Game Loop - Update
         # make update() for every sprite (players/enemy)
 
@@ -110,12 +114,12 @@ class Game:
         self.explosions.update()
         self.items.update()
 
-
         self.update_delta()
         self.creatures_engine.map_move(self.delta)
         self.creatures_engine.update()
 
     def events(self):
+        """Check for pygame events"""
         # Game Loop - events
         for event in pygame.event.get():
             # check for closing window
@@ -124,9 +128,11 @@ class Game:
                     self.playing = False
                 self.running = False
                 self.waiting = False
-            elif (event.type == pygame.MOUSEBUTTONDOWN
-                    or event.type == pygame.MOUSEBUTTONUP
-                    or event.type == pygame.MOUSEMOTION):
+            elif (
+                event.type == pygame.MOUSEBUTTONDOWN
+                or event.type == pygame.MOUSEBUTTONUP
+                or event.type == pygame.MOUSEMOTION
+            ):
                 self.equipment.handle_mouse(event)
                 self.spells.handle_mouse(event)
                 self.player.handle_mouse_cast_spell(event)
@@ -136,28 +142,30 @@ class Game:
             self.paused()
 
     def draw(self):
+        """Call a draw for all classes that need it"""
         # Game Loop - draw
         # Kolejność ma znaczenie
         self.background.draw()
+        self.creatures_engine.draw()
+        self.all_sprites.draw(self.screen)
         self.health_bar.draw()
         self.mana_bar.draw()
-        self.all_sprites.draw(self.screen)
         self.spells.draw()
         self.equipment.draw()
-        if self.trzymany:
-            self.trzymany.draw()
+        if self.player.held_item:
+            self.player.held_item.draw_on_player()
         # żeby przenoszony itemik był widoczny, nic go nie ma przykrywać, więc rysuje się na końcu
         self.spells.draw_moving_item()
-        self.creatures_engine.draw()
         # *after* drawing everything, flip the display
         # #NieZmieniaćBoNieBędzieDziałaćINawetTwórcyNieWiedząCzemu
         pygame.display.flip()
 
     def show_start_screen(self):
+        """Display starting screen"""
         waiting = True
         font = pygame.font.SysFont("dejavusans", 30, 0, 0)
         # TODO tutaj fancy grafika od naszego świrka graficznego
-        image = pygame.image.load("resources/images/random_start.jpg").convert()
+        image = pygame.image.load(IMAGES_LIST["start_screen"]).convert()
         image = pygame.transform.scale(image, (WIDTH, HEIGHT))
 
         counter = 0  # migotanie napisu
@@ -183,6 +191,7 @@ class Game:
                 waiting = False
 
     def show_game_over_screen(self):
+        """Display game over screen"""
         if not self.waiting:  # gdy wyłączamy grę, w pętli running wykona się jeszcze ta funkcja
             return
         alpha_surface = pygame.Surface((WIDTH, HEIGHT))  # background
@@ -196,7 +205,7 @@ class Game:
             self.screen.blit(loser, ((WIDTH / 2) - 6 * alpha, (HEIGHT / 2) - 10 * alpha))
             pygame.display.flip()  # nie zadzieraj z tym przeciwnikiem
             pygame.time.delay(50)
-        image = pygame.image.load("resources/images/index.png").convert()
+        image = pygame.image.load(IMAGES_LIST["game_over_screen"]).convert()
         image = pygame.transform.scale(image, (500, 500))
         self.screen.blit(image, (WIDTH / 5, 0))
         font = pygame.font.SysFont("dejavusans", 30, 0, 0)
@@ -223,6 +232,7 @@ class Game:
                     self.running = False
 
     def paused(self):
+        """Pause game and display pause screen"""
         large_text = pygame.font.SysFont("comicsansms", 115)
         text = large_text.render("Paused", True, (255, 255, 255))
         alpha_surface = pygame.Surface((WIDTH, HEIGHT))
@@ -247,12 +257,8 @@ class Game:
 
     # Funkcja potrzebna platformom, żeby mogły dostosować swoją pozcję
     def get_main_stage_position(self):
-        # Try dla zasady, jakby coś się namieszało w kodzie
-        try:
-            return self.background.main_stage.position
-        except:
-            print(f"{sys.exc_info()}[0]\n Continuing program with values (0,0)")
-            return vector(0, 0)
+        """Return main stage position - classes may need it for properly displaying on screen"""
+        return self.background.main_stage.position
 
     def update_delta(self):
         self.main_position.set(*self.get_main_stage_position())
