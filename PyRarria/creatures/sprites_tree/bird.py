@@ -1,9 +1,11 @@
 from creatures.sprites_attributes import BIRD
 from creatures.sprites_animations import BIRD_ANIMATION
 from creatures.sprites_tree.flying_sprite import FlyingSprite
-from creatures.test_global_settings import FPS
+from settings import FPS
 
 import math
+
+
 
 ANIMATION = BIRD_ANIMATION
 OBJECT = BIRD

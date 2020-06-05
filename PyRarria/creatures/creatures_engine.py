@@ -6,8 +6,8 @@ from PyRarria.creatures.sprites_tree.sheep import Sheep
 from PyRarria.creatures.sprites_tree.skeleton import Skeleton
 from PyRarria.creatures.sprites_tree.walking_test import WalkingTest
 from PyRarria.creatures.sprites_tree.zombie import Zombie
-from PyRarria.creatures.test_global_settings import FPS
 from pygame.sprite import Group
+from settings import FPS
 
 from PyRarria.creatures.vector import PVector
 

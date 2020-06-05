@@ -1,8 +1,7 @@
-from PyRarria.creatures.physical_engine import *
-from PyRarria.creatures.sprites_attributes import BAT
-from PyRarria.creatures.sprites_animations import BAT_ANIMATION
-from PyRarria.creatures.sprites_tree.flying_sprite import FlyingSprite
-from PyRarria.creatures.test_global_settings import FPS
+from creatures.physical_engine import *
+from creatures.sprites_attributes import BAT
+from creatures.sprites_animations import BAT_ANIMATION
+from creatures.sprites_tree.flying_sprite import FlyingSprite
 
 import math
 

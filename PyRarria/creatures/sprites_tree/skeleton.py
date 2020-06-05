@@ -3,7 +3,7 @@ from PyRarria.creatures.sprites_attributes import SKELETON
 from PyRarria.creatures.sprites_animations import SKELETON_ANIMATION
 from PyRarria.creatures.sprites_tree.arrow import Arrow
 from PyRarria.creatures.sprites_tree.walking_sprite import WalkingSprite
-from PyRarria.creatures.test_global_settings import FPS
+from settings import FPS
 
 import math
 
@@ -44,5 +44,5 @@ class Skeleton(WalkingSprite):
         if (player.position - self.position).mag() > 200:
             run_after(self, player)
         else:
-            self.velocity.zero()
+            self.velocity.x = 0
         jump_from_platform(self, platforms)
