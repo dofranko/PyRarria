@@ -13,7 +13,7 @@ class WalkingSprite(Sprite):
         # hitbox
         # TODO, moze sie roznic od obrazka
         if self.is_hitbox:
-            pg.draw.rect(win, (255, 0, 0), self.rect, 2)
+            pg.draw.rect(win, (0, 0, 255), self.rect, 2)
 
         # hpbar
         if self.is_hpbar:

@@ -12,13 +12,13 @@ from pygame.sprite import Group
 from PyRarria.creatures.vector import PVector
 
 LIMITS = {
-    'walking_test': 0,
+    'walking_test': 1,
     'birds': 0,
     'skeletons': 0,
     'zombies': 0,
     'cows': 0,
     'sheeps': 0,
-    'bats': 1,
+    'bats': 0,
     'chickens': 0,
 }
 

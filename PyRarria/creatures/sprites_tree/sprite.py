@@ -28,7 +28,7 @@ class Sprite(AbstractSprite):
         # flags
         self.is_enemy = True
         self.is_hpbar = False
-        self.is_hitbox = False
+        self.is_hitbox = True
         self.is_fixpos = True
 
         # counters
@@ -61,17 +61,16 @@ class Sprite(AbstractSprite):
         self.hp -= damage_value
 
     def bite(self, player):
-        pass
-        # if self.is_enemy and self.rect.colliderect(player):
-        #     if self.bite_count > 0:
-        #         self.bite_count -= 1
-        #     else:
-        #         player.hit(self.damage)
-        #         direction = -1
-        #         if self.location.x < player.location.x:
-        #             direction = 1
-        #         player.push_away(direction, 4, 14)
-        #         self.bite_count = 20
+        if self.is_enemy and self.rect.colliderect(player):
+            if self.bite_count > 0:
+                self.bite_count -= 1
+            else:
+                player.hit(self.damage)
+                direction = -1
+                if self.position.x < player.position.x:
+                    direction = 1
+                player.push_away(direction, 4, 14)
+                self.bite_count = 20
 
     def update(self, player, platforms, map_position):
         # dead

@@ -104,6 +104,7 @@ class Game:
         self.equipment.update()
         self.background.update()
         self.platforms.update()
+        self.creatures_engine.update()
         self.health_bar.update()
         self.mana_bar.update()
         self.boosters.update()
@@ -111,7 +112,7 @@ class Game:
         self.magics.update()
         self.explosions.update()
         self.items.update()
-        self.creatures_engine.update()
+
 
     def events(self):
         # Game Loop - events
