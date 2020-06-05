@@ -23,8 +23,20 @@ class WalkingTest(WalkingSprite):
         super(WalkingTest, self).__init__(x, y)
         self.create(x, y, **OBJECT)
 
-        # TEST dodac position
-        self.position = PVector(400, 58)
+        # test
+        self.position = PVector(400, -500)
+
+        # left
+        # self.position = PVector(0, 75)
+
+        # right
+        # self.position = PVector(900, 75)
+
+        # top
+        # self.position = PVector(200, 0)
+
+        # bottom
+        # self.position = PVector(200, 150)
 
     def apply_force(self, force):
         self.acceleration += force
@@ -32,9 +44,12 @@ class WalkingTest(WalkingSprite):
     def update_forces(self, player, platforms):
         # fly_after(self, player)
         # run(self)
-        # gravity(self)
-        # jump_from_platform2(self, platforms)
+        # wind(self)
+        gravity(self)
+        # jump_from_platform(self, platforms)
         # push_from_platform(self, platforms)
+        keep_on_platform(self, platforms)
+        run_after(self, player)
         # fly_after(self, player)
         pass
 
@@ -47,19 +62,4 @@ class WalkingTest(WalkingSprite):
         # alive
         self.update_forces(player, platforms)
         self.move(map_position)
-
-    def move(self, map_position):
-        # move
-        self.velocity += self.acceleration
-        self.velocity.xlimit(self.maxspeed)
-        self.position += self.velocity
-        self.acceleration.zero()
-
-        # update body
-        self.body.topleft = (self.position + map_position).repr()
-        self.rect.topleft = (self.position + map_position).repr()
-        self.hpbar.center(self.body.midtop)
-
-        # update animation counter
-        self.anim_count -= 1
-        self.anim_count %= self.animation_ticks
+        self.fix_move(platforms, map_position)

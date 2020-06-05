@@ -28,4 +28,3 @@ class Bat(FlyingSprite):
     def update_forces(self, player, platforms):
         track(self, player)
         edges_bounce(self)
-        bounce_from_platform(self, platforms)
