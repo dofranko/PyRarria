@@ -12,13 +12,13 @@ from pygame.sprite import Group
 from PyRarria.creatures.vector import PVector
 
 LIMITS = {
-    'walking_test': 1,
+    'walking_test': 0,
     'birds': 0,
     'skeletons': 0,
     'zombies': 0,
     'cows': 0,
     'sheeps': 0,
-    'bats': 0,
+    'bats': 1,
     'chickens': 0,
 }
 
@@ -68,7 +68,7 @@ class CreaturesEngine:
         self.window = game.screen
         self.clock = 0
         self.map_position = PVector(0, 0)
-        self.map_position_init = PVector(-400, -300)
+        self.map_position_init = PVector(0, 0)
 
         # map, player, arrows
         self.platforms = game.platforms
