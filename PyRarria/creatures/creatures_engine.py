@@ -22,6 +22,7 @@ LIMITS = {
     'chickens': 0,
 }
 
+
 FREQUENCIES = {
     'walking_test': 1,
     'birds': 1,
