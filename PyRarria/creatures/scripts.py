@@ -16,4 +16,4 @@ def images(name, frames, left_init, right_init):
     print(']')
 
 
-images('zombie', 4, 1, 5)
+images('chicken', 4, 5, 13)

@@ -1,5 +1,6 @@
-from creatures.test_global_settings import *
-from creatures.vector import PVector
+# from PyRarria.creatures.test_global_settings import *
+from PyRarria.settings import *
+from PyRarria.creatures.vector import PVector
 import pygame as pg
 import random
 import math
@@ -7,13 +8,12 @@ import math
 # forces
 WIND = PVector(0.000001, 0.0)
 GRAVITY = PVector(0, 2.0)
-# GRAVITY = PVector(0, 0.1)
-# REACTION = PVector(0, -0.1)
+GRAVITY_BULLET = PVector(0, 0.1)
 REACTION = PVector(0, -3)
 
 # constants
 MI = 0.05
-EDGE_LIMIT = 50
+EDGE_LIMIT = -200
 ARC_LENGTH = 2 * math.pi
 ARC_STEP = ARC_LENGTH / 15
 MOVE_LENGTH = 10
@@ -25,6 +25,14 @@ def gravity(src):
     Q = m*g
     """
     grav = GRAVITY.copy()
+    src.apply_force(grav)
+
+
+def gravity_bullet(src):
+    """Simple force of gravity. Only for flying objects.
+    Q = m*g
+    """
+    grav = GRAVITY_BULLET.copy()
     src.apply_force(grav)
 
 
@@ -76,7 +84,7 @@ def run_away(src, target):
     A greater distance in less force."""
 
     # desired velocity
-    desired = target.location - src.location
+    desired = target.position - src.position
     desired.xflat()
     desired *= -1
     d = desired.mag()
@@ -96,7 +104,7 @@ def run_after(src, target):
     """Runs to the target only on horizontal line."""
 
     # desired velocity
-    desired = target.location - src.location
+    desired = target.position - src.position
     desired.xflat()
     d = desired.mag()
     desired.normalize()
@@ -115,8 +123,11 @@ def run_after(src, target):
 
 def jump(src):
     """Performs single jump"""
-    jmp = PVector(src.velocity.xdirection(), -src.maxforce / 4)
+    jmp = PVector(src.velocity.xdirection()*src.maxspeed, -src.maxspeed)
     src.apply_force(jmp)
+
+    print(jmp)
+    print(src.velocity.xdirection())
 
 
 def bullet(src, src_location, dest_location):
@@ -135,12 +146,11 @@ def bullet(src, src_location, dest_location):
     dy = y1 - y0
     sx = x0 + x1
 
-    g = 0.1
-    vx = dx / 100
+    vx = dx/100
 
     if dx == 0:
         return
-    vy = vx * abs(dy / dx) + 0.5 * g * abs(dx / vx)
+    vy = vx * abs(dy/dx) + 0.5 * GRAVITY_BULLET.y * abs(dx/vx)
 
     # STATS
     # print('x0 = ', x0)
@@ -185,7 +195,7 @@ def track(src, target):
     """Source tracks the target, stops close to it."""
 
     # desired velocity
-    desired = target.location - src.location
+    desired = target.position - src.position
     desired.normalize()
     desired *= src.maxspeed
 
@@ -224,7 +234,7 @@ def fly_after(src, target):
     """Flies straight to the target, stops close to it."""
 
     # desired velocity
-    desired = target.location - src.location
+    desired = target.position - src.position
     d = desired.mag()
     desired.normalize()
 
@@ -244,7 +254,7 @@ def fly_away(src, target):
     A greater distance in less force."""
 
     # desired velocity
-    desired = target.location - src.location
+    desired = target.position - src.position
     desired *= -1
     d = desired.mag()
     desired.normalize()
@@ -255,81 +265,39 @@ def fly_away(src, target):
     src.apply_force(steer)
 
 
-def edges(src):
+def edges_bounce(src):
     """Checks if the object does not go beyond the screen.
     If true, object turns back with the opposite direction and max velocity."""
 
     # horizontal
-    if src.location.x < EDGE_LIMIT:
+    if src.rect.left < EDGE_LIMIT:
         desired = PVector(src.maxspeed, src.velocity.y)
         steer = desired - src.velocity
         src.apply_force(steer)
-    elif src.location.x > SCREEN_WIDTH - EDGE_LIMIT:
+    elif src.rect.right > WIDTH - EDGE_LIMIT:
         desired = PVector(-src.maxspeed, src.velocity.y)
         steer = desired - src.velocity
         src.apply_force(steer)
 
     # vertical
-    if src.location.y < EDGE_LIMIT:
+    if src.rect.top< EDGE_LIMIT:
         desired = PVector(src.velocity.x, src.maxspeed)
         steer = desired - src.velocity
         src.apply_force(steer)
-    elif src.location.y > SCREEN_HEIGHT - EDGE_LIMIT:
+    elif src.rect.bottom > HEIGHT - EDGE_LIMIT:
         desired = PVector(src.velocity.x, -src.maxspeed)
         steer = desired - src.velocity
         src.apply_force(steer)
 
 
-def edges_stop(src):
-    """Checks if the object does not go beyond the screen.
-    Ball stops whet touches the edge."""
-
-    # horizontal
-    if src.location.x < 0:
-        src.velocity.x = 0
-        src.location.x = 0
-    elif src.location.x > SCREEN_WIDTH:
-        src.velocity.x = 0
-        src.location.x = SCREEN_WIDTH
-
-    # vertical
-    if src.location.y < 0:
-        src.velocity.y = 0
-        src.location.y = 0
-    elif src.location.y > SCREEN_HEIGHT:
-        src.velocity.y = 0
-        src.location.y = SCREEN_HEIGHT
-
-
 def edges_delete(src):
     """Deletes object if it goes off the screen."""
 
-    if src.location.x < 0 or src.location.x > SCREEN_WIDTH:
+    if src.rect.right < 0 or src.rect.left > WIDTH:
         src.die()
 
-    elif src.location.y > SCREEN_HEIGHT:
+    elif src.rect.top > HEIGHT:
         src.die()
-
-
-def edges_ball(src):
-    """Checks if the object goes off the screen.
-    Bounces off the edge like a ball."""
-
-    # horizontal
-    if src.location.x < 0:
-        src.velocity.x *= -1
-        src.location.x = 0
-    elif src.location.x > SCREEN_WIDTH:
-        src.velocity.x *= -1
-        src.location.x = SCREEN_WIDTH
-
-    # vertical
-    if src.location.y < 0:
-        src.velocity.y *= -1
-        src.location.y = 0
-    elif src.location.y > SCREEN_HEIGHT:
-        src.velocity.y *= -1
-        src.location.y = SCREEN_HEIGHT
 
 
 def init_move(src):
@@ -345,33 +313,37 @@ def keep_on_platform(src, platforms):
 
     hits = pg.sprite.spritecollide(src, platforms, False)
     if hits:
+
         reaction(src)
-        right = hits[0].rect.right
-        left = hits[0].rect.left
 
-        if src.location.x > right:
-            src.velocity.x *= -1
-            src.location.x = right
+        if src.rect.centerx > hits[0].rect.right:
+            desired = PVector(-1, src.velocity.y)
+            steer = desired - src.velocity
+            src.apply_force(steer)
 
-        elif src.location.x < left:
-            src.velocity.x *= -1
-            src.location.x = left
+        elif src.rect.centerx < hits[0].rect.left:
+            desired = PVector(1, src.velocity.y)
+            steer = desired - src.velocity
+            src.apply_force(steer)
 
 
 def push_from_platform(src, platforms):
-    """Adds extra force if creature reaches platform edge to push it out."""
+    """Inverts speed vector if creature reaches platform edge."""
 
     hits = pg.sprite.spritecollide(src, platforms, False)
     if hits:
+
         reaction(src)
-        right = hits[0].rect.right
-        left = hits[0].rect.left
 
-        if src.location.x > right:
-            src.apply_force(PVector(src.maxforce, 0))
+        if src.rect.centerx > hits[0].rect.right:
+            desired = PVector(2, src.velocity.y)
+            steer = desired - src.velocity
+            src.apply_force(steer)
 
-        elif src.location.x < left:
-            src.apply_force(PVector(-src.maxforce, 0))
+        elif src.rect.centerx < hits[0].rect.left:
+            desired = PVector(-2, src.velocity.y)
+            steer = desired - src.velocity
+            src.apply_force(steer)
 
 
 def jump_from_platform(src, platforms):
@@ -380,11 +352,34 @@ def jump_from_platform(src, platforms):
     hits = pg.sprite.spritecollide(src, platforms, False)
     if hits:
         reaction(src)
-        right = hits[0].rect.right
-        left = hits[0].rect.left
 
-        if src.location.x > right:
+        if src.rect.centerx > hits[0].rect.right:
             jump(src)
 
-        elif src.location.x < left:
+        elif src.rect.centerx < hits[0].rect.left:
             jump(src)
+
+
+def bounce_from_platform(src, platforms):
+    """If creature collides with platforms, moves in opposite direction."""
+    hits = pg.sprite.spritecollide(src, platforms, False)
+    if hits:
+        if src.rect.left < hits[0].rect.left:
+            src.apply_force(PVector(-src.maxforce, 0))
+
+        elif src.rect.right > hits[0].rect.right:
+            src.apply_force(PVector(src.maxforce, 0))
+
+        if src.rect.top < hits[0].rect.top:
+            src.apply_force(PVector(0, -src.maxforce))
+
+        elif src.rect.bottom > hits[0].rect.bottom:
+            src.apply_force(PVector(0, +src.maxforce))
+
+
+def platform_stop(src, platforms):
+    """If creature collides with platforms, stopes."""
+    hits = pg.sprite.spritecollide(src, platforms, False)
+    if hits:
+        src.velocity.zero()
+

@@ -31,8 +31,6 @@ class Game:
         self.running = True
         self.pause = False
         self.creatures_engine = None
-        self.main_position = None
-        self.last_main_position = None
 
     def new_game(self):
         """Start new game"""
@@ -113,15 +111,12 @@ class Game:
         self.magics.update()
         self.explosions.update()
         self.items.update()
-
-        self.update_delta()
-        self.creatures_engine.map_move(self.delta)
         self.creatures_engine.update()
 
     def events(self):
-        """Check for pygame events"""
         # Game Loop - events
         for event in pygame.event.get():
+            # TODO test
             # check for closing window
             if event.type == pygame.QUIT:
                 if self.playing:
@@ -259,11 +254,6 @@ class Game:
     def get_main_stage_position(self):
         """Return main stage position - classes may need it for properly displaying on screen"""
         return self.background.main_stage.position + (WIDTH / 2, HEIGHT / 2)
-
-    def update_delta(self):
-        self.main_position.set(*self.get_main_stage_position())
-        self.delta.set_from_vector(self.main_position - self.last_main_position)
-        self.last_main_position.set_from_vector(self.main_position)
 
 
 if __name__ == "__main__":

@@ -3,7 +3,44 @@
 
 INFINITY = 100000
 
+WALKING_TEST = {
+    'manoeuvrability': 0.05,
+    'maxspeed': 3,
+    'maxforce': 5,
+    'maxhp': 100,
+
+    'mass': 20,
+    'items': [],
+    'damage': 14,
+    'defense': 10,
+}
+
 BIRD = {
+    'manoeuvrability': 0.05,
+    'maxspeed': 3,
+    'maxforce': 5,
+    'maxhp': 100,
+
+    'mass': 20,
+    'items': [],
+    'damage': 14,
+    'defense': 10,
+}
+
+CHICKEN = {
+    'manoeuvrability': 0.05,
+    'maxspeed': 3,
+    'maxforce': 5,
+    'maxhp': 100,
+
+    'mass': 20,
+    'items': [],
+    'damage': 14,
+    'defense': 10,
+}
+
+
+BAT = {
     'manoeuvrability': 0.05,
     'maxspeed': 3,
     'maxforce': 5,

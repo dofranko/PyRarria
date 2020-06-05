@@ -21,4 +21,5 @@ class WalkingSprite(Sprite):
 
     def update_forces(self, player, platforms):
         run(self)
-        edges_ball(self)
+        gravity(self)
+        keep_on_platform(self, platforms)

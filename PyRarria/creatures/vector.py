@@ -67,12 +67,6 @@ class PVector(Vector2):
             self.x /= mag
             self.y /= mag
 
-    def limit(self, maxi):
-        if self.mag() > maxi:
-            self.normalize()
-            self.x *= maxi
-            self.y *= maxi
-
     def angle(self):
         if self.x == 0.0 and self.y >= 0:
             return math.pi / 2
@@ -101,7 +95,7 @@ class PVector(Vector2):
         elif self.x > 0.0:
             return 1
         else:
-            return
+            return 0
 
     def anim_direction(self):
         if self.x < 0.0:
@@ -132,6 +126,18 @@ class PVector(Vector2):
 
     def yflat(self):
         self.x = 0.0
+
+    def limit(self, maxi):
+        if self.mag() > maxi:
+            self.normalize()
+            self.x *= maxi
+            self.y *= maxi
+
+    def xlimit(self, maxi):
+        self.x = min(self.x, maxi)
+
+    def ylimit(self, maxi):
+        self.y = min(self.y, maxi)
 
     def repr(self):
         return self.x, self.y
@@ -170,3 +176,9 @@ class PVector(Vector2):
 # print(u)
 # u.normalize()
 # print(u)
+
+# TEST 5
+u = PVector(10,200)
+u.ylimit(2)
+
+print(u)

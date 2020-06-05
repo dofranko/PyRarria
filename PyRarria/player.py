@@ -7,7 +7,7 @@ import random
 
 from creatures.vector import PVector
 
-vector = pygame.math.Vector2
+vector = PVector
 
 
 class Player(pygame.sprite.Sprite):
@@ -189,6 +189,9 @@ class Player(pygame.sprite.Sprite):
         self.game.items.add(thrown)
 
     def update(self):
+
+        self.location.set(self.rect.centerx, self.rect.centery)
+
         """Update player position, check collisons, collect/throw items, handle keys pressed"""
         # Równania ruchu. Zabawa na własną odpowiedzialność :v
         self.vel.y += self.acc.y

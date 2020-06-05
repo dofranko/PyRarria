@@ -35,11 +35,32 @@ ZOMBIE_RIGHT = [
     load('img/zombie_05.png'), load('img/zombie_06.png'),
     load('img/zombie_07.png'), load('img/zombie_08.png')]
 
+CHICKEN_LEFT = [
+    load('img/chicken_05.png'), load('img/chicken_06.png'),
+    load('img/chicken_07.png'), load('img/chicken_08.png')]
+
+CHICKEN_RIGHT = [
+    load('img/chicken_13.png'), load('img/chicken_14.png'),
+    load('img/chicken_15.png'), load('img/chicken_16.png')]
+
+BAT_LEFT = [
+    load('img/bat_06.png'), load('img/bat_07.png'),
+    load('img/bat_08.png'), load('img/bat_09.png'),
+    load('img/bat_10.png')]
+
+BAT_RIGHT = [
+    load('img/bat_21.png'), load('img/bat_22.png'),
+    load('img/bat_23.png'), load('img/bat_24.png'),
+    load('img/bat_25.png')]
+
 SKELETON_LEFT = [load('img/skeleton_01.png'), load('img/skeleton_02.png')]
 SKELETON_RIGHT = [load('img/skeleton_03.png'), load('img/skeleton_04.png')]
 
 ARROW_LEFT = [load('img/arrow_01.png')]
 ARROW_RIGHT = [load('img/arrow_02.png')]
+
+WALKING_TEST_LEFT = [load('img/walking_test_01.png')]
+WALKING_TEST_RIGHT = [load('img/walking_test_01.png')]
 
 
 BIRD_ANIMATION = {
@@ -49,6 +70,15 @@ BIRD_ANIMATION = {
     'width': BIRD_LEFT[0].get_rect().width,
     'height': BIRD_LEFT[0].get_rect().height,
     'speed': 0.5,  # animation duration in seconds
+}
+
+BAT_ANIMATION = {
+    'left': BAT_LEFT,
+    'right': BAT_RIGHT,
+    'frames': len(BAT_LEFT),
+    'width': BAT_LEFT[0].get_rect().width,
+    'height': BAT_LEFT[0].get_rect().height,
+    'speed': 0.75,  # animation duration in seconds
 }
 
 COW_ANIMATION = {
@@ -94,4 +124,22 @@ ARROW_ANIMATION = {
     'width': ARROW_LEFT[0].get_rect().width,
     'height': ARROW_LEFT[0].get_rect().height,
     'speed': 2,
+}
+
+CHICKEN_ANIMATION = {
+    'left': CHICKEN_LEFT,
+    'right': CHICKEN_RIGHT,
+    'frames': len(CHICKEN_LEFT),
+    'width': CHICKEN_LEFT[0].get_rect().width,
+    'height': CHICKEN_LEFT[0].get_rect().height,
+    'speed': 2,
+}
+
+WALKING_TEST_ANIMATION = {
+    'left': WALKING_TEST_LEFT,
+    'right': WALKING_TEST_RIGHT,
+    'frames': len(WALKING_TEST_LEFT),
+    'width': WALKING_TEST_LEFT[0].get_rect().width,
+    'height': WALKING_TEST_LEFT[0].get_rect().height,
+    'speed': 1,
 }
