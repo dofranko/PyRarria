@@ -29,7 +29,6 @@ class Game:
         pygame.display.set_caption(TITLE)
         self.clock = pygame.time.Clock()
         self.running = True
-        self.loaded_images = {}
         self.pause = False
         self.creatures_engine = None
         self.main_position = None
@@ -136,7 +135,7 @@ class Game:
             ):
                 self.equipment.handle_mouse(event)
                 self.spells.handle_mouse(event)
-                self.player.handle_mouse_cast_spell(event)
+                self.player.handle_mouse(event)
         keys = pygame.key.get_pressed()
         if keys[pygame.K_p]:
             self.pause = True
@@ -259,7 +258,7 @@ class Game:
     # Funkcja potrzebna platformom, żeby mogły dostosować swoją pozcję
     def get_main_stage_position(self):
         """Return main stage position - classes may need it for properly displaying on screen"""
-        return self.background.main_stage.position
+        return self.background.main_stage.position + (WIDTH / 2, HEIGHT / 2)
 
     def update_delta(self):
         self.main_position.set(*self.get_main_stage_position())

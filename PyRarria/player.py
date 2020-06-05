@@ -1,7 +1,8 @@
 # Sprite class for player
 import pygame
 from settings import *
-from magic_spells import *
+from bullet_spells import *
+from fast_spells import *
 import random
 
 from creatures.vector import PVector
@@ -20,17 +21,17 @@ class Player(pygame.sprite.Sprite):
         self.equipment = equipment
         self.image = pygame.image.load(IMAGES_LIST["player"])
         self.rect = self.image.get_rect()
-        self.rect.center = (WIDTH / 2, HEIGHT / 2)
+        self.rect.center = (WIDTH / 2, 0)
         self.position = vector(WIDTH / 2, 0)
         self.vel = vector(0, 0)
-        self.acc = vector(0, PLAYER_GRAV)
+        self.acc = vector(0, PLAYER_MOVE["PLAYER_GRAV"])
         self.mask = pygame.mask.from_surface(self.image)
         self.facing = 1
-        self.standing = False  # TODO jakie mialo byc tego przeznaczenie?
         self.q_trigger = False
         self.held_item = None
         self.last_shift = 0
         self.spell_cast_ready = False
+        self.is_pushed = False  # Flaga na odechniecie
 
         self.health_bar = health_bar
         self.mana_bar = mana_bar
@@ -58,7 +59,7 @@ class Player(pygame.sprite.Sprite):
 
     def jump(self):
         """Player jumps (only if on platform) - change velocity y value"""
-        self.vel.y = JUMP_VEL
+        self.vel.y = PLAYER_MOVE["JUMP_VEL"]
 
     # Sprawdzenie kolizji (stania) od góry platform
     def check_collision_vertically(self):
@@ -70,8 +71,9 @@ class Player(pygame.sprite.Sprite):
         if self.vel.y > 0:
             hits = pygame.sprite.spritecollide(self, self.game.platforms, False)
             if hits:
+                self.is_pushed = False
                 new_position = min([hits[i].position.y for i in range(len(hits))])
-                new_position += -(HEIGHT // 2 + self.rect.height)  # SPECIAL ALIGN
+                new_position += -(self.rect.height)  # SPECIAL ALIGN
                 # Cofnięcie na wcześniejszą pozycję (przed sprawdzaniem kolizji)
                 self.rect.y += new_position - self.position.y
                 self.position.y = new_position
@@ -79,11 +81,12 @@ class Player(pygame.sprite.Sprite):
                 can_jump = True
 
         # Gdy porusza się w górę
-        elif JUMP_VEL <= self.vel.y < 0:
+        elif self.vel.y < 0:
             hits = pygame.sprite.spritecollide(self, self.game.platforms, False)
             if hits:
+                self.is_pushed = False
                 new_position = max([hits[i].position.y + hits[i].rect.height + 1 for i in range(len(hits))])
-                new_position += -(HEIGHT // 2)  # SPECIAL ALIGN
+                # new_position += -(HEIGHT // 2)  # SPECIAL ALIGN
                 # Cofnięcie na wcześniejszą pozycję (przed sprawdzaniem kolizji)
                 self.rect.y += new_position - self.position.y
                 self.position.y = new_position
@@ -96,15 +99,21 @@ class Player(pygame.sprite.Sprite):
         if self.acc.x > 0:
             hits = pygame.sprite.spritecollide(self, self.game.platforms, False)  # False -> don't remove from platforms
             if hits:
-                self.position.x = min([hits[i].position.x for i in range(len(hits))])
-                self.position.x += -(WIDTH // 2) - self.rect.width  # SPECIAL ALIGN
+                self.is_pushed = False
+                new_position = min([hits[i].position.x for i in range(len(hits))])
+                new_position += -self.rect.width  # SPECIAL ALIGN
+                self.rect.x += new_position - self.position.x
+                self.position.x = new_position
                 self.acc.x = 0
         # Gdy porusza się w lewo
         elif self.acc.x < 0:
             hits = pygame.sprite.spritecollide(self, self.game.platforms, False)  # False -> don't remove from platforms
             if hits:
-                self.position.x = max([hits[i].position.x + hits[i].rect.width for i in range(len(hits))])
-                self.position.x += -WIDTH // 2  # SPECIAL ALIGN
+                self.is_pushed = False
+                new_position = max([hits[i].position.x + hits[i].rect.width for i in range(len(hits))])
+                self.rect.x += new_position - self.position.x
+                self.position.x = new_position
+                # self.position.x += -WIDTH // 2  # SPECIAL ALIGN
                 self.acc.x = 0
 
     # Sprawdzanie kolizji boosterów (prostokątów gracza i ich)
@@ -127,6 +136,16 @@ class Player(pygame.sprite.Sprite):
                     hit.apply_boost()
             if kill:
                 hit.kill()
+
+    def handle_mouse(self, event):
+        self.handle_mouse_cast_spell(event)
+        self.execute_item_action(event)
+
+    def execute_item_action(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
+            item = self.equipment.get_active_item()
+            if item and item.action(event.pos, self):
+                item = self.equipment.remove_item("active")
 
     def handle_mouse_cast_spell(self, event):
         """Handle mouse spell casting and cast if needed"""
@@ -164,18 +183,17 @@ class Player(pygame.sprite.Sprite):
         if not thrown:
             return
 
-        thrown.pos = vector(self.position.x + 80 * self.facing + 15 + WIDTH / 2, self.position.y - 50 + HEIGHT / 2)
+        thrown.pos = vector(self.position.x + 80 * self.facing + 15, self.position.y - 50)
 
         self.game.all_sprites.add(thrown)
         self.game.items.add(thrown)
 
     def update(self):
         """Update player position, check collisons, collect/throw items, handle keys pressed"""
-
         # Równania ruchu. Zabawa na własną odpowiedzialność :v
         self.vel.y += self.acc.y
-        if self.vel.y > MAX_VEL_Y:
-            self.vel.y = MAX_VEL_Y
+        if self.vel.y > PLAYER_MOVE["MAX_VEL_Y"]:
+            self.vel.y = PLAYER_MOVE["MAX_VEL_Y"]
 
         # Poruszenie się i sprawdzenie kolizji
         self.position.y += self.vel.y + 0.5 * self.acc.y
@@ -195,7 +213,7 @@ class Player(pygame.sprite.Sprite):
         self.check_collision_boosters()
 
         # To zostaje nadpisane, jeśli działa tło (background.py) w klasie tła @see class Background
-        self.rect.midbottom = (self.position.x, self.position.y)
+        # self.rect.midbottom = (self.position.x, self.position.y)
 
         self.key_actions(can_jump)
 
@@ -205,17 +223,17 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
             self.facing = -1
-            self.acc.x = -PLAYER_MOVE["PLAYER_ACC"]
-            self.standing = False
+            if not self.is_pushed:
+                self.acc.x = -PLAYER_MOVE["PLAYER_ACC"]
         elif keys[pygame.K_RIGHT]:
             self.facing = 1
-            self.acc.x = PLAYER_MOVE["PLAYER_ACC"]
-            self.standing = False
+            if not self.is_pushed:
+                self.acc.x = PLAYER_MOVE["PLAYER_ACC"]
         else:
-            self.acc.x = 0
+            if not self.is_pushed:
+                self.acc.x = 0
             self.standing = True
         if keys[pygame.K_UP] and can_jump:
-            self.standing = False
             self.jump()
 
         if keys[pygame.K_q]:
@@ -235,9 +253,9 @@ class Player(pygame.sprite.Sprite):
                         self.spells.flag_ctrl = True
                         self.spells.last_ctrl = now_ctrl
                         if self.facing == 1:
-                            cur_pos = vector(self.position.x, self.rect.centery + 10)
+                            cur_pos = vector(self.position.x, self.position.y + 10)
                         else:
-                            cur_pos = vector(self.position.x - self.rect.width, self.rect.centery + 10)
+                            cur_pos = vector(self.position.x - self.rect.width, self.position.y + 10)
                         # Prędkość pionowa pocisku po wystrzeleniu
                         speed_y = random.uniform(-0.2, 0.2)
                         if self.spell_ctrl == "fireball":
@@ -298,14 +316,19 @@ class Player(pygame.sprite.Sprite):
                 self.spell_cast_ready = True
 
     def hit(self, attack):
-        print(f"attack: {attack}")
+        self.health_bar.decrease_health(attack)
 
     def heal(self, hp_value):
         return self.health_bar.increase_health(hp_value)
+
+    def push_away(self, direction, push_vel_x, push_vel_y):
+        self.vel.y = -push_vel_y
+        self.acc.x = push_vel_x * direction
+        self.is_pushed = True
 
 
 # Wywolanie akcji przedmiotu
 # if keys[pygame.K_n]:
 #            item = self.equipment.get_active_item()
-#            if item and item.action():
+#            if item and item.action(mouse_pos, pself.position):
 #                item = self.equipment.remove_item("active")

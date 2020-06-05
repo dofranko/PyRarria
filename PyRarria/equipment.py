@@ -5,7 +5,7 @@ from copy import copy
 
 vector = pygame.math.Vector2
 
-# Klasa, która tworzy ekwipunek i zarządza nim
+
 class Equipment:
     """A class representing equipement and holding items"""
 
@@ -16,7 +16,6 @@ class Equipment:
         self.base_width, self.base_height = 0, 0  # Inicjowane również w funkcji create_eq_GUI()
         self.is_opened = False  # Czy otwarty
         self.eq_size = eq_size  # Rozmiar całego eq
-        self.loaded_images = {}  # Przechowywanie obrazków przedmiotów (żeby nie duplikować ich wczytywania)
         self.change_tool = None  # numer przenoszonego przedmiotu
         self.equipment_moving = False  # flaga do przenoszenia przedmiotu
         self.equipment = None  # przenoszony przedmiot
@@ -103,14 +102,15 @@ class Equipment:
         for i in range(len(self.base_eq)):
             eq = self.base_eq.sprites()[i]
             if self.collected_items[i]:
-                item_image = self.collected_items[i][0].image
                 if i != self.change_tool:  # nie rysujemy przedmiotu przenoszonego
                     if i == self.active_tool_number:  # podświetlenie przedmiotu
                         eq.image = copy(self.eq_panel_image)  # znika podświetlenie całego square
+                        item_image = self.collected_items[i][0].image
                         item_image = pygame.transform.scale(item_image, (44, 44))
                         item_image.fill(GREEN, special_flags=pygame.BLEND_MAX)
                         screen.blit(item_image, (5 + self.base_x + i * self.base_width - 2, 5 + self.base_y - 2))
 
+                    item_image = self.collected_items[i][0].image
                     item_image = pygame.transform.scale(item_image, (40, 40))
                     screen.blit(item_image, (5 + self.base_x + i * self.base_width, 5 + self.base_y))
                     if len(self.collected_items[i]) > 1:

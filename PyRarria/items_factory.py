@@ -17,9 +17,13 @@ class Factory:
     """A factory for creating items"""
 
     ITEMS_DICT = {}
-    ITEMS_DICT["potato"] = ItemInfo("potato", "Przepyszny ziemniak.", "food", -10, {"health_value": 5})
+    ITEMS_DICT["potato"] = ItemInfo("potato", "Przepyszny ziemniak.", "food", -10, {"health_points": 200})
     ITEMS_DICT["pickaxe_diamond"] = ItemInfo(
-        "pickaxe_diamond", "Potężny przedmiot, uważaj na niego.", "tool", -30, {"dmg": 5, "dur": 10}
+        "pickaxe_diamond",
+        "Potężny przedmiot, uważaj na niego.",
+        "tool",
+        -30,
+        {"damage": 30, "durability": 30, "range": 120},
     )
 
     def __init__(self, game):
@@ -35,11 +39,8 @@ class Factory:
 
     def create_food(self, name, info, x, y):
         food = Food(x, y, info, self.game)
-        food.health_value = info.attr["health_value"]
         return food
 
     def create_tool(self, name, info, x, y):
         tool = Tool(x, y, info, self.game)
-        tool.damage = info.attr["dmg"]
-        tool.durability = info.attr["dur"]
         return tool

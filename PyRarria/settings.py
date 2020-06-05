@@ -9,41 +9,42 @@ IMAGES = "resources/images"
 SOUNDS = "resources/sounds"
 
 # Player properties
-PLAYER_MOVE = {"PLAYER_ACC": 5}
-PLAYER_FRICTION = -0.2
-PLAYER_GRAV = 0.8
-MAX_VEL_Y = 15
-JUMP_VEL = -20
+PLAYER_MOVE = {"PLAYER_ACC": 5, "PLAYER_GRAV": 0.8, "PLAYER_FRICTION": -0.2, "JUMP_VEL": -20, "MAX_VEL_Y": 15}
+
 
 # Health/Mana bar properties
 HEART_VALUE = 195
 STAR_VALUE = 195
-HEALTH_RECOVERY_VALUE = 1
-MANA_RECOVERY_VALUE = 1
+HEALTH_RECOVERY_VALUE = 0.2
+MANA_RECOVERY_VALUE = 0.2
 MAX_HEALTH = 20 * HEART_VALUE
 MIN_HEALTH = 5 * HEART_VALUE
 MAX_MANA = 20 * STAR_VALUE
 MIN_MANA = 5 * STAR_VALUE
 
 IMAGES_LIST = {
+    # Player
     "player": IMAGES + "/player.png",
-    "background": {"main": IMAGES + "/mv_bg.png", "2": IMAGES + "/mv_bg2.png"},
+    # GUI
     "heart": IMAGES + "/heart.png",
     "mana": IMAGES + "/mana.png",
+    # Ekuipment
     "eq_square": IMAGES + "/eq_square.png",
     "open_eq": IMAGES + "/open_eq.png",
     "bin": IMAGES + "/bin.png",
     "helmet": IMAGES + "/helmet.png",
+    "breastplate": IMAGES + "/breastplate.png",
+    "boot": IMAGES + "/boot.png",
+    # Screens
+    "background": {"main": IMAGES + "/background_moving_main.png", "2": IMAGES + "/background_moving_second.png"},
     "start_screen": IMAGES + "/random_start.png",
     "game_over_screen": IMAGES + "/index.png",
     # START ITEMS
     # Food
-    "potato": IMAGES + "/example_tool_2.png",
+    "potato": IMAGES + "/potato.png",
     # Tools
-    "pickaxe_diamond": IMAGES + "/diaxowy.png",
+    "pickaxe_diamond": IMAGES + "/pickaxe_diamond.png",
     # Armor
-    "breastplate": IMAGES + "/breastplate.png",
-    "boot": IMAGES + "/boot.png",
     # END ITEMS
     # Spells
     "smallfire": IMAGES + "/smallfire.png",
@@ -102,7 +103,7 @@ SPELL_SHEETS = {
 # Starting platforms
 PLATFORM_LIST = [
     (0, HEIGHT - 40, WIDTH, 40),
-    (WIDTH / 2 - 50, HEIGHT * 3 / 4, 500, 20),
+    (WIDTH / 2 - 50, HEIGHT * 3 / 4 , 500, 20),
     (125, HEIGHT - 350, 600, 20),
     (350, 200, 100, 30),
     (1200, 520, 20, 20),

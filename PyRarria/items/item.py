@@ -32,7 +32,6 @@ class Item(pygame.sprite.Sprite):
         """Check collision (only to down)"""
         if self.vel_y > 0:
             hits = pygame.sprite.spritecollide(self, self.game.platforms, False)
-
             if hits:
                 self.pos.y = min([(hits[i].position.y - self.rect.height) for i in range(len(hits))])
                 self.vel_y = 0
@@ -40,7 +39,7 @@ class Item(pygame.sprite.Sprite):
     def falling(self):
         """If needed - fall"""
         self.check_collision()
-        self.acc_y = PLAYER_GRAV
+        self.acc_y = PLAYER_MOVE["PLAYER_GRAV"]
         self.vel_y += self.acc_y
         if self.vel_y != 0:
             self.pos.y += self.vel_y + 0.5 * self.acc_y
@@ -85,6 +84,9 @@ class Item(pygame.sprite.Sprite):
         self.game.screen.blit(rot, obr_rect)
 
     # implementowane przez podklasy
-    def action(self):
-        """To implement by subclasses"""
-        pass
+    def action(self, mouse_pos, player_pos):
+        """To implement by subclasses
+            IMPORTANT:
+            return if item should be destroyed (like eating food should remove it -> then return True)
+        """
+        return False

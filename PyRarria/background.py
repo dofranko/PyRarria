@@ -13,7 +13,7 @@ class Background:
         self.stages = []  # Lista dalszych planów tła
         # Main stage
         self.stage_width = 5000  # Szerokość całej planszy. TODO Można zmienić lub jakoś upłynnić np w settings.py
-        self.start_scrolling_position = vector(WIDTH / 2, HEIGHT / 2)
+        self.start_scrolling_position = vector(0, 0)
         self.main_image = pygame.image.load(IMAGES_LIST["background"]["main"]).convert_alpha()
         self.main_stage = Stage(game, *self.main_image.get_rect().size, slowing_rate=1, image=self.main_image)
         # Dalsze tła (liczba mnoga)
@@ -26,21 +26,21 @@ class Background:
         """Updating main stage position x and player rect x"""
         # Jeśli gracz jest na lewym końcu mapy to nie przewijamy tła
         if self.player.position.x < self.start_scrolling_position.x:
-            self.player.rect.x = self.player.position.x
+            self.player.rect.x = self.player.position.x + WIDTH / 2
             self.main_stage.position.x = -self.start_scrolling_position.x
         # Jeśli gracz jest na prawym końcu mapy to nie przewijamy tła
         elif self.player.position.x > self.stage_width - self.start_scrolling_position.x:
-            self.player.rect.x = self.player.position.x - self.stage_width + WIDTH
+            self.player.rect.x = self.player.position.x - self.stage_width + + WIDTH / 2
         # Haha przewijane tło robi suuuuwu suwu
         else:
             # Tu ważne: w tym miejscu centrujemy player.rect - nie w jego klasie.
-            self.player.rect.x = self.start_scrolling_position.x
+            self.player.rect.x = self.start_scrolling_position.x + WIDTH / 2
             self.main_stage.position.x = -self.player.position.x
 
     def update_player_and_rect_y(self):
         """Updating main stage position y and player rect y"""
         # Pozycja gracza Y i sceny
-        self.player.rect.y = self.start_scrolling_position.y
+        self.player.rect.y = self.start_scrolling_position.y + HEIGHT / 2
         self.main_stage.position.y = -self.player.position.y
 
     def update(self):

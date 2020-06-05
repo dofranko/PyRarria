@@ -66,7 +66,11 @@ class Sprite(AbstractSprite):
                 self.bite_count -= 1
             else:
                 player.hit(self.damage)
-                self.bite_count = 10
+                direction = -1
+                if self.location.x < player.location.x:
+                    direction = 1
+                player.push_away(direction, 4, 14)
+                self.bite_count = 20
 
     def update(self, player, platforms):
         # dead

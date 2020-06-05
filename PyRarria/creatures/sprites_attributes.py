@@ -59,7 +59,7 @@ ZOMBIE = {
 
     'mass': 20,
     'items': [],
-    'damage': 14,
+    'damage': 50,
     'defense': 10,
 }
 
