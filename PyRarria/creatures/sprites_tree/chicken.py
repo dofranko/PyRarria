@@ -27,9 +27,3 @@ class Chicken(WalkingSprite):
 
     def apply_force(self, force):
         self.acceleration += force
-
-    def update_forces(self, player, platforms):
-        pass
-        run(self)
-        gravity(self)
-        keep_on_platform(self, platforms)

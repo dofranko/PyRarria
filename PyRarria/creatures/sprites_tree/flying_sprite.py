@@ -25,5 +25,5 @@ class FlyingSprite(Sprite):
 
     def update_forces(self, player, platforms):
         fly(self)
-        soft_edges_ball(self)
+        edges_bounce(self)
         bounce_from_platform(self, platforms)

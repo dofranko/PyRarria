@@ -24,6 +24,7 @@ class Arrow(FlyingSprite):
     def __init__(self, x, y):
         super(Arrow, self).__init__(x, y)
         self.create(x, y, **OBJECT)
+        self.rect = pg.rect.Rect(0, 0, self.radius, self.radius)
 
     def apply_force(self, force):
         force.limit(self.maxforce)
@@ -32,5 +33,5 @@ class Arrow(FlyingSprite):
     def update_forces(self, player, platforms):
         gravity_bullet(self)
         edges_delete(self)
-        platrofm_stop(self, platforms)
+        platform_stop(self, platforms)
 

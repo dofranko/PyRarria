@@ -26,14 +26,6 @@ class Skeleton(WalkingSprite):
         super(Skeleton, self).__init__(x, y)
         self.create(x, y, **OBJECT)
 
-    def update_forces(self, player, platforms):
-        gravity(self)
-        if (player.location - self.location).mag() > 200:
-            run_after(self, player)
-        else:
-            self.velocity.zero()
-        jump_from_platform(self, platforms)
-
     def bite(self, player):
         pass
 
@@ -41,8 +33,16 @@ class Skeleton(WalkingSprite):
         if self.shot_count > 0:
             self.shot_count -= 1
         else:
-            arrow = Arrow(self.location.x, self.location.y)
-            bullet(arrow, self.location, player.location)
+            arrow = Arrow(self.position.x, self.position.y)
+            bullet(arrow, self.position, player.position)
 
             arrows.add(arrow)
             self.shot_count = 10
+
+    def update_forces(self, player, platforms):
+        gravity(self)
+        if (player.position - self.position).mag() > 200:
+            run_after(self, player)
+        else:
+            self.velocity.zero()
+        jump_from_platform(self, platforms)

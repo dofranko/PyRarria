@@ -4,21 +4,26 @@ from PyRarria.creatures.sprites_tree.chicken import Chicken
 from PyRarria.creatures.sprites_tree.cow import Cow
 from PyRarria.creatures.sprites_tree.sheep import Sheep
 from PyRarria.creatures.sprites_tree.skeleton import Skeleton
+from PyRarria.creatures.sprites_tree.walking_test import WalkingTest
 from PyRarria.creatures.sprites_tree.zombie import Zombie
 from PyRarria.creatures.test_global_settings import FPS
 from pygame.sprite import Group
 
+from PyRarria.creatures.vector import PVector
+
 LIMITS = {
+    'walking_test': 1,
     'birds': 0,
     'skeletons': 0,
     'zombies': 0,
     'cows': 0,
     'sheeps': 0,
-    'bats': 1,
+    'bats': 0,
     'chickens': 0,
 }
 
 FREQUENCIES = {
+    'walking_test': 1,
     'birds': 1,
     'skeletons': 1,
     'zombies': 1,
@@ -29,6 +34,7 @@ FREQUENCIES = {
 }
 
 CREATURES = {
+    'walking_test': WalkingTest,
     'bird': Bird,
     'skeleton': Skeleton,
     'zombies': Zombie,
@@ -39,6 +45,7 @@ CREATURES = {
 }
 
 NAMES = {
+    'walking_test': 'walking_test',
     'bird': 'birds',
     'skeleton': 'skeletons',
     'zombies': 'zombie',
@@ -56,10 +63,12 @@ class CreaturesEngine:
 
     def __init__(self, game):
 
-        # window, clock, main coords
+        # window, clock, main position
+        self.game = game
         self.window = game.screen
         self.clock = 0
-        self.main_position = game.main_position
+        self.map_position = PVector(0, 0)
+        self.map_position_init = PVector(-400, -300)
 
         # map, player, arrows
         self.platforms = game.platforms
@@ -71,6 +80,7 @@ class CreaturesEngine:
 
         # groups
         self.groups = {
+            'walking_test': Group(),
             'birds': Group(),
             'skeletons': Group(),
             'zombies': Group(),
@@ -81,6 +91,9 @@ class CreaturesEngine:
         }
 
     def update(self):
+        # update main position
+        self.update_map_position()
+
         # clock
         self.clock += 1
 
@@ -98,11 +111,11 @@ class CreaturesEngine:
 
         # update creatures
         for creature in self.all_creatures:
-            creature.update(self.player, self.platforms)
+            creature.update(self.player, self.platforms, self.map_position)
 
         # update arrows
         for arr in self.arrows:
-            arr.update(self.player, self.platforms)
+            arr.update(self.player, self.platforms, self.map_position)
 
         # spawn
         self.spawn()
@@ -132,16 +145,13 @@ class CreaturesEngine:
             if self.clock % (frequency) != 0:
                 continue
 
-            new_creature = Creature(self.player.location.x, self.player.location.y)
+            new_creature = Creature(400, 0)
             group.add(new_creature)
             self.all_creatures.add(new_creature)
 
-    def map_move(self, delta):
-        for creature in self.all_creatures:
-            creature.map_move(delta)
-
-        for arrow in self.arrows:
-            arrow.map_move(delta)
+    def update_map_position(self):
+        dx, dy = self.game.get_main_stage_position()
+        self.map_position.set(dx - self.map_position_init.x, dy - self.map_position_init.y)
 
     def print_stats(self):
         for group, name in zip(self.groups.values(), NAMES):

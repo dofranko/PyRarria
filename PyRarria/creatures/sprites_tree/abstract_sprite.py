@@ -40,7 +40,7 @@ class AbstractSprite(pg.sprite.Sprite):
         self.shot_count = None
 
         # vectors
-        self.location = PVector(x, y)
+        self.position = PVector(x, y)
         self.velocity = PVector(0, 0)
         self.acceleration = PVector(0, 0)
 
@@ -70,7 +70,7 @@ class AbstractSprite(pg.sprite.Sprite):
     def shoot(self, player, arrows):
         pass
 
-    def update(self, player, platforms):
+    def update(self, player, platforms, map_position):
         pass
 
     def update_forces(self, player, platforms):
@@ -79,10 +79,7 @@ class AbstractSprite(pg.sprite.Sprite):
     def apply_force(self, player):
         pass
 
-    def move(self):
-        pass
-
-    def map_move(self, delta):
+    def move(self, map_position):
         pass
 
     def die(self):

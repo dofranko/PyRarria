@@ -30,7 +30,7 @@ class Sprite(AbstractSprite):
         # flags
         self.is_enemy = True
         self.is_hpbar = False
-        self.is_hitbox = False
+        self.is_hitbox = True
         self.is_fixpos = True
 
         # counters
@@ -39,14 +39,14 @@ class Sprite(AbstractSprite):
         self.shot_count = 0
 
         # vectors
-        self.location = PVector(x, y)
+        self.position = PVector(x, y)
         self.velocity = PVector(0, 0.001)
         self.acceleration = PVector(0, 0)
 
         # body
         w, h = self.width, self.height
         self.rect = pg.rect.Rect(0, 0, w, h)
-        self.rect.center = self.location.repr()
+        self.rect.center = self.position.repr()
         self.body = pg.rect.Rect(self.rect)
         self.hpbar = HpBar(self.body.midtop)
 
@@ -75,7 +75,7 @@ class Sprite(AbstractSprite):
                 player.hit(self.damage)
                 self.bite_count = 10
 
-    def update(self, player, platforms):
+    def update(self, player, platforms, map_position):
         # dead
         if self.hp <= 0:
             self.die()
@@ -83,29 +83,26 @@ class Sprite(AbstractSprite):
 
         # alive
         self.update_forces(player, platforms)
-        self.move()
+        self.move(map_position)
 
     def update_forces(self, player, platforms):
         pass
 
-    def move(self):
+    def move(self, map_position):
         # move
         self.velocity += self.acceleration
-        self.velocity.limit(self.maxspeed)
-        self.location += self.velocity
-        self.acceleration *= 0
+        self.velocity.xlimit(self.maxspeed)
+        self.position += self.velocity
+        self.acceleration.zero()
 
         # update body
-        self.body.center = self.location.repr()
-        self.rect.center = self.location.repr()
+        self.body.topleft = (self.position + map_position).repr()
+        self.rect.topleft = (self.position + map_position).repr()
         self.hpbar.center(self.body.midtop)
 
         # update animation counter
         self.anim_count -= 1
         self.anim_count %= self.animation_ticks
-
-    def map_move(self, delta):
-        self.location += delta
 
     def apply_force(self, force):
         force.limit(self.maxforce)

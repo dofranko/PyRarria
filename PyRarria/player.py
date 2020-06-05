@@ -6,7 +6,7 @@ import random
 
 from PyRarria.creatures.vector import PVector
 
-vector = pygame.math.Vector2
+vector = PVector
 
 
 class Player(pygame.sprite.Sprite):

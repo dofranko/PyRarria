@@ -59,6 +59,9 @@ SKELETON_RIGHT = [load('img/skeleton_03.png'), load('img/skeleton_04.png')]
 ARROW_LEFT = [load('img/arrow_01.png')]
 ARROW_RIGHT = [load('img/arrow_02.png')]
 
+WALKING_TEST_LEFT = [load('img/walking_test_01.png')]
+WALKING_TEST_RIGHT = [load('img/walking_test_01.png')]
+
 
 BIRD_ANIMATION = {
     'left': BIRD_LEFT,
@@ -130,4 +133,13 @@ CHICKEN_ANIMATION = {
     'width': CHICKEN_LEFT[0].get_rect().width,
     'height': CHICKEN_LEFT[0].get_rect().height,
     'speed': 2,
+}
+
+WALKING_TEST_ANIMATION = {
+    'left': WALKING_TEST_LEFT,
+    'right': WALKING_TEST_RIGHT,
+    'frames': len(WALKING_TEST_LEFT),
+    'width': WALKING_TEST_LEFT[0].get_rect().width,
+    'height': WALKING_TEST_LEFT[0].get_rect().height,
+    'speed': 1,
 }

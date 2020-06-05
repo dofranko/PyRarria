@@ -29,8 +29,6 @@ class Game:
         self.loaded_images = {}
         self.pause = False
         self.creatures_engine = None
-        self.main_position = None
-        self.last_main_position = None
 
     def new_game(self):
         # start a new game
@@ -51,10 +49,6 @@ class Game:
         self.background = Background(self, self.player)
         self.health_bar = HealthBar(self)
         self.mana_bar = ManaBar(self)
-
-        self.main_position = PVector(*self.get_main_stage_position())
-        self.last_main_position = PVector(*self.get_main_stage_position())
-        self.delta = PVector(0, 0)
         self.creatures_engine = CreaturesEngine(self)
 
         self.waiting = True
@@ -109,17 +103,12 @@ class Game:
         self.magics.update()
         self.explosions.update()
         self.items.update()
-
-
-        self.update_delta()
-        self.creatures_engine.map_move(self.delta)
         self.creatures_engine.update()
 
     def events(self):
         # Game Loop - events
         for event in pygame.event.get():
             # TODO test
-            print('jump now!')
             # check for closing window
             if event.type == pygame.QUIT:
                 if self.playing:
@@ -255,12 +244,6 @@ class Game:
         except:
             print(f"{sys.exc_info()}[0]\n Continuing program with values (0,0)")
             return vector(0, 0)
-
-    def update_delta(self):
-        self.main_position.set(*self.get_main_stage_position())
-        self.delta.set_from_vector(self.main_position - self.last_main_position)
-        self.last_main_position.set_from_vector(self.main_position)
-        print(self.delta)
 
 
 if __name__ == "__main__":
