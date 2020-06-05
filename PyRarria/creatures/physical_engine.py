@@ -6,10 +6,10 @@ import random
 import math
 
 # forces
-WIND = PVector(0.000001, 0.0)
-GRAVITY = PVector(0, 2.0)
+WIND = PVector(-0.05, 0.0)
+GRAVITY = PVector(0, 0.2)
 GRAVITY_BULLET = PVector(0, 0.1)
-REACTION = PVector(0, -3)
+REACTION = PVector(0, -2.0)
 
 # constants
 MI = 0.05
@@ -123,7 +123,7 @@ def run_after(src, target):
 
 def jump(src):
     """Performs single jump"""
-    jmp = PVector(src.velocity.xdirection()*src.maxspeed, -src.maxspeed)
+    jmp = PVector(src.velocity.xdirection()*src.maxspeed, -src.maxspeed/8)
     src.apply_force(jmp)
 
     print(jmp)
@@ -280,7 +280,7 @@ def edges_bounce(src):
         src.apply_force(steer)
 
     # vertical
-    if src.rect.top< EDGE_LIMIT:
+    if src.rect.top < EDGE_LIMIT:
         desired = PVector(src.velocity.x, src.maxspeed)
         steer = desired - src.velocity
         src.apply_force(steer)
@@ -314,7 +314,7 @@ def keep_on_platform(src, platforms):
     hits = pg.sprite.spritecollide(src, platforms, False)
     if hits:
 
-        reaction(src)
+        # reaction(src)
 
         if src.rect.centerx > hits[0].rect.right:
             desired = PVector(-1, src.velocity.y)
@@ -333,7 +333,7 @@ def push_from_platform(src, platforms):
     hits = pg.sprite.spritecollide(src, platforms, False)
     if hits:
 
-        reaction(src)
+        # reaction(src)
 
         if src.rect.centerx > hits[0].rect.right:
             desired = PVector(2, src.velocity.y)
@@ -351,7 +351,7 @@ def jump_from_platform(src, platforms):
 
     hits = pg.sprite.spritecollide(src, platforms, False)
     if hits:
-        reaction(src)
+        # reaction(src)
 
         if src.rect.centerx > hits[0].rect.right:
             jump(src)
@@ -364,6 +364,7 @@ def bounce_from_platform(src, platforms):
     """If creature collides with platforms, moves in opposite direction."""
     hits = pg.sprite.spritecollide(src, platforms, False)
     if hits:
+        print('hits')
         if src.rect.left < hits[0].rect.left:
             src.apply_force(PVector(-src.maxforce, 0))
 

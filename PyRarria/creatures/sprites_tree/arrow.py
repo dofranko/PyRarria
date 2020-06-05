@@ -30,6 +30,16 @@ class Arrow(FlyingSprite):
         force.limit(self.maxforce)
         self.acceleration += force
 
+    def update(self, player, platforms, map_position):
+        # dead
+        if self.hp <= 0:
+            self.die()
+            return
+
+        # alive
+        self.update_forces(player, platforms)
+        self.move(map_position)
+
     def update_forces(self, player, platforms):
         gravity_bullet(self)
         edges_delete(self)

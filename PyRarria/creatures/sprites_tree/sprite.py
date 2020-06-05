@@ -28,7 +28,7 @@ class Sprite(AbstractSprite):
         # flags
         self.is_enemy = True
         self.is_hpbar = False
-        self.is_hitbox = True
+        self.is_hitbox = False
         self.is_fixpos = True
 
         # counters
@@ -81,6 +81,7 @@ class Sprite(AbstractSprite):
         # alive
         self.update_forces(player, platforms)
         self.move(map_position)
+        self.fix_move(platforms, map_position)
 
     def update_forces(self, player, platforms):
         pass
@@ -100,6 +101,45 @@ class Sprite(AbstractSprite):
         # update animation counter
         self.anim_count -= 1
         self.anim_count %= self.animation_ticks
+
+    def fix_move(self, platforms, map_position):
+        hits = pg.sprite.spritecollide(self, platforms, False)
+        if hits:
+            dx = 0.0
+            hit = hits[0].rect
+            rect = self.rect
+
+            # vertical
+            if rect.left < hit.left:
+                dx = hit.left - rect.right
+                self.velocity.x = 0.0
+            elif rect.right > hit.right:
+                dx = hit.right - rect.left
+                self.velocity.x = 0.0
+
+            self.position.x += dx
+            self.body.topleft = (self.position + map_position).repr()
+            self.rect.topleft = (self.position + map_position).repr()
+            self.hpbar.center(self.body.midtop)
+
+        hits = pg.sprite.spritecollide(self, platforms, False)
+        if hits:
+            dy = 0.0
+            hit = hits[0].rect
+            rect = self.rect
+
+            # horizontal
+            if rect.top < hit.top:
+                dy = hit.top - rect.bottom
+                self.velocity.y = 0.0
+            elif rect.bottom > hit.bottom:
+                dy = hit.bottom - rect.top
+                self.velocity.y = 0.0
+
+            self.position.y += dy
+            self.body.topleft = (self.position + map_position).repr()
+            self.rect.topleft = (self.position + map_position).repr()
+            self.hpbar.center(self.body.midtop)
 
     def apply_force(self, force):
         force.limit(self.maxforce)

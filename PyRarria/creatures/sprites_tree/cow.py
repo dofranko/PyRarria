@@ -24,7 +24,3 @@ class Cow(WalkingSprite):
     def __init__(self, x, y):
         super(Cow, self).__init__(x, y)
         self.create(x, y, **OBJECT)
-
-    def apply_force(self, force):
-        self.acceleration += force
-

@@ -132,7 +132,7 @@ CHICKEN_ANIMATION = {
     'frames': len(CHICKEN_LEFT),
     'width': CHICKEN_LEFT[0].get_rect().width,
     'height': CHICKEN_LEFT[0].get_rect().height,
-    'speed': 2,
+    'speed': 1,
 }
 
 WALKING_TEST_ANIMATION = {
