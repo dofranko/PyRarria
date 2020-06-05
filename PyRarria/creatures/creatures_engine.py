@@ -22,6 +22,7 @@ LIMITS = {
     'chickens': 0,
 }
 
+
 FREQUENCIES = {
     'walking_test': 1,
     'birds': 1,
@@ -68,7 +69,7 @@ class CreaturesEngine:
         self.window = game.screen
         self.clock = 0
         self.map_position = PVector(0, 0)
-        self.map_position_init = PVector(-400, -300)
+        self.map_position_init = PVector(0, 0)
 
         # map, player, arrows
         self.platforms = game.platforms
@@ -134,15 +135,13 @@ class CreaturesEngine:
 
     def spawn(self):
         for group, frequency, limit, Creature in zip(
-                self.groups.values(),
-                FREQUENCIES.values(),
-                LIMITS.values(),
-                CREATURES.values()):
+            self.groups.values(), FREQUENCIES.values(), LIMITS.values(), CREATURES.values()
+        ):
 
             if len(group) >= limit:
                 continue
 
-            if self.clock % (frequency) != 0:
+            if self.clock % (frequency * FPS) != 0:
                 continue
 
             new_creature = Creature(400, 0)
@@ -155,5 +154,5 @@ class CreaturesEngine:
 
     def print_stats(self):
         for group, name in zip(self.groups.values(), NAMES):
-            print(f'{name:10}:{len(group)}')
+            print(f"{name:10}:{len(group)}")
         print()

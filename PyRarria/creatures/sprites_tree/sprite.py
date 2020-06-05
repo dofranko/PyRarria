@@ -1,20 +1,18 @@
-from PyRarria.creatures.sprites_tree.abstract_sprite import AbstractSprite
-from PyRarria.creatures.hp_bar import HpBar
-from PyRarria.creatures.physical_engine import *
-from PyRarria.creatures.vector import PVector
+from creatures.sprites_tree.abstract_sprite import AbstractSprite
+from creatures.hp_bar import HpBar
+from creatures.physical_engine import *
+from creatures.vector import PVector
 
 ANIMATION = None
 OBJECT = None
 
 
 class Sprite(AbstractSprite):
-
     def __init__(self, x, y):
         super(Sprite, self).__init__(x, y)
         # self.create(x, y, **OBJECT)
 
-    def create(self, x, y, manoeuvrability, maxspeed, maxforce, maxhp,
-               mass, items, damage, defense):
+    def create(self, x, y, manoeuvrability, maxspeed, maxforce, maxhp, mass, items, damage, defense):
 
         # variables
         self.radius = min(self.width, self.height)
@@ -59,13 +57,8 @@ class Sprite(AbstractSprite):
     def draw(self, win):
         pass
 
-    def hit(self, weapon):
-        if pg.sprite.collide_rect(self, weapon):
-            self.is_enemy = True
-            self.is_hpbar = True
-
-            self.hp -= (101 - self.defense) * weapon.damage / 101
-            print(self.hp)
+    def hit(self, damage_value):
+        self.hp -= damage_value
 
     def bite(self, player):
         if self.is_enemy and self.rect.colliderect(player):
@@ -73,7 +66,11 @@ class Sprite(AbstractSprite):
                 self.bite_count -= 1
             else:
                 player.hit(self.damage)
-                self.bite_count = 10
+                direction = -1
+                if self.position.x < player.position.x:
+                    direction = 1
+                player.push_away(direction, 4, 14)
+                self.bite_count = 20
 
     def update(self, player, platforms, map_position):
         # dead
@@ -109,5 +106,5 @@ class Sprite(AbstractSprite):
         self.acceleration += force
 
     def die(self):
-        print('die')
+        print("die")
         self.kill()

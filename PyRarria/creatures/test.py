@@ -1,13 +1,13 @@
 import pygame as pg
 from pygame.sprite import Group
 
-from PyRarria.creatures.creatures_engine import CreaturesEngine
-from PyRarria.creatures.sprites_tree.arrow import Arrow
-from PyRarria.creatures.sprites_tree.bird import Bird
-from PyRarria.creatures.sprites_tree.skeleton import Skeleton
-from PyRarria.creatures.test_global_settings import *
-from PyRarria.creatures.test_player import Player
-from PyRarria.creatures.teat_weapon import Weapon
+from creatures.creatures_engine import CreaturesEngine
+from creatures.sprites_tree.arrow import Arrow
+from creatures.sprites_tree.bird import Bird
+from creatures.sprites_tree.skeleton import Skeleton
+from creatures.test_global_settings import *
+from creatures.test_player import Player
+from creatures.teat_weapon import Weapon
 
 from pygame.locals import (
     K_UP,
@@ -27,9 +27,9 @@ from pygame.locals import (
 pg.init()
 
 # test constants
-BACKGORUND = pg.image.load('images/bg.jpg')
-CHAR = pg.image.load('images/standing.png')
-FONT = pg.font.SysFont('comicsans', 30, True, False)
+BACKGORUND = pg.image.load("images/bg.jpg")
+CHAR = pg.image.load("images/standing.png")
+FONT = pg.font.SysFont("comicsans", 30, True, False)
 
 # window / clock
 win = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -69,6 +69,7 @@ all_sprites.add(man)
 # creatures engine
 
 creatures_engine = CreaturesEngine(game)
+
 
 def update_engine():
     # # hit
@@ -124,7 +125,6 @@ run = True
 while run:
     # clock
     clock.tick(FPS)
-
 
     # events
     for event in pg.event.get():

@@ -24,17 +24,17 @@ class WalkingTest(WalkingSprite):
         self.create(x, y, **OBJECT)
 
         # TEST dodac position
-        self.position = PVector(400, -150)
+        self.position = PVector(400, 58)
 
     def apply_force(self, force):
         self.acceleration += force
 
     def update_forces(self, player, platforms):
         # fly_after(self, player)
-        run(self)
-        gravity(self)
+        # run(self)
+        # gravity(self)
         # jump_from_platform2(self, platforms)
-        push_from_platform(self, platforms)
+        # push_from_platform(self, platforms)
         # fly_after(self, player)
         pass
 

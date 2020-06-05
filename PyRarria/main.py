@@ -1,36 +1,39 @@
 import pygame
-import random
 import sys
+
 from settings import *
 from platforms import *
 from player import *
 from equipment import *
 from spells_icon import *
 from background import *
-from health_mana_bar import *
-from FabrykaItemow import *
+from health_bar import *
+from mana_bar import *
+from items_factory import *
 from boosters import *
 
-from PyRarria.creatures.creatures_engine import CreaturesEngine
-from PyRarria.creatures.vector import PVector
+from creatures.creatures_engine import CreaturesEngine
+from creatures.vector import PVector
 
 vector = pygame.math.Vector2
 
 
 class Game:
+    """Main class starting game"""
+
     def __init__(self):
         # Initialize game window
         pygame.init()
-        #pygame.mixer.init()
+        # pygame.mixer.init()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption(TITLE)
         self.clock = pygame.time.Clock()
         self.running = True
-        self.loaded_images = {}
         self.pause = False
         self.creatures_engine = None
 
     def new_game(self):
+        """Start new game"""
         # start a new game
         self.all_sprites = pygame.sprite.Group()
         self.platforms = pygame.sprite.Group()
@@ -41,14 +44,17 @@ class Game:
         self.items = pygame.sprite.Group()
         self.all_creatures = pygame.sprite.Group()
         self.arrows = pygame.sprite.Group()
-        self.trzymany = None
-        self.fabryka = Fabryka(self)
-        self.player = Player(self)
-        self.equipment = Equipment(self, self.player)
+        self.factory = Factory(self)
+        self.equipment = Equipment(self)
         self.spells = Spells(self)
-        self.background = Background(self, self.player)
         self.health_bar = HealthBar(self)
         self.mana_bar = ManaBar(self)
+        self.player = Player(self, self.equipment, self.health_bar, self.mana_bar, self.spells)
+        self.background = Background(self, self.player)
+
+        self.main_position = PVector(*self.get_main_stage_position())
+        self.last_main_position = PVector(*self.get_main_stage_position())
+        self.delta = PVector(0, 0)
         self.creatures_engine = CreaturesEngine(self)
 
         self.waiting = True
@@ -58,9 +64,9 @@ class Game:
             self.platforms.add(p)
 
         # test
-        ziemniak = self.fabryka.create("ziemniak", 1000, 300)
-        self.all_sprites.add(ziemniak)
-        self.items.add(ziemniak)
+        potato = self.factory.create("potato", 1000, 300)
+        self.all_sprites.add(potato)
+        self.items.add(potato)
 
         # Tutaj testowanie dodawania boosterów
         position = vector(1193, 478)
@@ -70,8 +76,8 @@ class Game:
         position5 = vector(500, 470)
         position6 = vector(1400, 470)
 
-        boost_test1 = TweeningBooster(self, position, 'health')
-        boost_test2 = TweeningBooster(self, position2, 'mana')
+        boost_test1 = TweeningBooster(self, position, "health")
+        boost_test2 = TweeningBooster(self, position2, "mana")
         boost_test3 = PlayerSpeedBooster(self, position3)
         boost_test4 = DamageBooster(self, position4)
         boost_test5 = DefenseBooster(self, position5)
@@ -80,6 +86,7 @@ class Game:
         self.run()
 
     def run(self):
+        """Run game in loop"""
         # Game Loop
         self.playing = True
         while self.playing:
@@ -89,6 +96,7 @@ class Game:
             self.draw()
 
     def update(self):
+        """Call an update for every class that needs it"""
         # Game Loop - Update
         # make update() for every sprite (players/enemy)
 
@@ -96,6 +104,7 @@ class Game:
         self.equipment.update()
         self.background.update()
         self.platforms.update()
+        self.creatures_engine.update()
         self.health_bar.update()
         self.mana_bar.update()
         self.boosters.update()
@@ -103,7 +112,7 @@ class Game:
         self.magics.update()
         self.explosions.update()
         self.items.update()
-        self.creatures_engine.update()
+
 
     def events(self):
         # Game Loop - events
@@ -115,40 +124,44 @@ class Game:
                     self.playing = False
                 self.running = False
                 self.waiting = False
-            elif (event.type == pygame.MOUSEBUTTONDOWN
-                    or event.type == pygame.MOUSEBUTTONUP
-                    or event.type == pygame.MOUSEMOTION):
+            elif (
+                event.type == pygame.MOUSEBUTTONDOWN
+                or event.type == pygame.MOUSEBUTTONUP
+                or event.type == pygame.MOUSEMOTION
+            ):
                 self.equipment.handle_mouse(event)
                 self.spells.handle_mouse(event)
-                self.player.handle_mouse_cast_spell(event)
+                self.player.handle_mouse(event)
         keys = pygame.key.get_pressed()
         if keys[pygame.K_p]:
             self.pause = True
             self.paused()
 
     def draw(self):
+        """Call a draw for all classes that need it"""
         # Game Loop - draw
         # Kolejność ma znaczenie
         self.background.draw()
+        self.creatures_engine.draw()
+        self.all_sprites.draw(self.screen)
         self.health_bar.draw()
         self.mana_bar.draw()
-        self.all_sprites.draw(self.screen)
-        self.spells.draw()
-        self.equipment.draw()
-        if self.trzymany:
-            self.trzymany.draw()
+        self.spells.draw(self.screen)
+        self.equipment.draw(self.screen)
+        if self.player.held_item:
+            self.player.held_item.draw_on_player()
         # żeby przenoszony itemik był widoczny, nic go nie ma przykrywać, więc rysuje się na końcu
-        self.spells.draw_moving_item()
-        self.creatures_engine.draw()
+        self.spells.draw_moving_item(self.screen)
         # *after* drawing everything, flip the display
         # #NieZmieniaćBoNieBędzieDziałaćINawetTwórcyNieWiedząCzemu
         pygame.display.flip()
 
     def show_start_screen(self):
+        """Display starting screen"""
         waiting = True
         font = pygame.font.SysFont("dejavusans", 30, 0, 0)
         # TODO tutaj fancy grafika od naszego świrka graficznego
-        image = pygame.image.load("resources/images/random_start.jpg").convert()
+        image = pygame.image.load(IMAGES_LIST["start_screen"]).convert()
         image = pygame.transform.scale(image, (WIDTH, HEIGHT))
 
         counter = 0  # migotanie napisu
@@ -174,6 +187,7 @@ class Game:
                 waiting = False
 
     def show_game_over_screen(self):
+        """Display game over screen"""
         if not self.waiting:  # gdy wyłączamy grę, w pętli running wykona się jeszcze ta funkcja
             return
         alpha_surface = pygame.Surface((WIDTH, HEIGHT))  # background
@@ -187,7 +201,7 @@ class Game:
             self.screen.blit(loser, ((WIDTH / 2) - 6 * alpha, (HEIGHT / 2) - 10 * alpha))
             pygame.display.flip()  # nie zadzieraj z tym przeciwnikiem
             pygame.time.delay(50)
-        image = pygame.image.load("resources/images/index.png").convert()
+        image = pygame.image.load(IMAGES_LIST["game_over_screen"]).convert()
         image = pygame.transform.scale(image, (500, 500))
         self.screen.blit(image, (WIDTH / 5, 0))
         font = pygame.font.SysFont("dejavusans", 30, 0, 0)
@@ -214,6 +228,7 @@ class Game:
                     self.running = False
 
     def paused(self):
+        """Pause game and display pause screen"""
         large_text = pygame.font.SysFont("comicsansms", 115)
         text = large_text.render("Paused", True, (255, 255, 255))
         alpha_surface = pygame.Surface((WIDTH, HEIGHT))
@@ -238,12 +253,8 @@ class Game:
 
     # Funkcja potrzebna platformom, żeby mogły dostosować swoją pozcję
     def get_main_stage_position(self):
-        # Try dla zasady, jakby coś się namieszało w kodzie
-        try:
-            return self.background.main_stage.position
-        except:
-            print(f"{sys.exc_info()}[0]\n Continuing program with values (0,0)")
-            return vector(0, 0)
+        """Return main stage position - classes may need it for properly displaying on screen"""
+        return self.background.main_stage.position + (WIDTH / 2, HEIGHT / 2)
 
 
 if __name__ == "__main__":

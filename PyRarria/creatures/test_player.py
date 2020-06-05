@@ -1,18 +1,32 @@
 import pygame as pg
 from pygame.rect import Rect
 
-from PyRarria.creatures.vector import PVector
+from creatures.vector import PVector
 
 walk_right = [
-    pg.image.load('images/R1.png'), pg.image.load('images/R2.png'), pg.image.load('images/R3.png'),
-    pg.image.load('images/R4.png'), pg.image.load('images/R5.png'), pg.image.load('images/R6.png'),
-    pg.image.load('images/R5.png'), pg.image.load('images/R6.png'), pg.image.load('images/R7.png')]
+    pg.image.load("images/R1.png"),
+    pg.image.load("images/R2.png"),
+    pg.image.load("images/R3.png"),
+    pg.image.load("images/R4.png"),
+    pg.image.load("images/R5.png"),
+    pg.image.load("images/R6.png"),
+    pg.image.load("images/R5.png"),
+    pg.image.load("images/R6.png"),
+    pg.image.load("images/R7.png"),
+]
 
 
 walk_left = [
-    pg.image.load('images/L1.png'), pg.image.load('images/L2.png'), pg.image.load('images/L3.png'),
-    pg.image.load('images/L4.png'), pg.image.load('images/L5.png'), pg.image.load('images/L6.png'),
-    pg.image.load('images/L5.png'), pg.image.load('images/L6.png'), pg.image.load('images/L7.png')]
+    pg.image.load("images/L1.png"),
+    pg.image.load("images/L2.png"),
+    pg.image.load("images/L3.png"),
+    pg.image.load("images/L4.png"),
+    pg.image.load("images/L5.png"),
+    pg.image.load("images/L6.png"),
+    pg.image.load("images/L5.png"),
+    pg.image.load("images/L6.png"),
+    pg.image.load("images/L7.png"),
+]
 
 
 class Player(pg.sprite.Sprite):
@@ -33,18 +47,18 @@ class Player(pg.sprite.Sprite):
         self.damage = 1
 
     def draw(self, win):
-        self.x = self.location.x - self.width//2
-        self.y = self.location.y - self.height//2
+        self.x = self.location.x - self.width // 2
+        self.y = self.location.y - self.height // 2
 
         if self.walk_count + 1 >= 27:
             self.walk_count = 0
 
         if not self.standing:
             if self.left:
-                win.blit(walk_left[self.walk_count//3], (int(self.x), int(self.y)))
+                win.blit(walk_left[self.walk_count // 3], (int(self.x), int(self.y)))
                 self.walk_count += 1
             elif self.right:
-                win.blit(walk_right[self.walk_count//3], (int(self.x), int(self.y)))
+                win.blit(walk_right[self.walk_count // 3], (int(self.x), int(self.y)))
                 self.walk_count += 1
         else:
             if self.right:
@@ -74,4 +88,3 @@ class Player(pg.sprite.Sprite):
         #         if event.type == pg.QUIT:
         #             i = 301
         #             pg.quit()
-

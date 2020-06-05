@@ -110,7 +110,7 @@ def run_after(src, target):
     desired.normalize()
 
     if d < src.radius:
-        m = (d*src.maxspeed) / src.radius
+        m = (d * src.maxspeed) / src.radius
         desired *= m
     else:
         desired *= src.maxspeed
@@ -239,7 +239,7 @@ def fly_after(src, target):
     desired.normalize()
 
     if d < src.radius:
-        m = (d*src.maxspeed) / src.radius
+        m = (d * src.maxspeed) / src.radius
         desired *= m
     else:
         desired *= src.maxspeed

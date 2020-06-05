@@ -12,10 +12,10 @@ OBJECT = ZOMBIE
 class Zombie(WalkingSprite):
 
     # static variables
-    animation = [ANIMATION['left'], ANIMATION['right']]
-    frames = ANIMATION['frames']
-    width = ANIMATION['width']
-    height = ANIMATION['height']
+    animation = [ANIMATION["left"], ANIMATION["right"]]
+    frames = ANIMATION["frames"]
+    width = ANIMATION["width"]
+    height = ANIMATION["height"]
     radius = min(width, height)
     animation_ticks = math.floor(FPS * ANIMATION['speed'])
     frame_ticks = math.ceil(FPS * ANIMATION['speed'] / ANIMATION['frames'])
