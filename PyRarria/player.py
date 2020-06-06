@@ -173,6 +173,7 @@ class Player(pygame.sprite.Sprite):
                             sprite.hit(thrown_spell.damage)
                             self.spells.chosen = None
                             self.spell_cast_ready = False
+                        break
 
     def collect(self):
         """Adding item to eq that was collided"""

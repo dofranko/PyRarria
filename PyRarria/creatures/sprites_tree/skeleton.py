@@ -37,7 +37,7 @@ class Skeleton(WalkingSprite):
             bullet(arrow, self.position, player.position)
 
             arrows.add(arrow)
-            self.shot_count = 10
+            self.shot_count = 100
 
     def update_forces(self, player, platforms):
         gravity(self)

@@ -268,6 +268,18 @@ class Freeze(SmallSpell):
         main_stage_position = self.game.get_main_stage_position()
         self.stage_pos_x = main_stage_position.x
         self.stage_pos_y = main_stage_position.y
+        self.freezed_enemies = [
+            [enemy, enemy.maxspeed] for enemy in self.game.all_creatures if pygame.sprite.collide_rect(enemy, self)
+        ]
+        self.freeze_enemies()
+
+    def freeze_enemies(self):
+        for enemy, _ in self.freezed_enemies:
+            enemy.maxspeed = 0
+
+    def defreeze_enemies(self):
+        for enemy, maxspeed in self.freezed_enemies:
+            enemy.maxspeed = maxspeed
 
     # Rysowanie kolejnej klatki tego efektu
     def draw(self, cell_index):
@@ -279,6 +291,7 @@ class Freeze(SmallSpell):
     def update(self):
         now = pygame.time.get_ticks()
         if now - self.start > self.duration:
+            self.defreeze_enemies()
             self.kill()
 
         main_stage_position = self.game.get_main_stage_position()
