@@ -338,17 +338,21 @@ class Player(pygame.sprite.Sprite):
                 else:
                     self.spell_cast_ready = True
 
-    def hit(self, attack):
+    def hit(self, attack, direction):
         real_attack = attack - PLAYER_VALUES["DEFENCE"]
         if real_attack > 0:
             self.health_bar.decrease_health(real_attack)
+            force = real_attack / HEART_VALUE * 4
+            self.push_away(direction, force=force)
 
     def heal(self, hp_value):
         return self.health_bar.increase_health(hp_value)
 
-    def push_away(self, direction, push_vel_x, push_vel_y):
-        self.vel.y = -push_vel_y
-        self.acc.x = push_vel_x * direction
+    def push_away(self, direction, push_vel_x=4, push_vel_y=14, force=1):
+        if force < 0.4:
+            force = 0.4
+        self.vel.y = -push_vel_y * force
+        self.acc.x = push_vel_x * direction * force
         self.is_pushed = True
 
 

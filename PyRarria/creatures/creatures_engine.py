@@ -13,13 +13,13 @@ from creatures.vector import PVector
 
 LIMITS = {
     "walking_test": 0,
-    "birds": 0,
-    "skeletons": 1,
-    "zombies": 0,
-    "cows": 0,
-    "sheeps": 0,
-    "bats": 0,
-    "chickens": 0,
+    "birds": 5,
+    "skeletons": 3,
+    "zombies": 3,
+    "cows": 3,
+    "sheeps": 3,
+    "bats": 3,
+    "chickens": 3,
 }
 
 
