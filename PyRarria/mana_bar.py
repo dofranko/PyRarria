@@ -44,7 +44,8 @@ class ManaBar:
         if self.mana - power_value < 0:  # nie możemy użyć mocy bez wystarczająco dużo many
             return False
         else:
-            self.mana -= power_value
+            if power_value > 0:
+                self.mana -= power_value
             return True
 
     def update(self):

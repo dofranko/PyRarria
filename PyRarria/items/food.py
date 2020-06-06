@@ -10,5 +10,5 @@ class Food(Item):
         super().__init__(x, y, info, game)
         self.health_points = info.attr["health_points"]
 
-    def action(self, *args):
+    def action(self, *args, **kwargs):
         return self.game.player.heal(self.health_points)

@@ -1,59 +1,59 @@
-from PyRarria.creatures.sprites_tree.bat import Bat
-from PyRarria.creatures.sprites_tree.bird import Bird
-from PyRarria.creatures.sprites_tree.chicken import Chicken
-from PyRarria.creatures.sprites_tree.cow import Cow
-from PyRarria.creatures.sprites_tree.sheep import Sheep
-from PyRarria.creatures.sprites_tree.skeleton import Skeleton
-from PyRarria.creatures.sprites_tree.walking_test import WalkingTest
-from PyRarria.creatures.sprites_tree.zombie import Zombie
+from creatures.sprites_tree.bat import Bat
+from creatures.sprites_tree.bird import Bird
+from creatures.sprites_tree.chicken import Chicken
+from creatures.sprites_tree.cow import Cow
+from creatures.sprites_tree.sheep import Sheep
+from creatures.sprites_tree.skeleton import Skeleton
+from creatures.sprites_tree.walking_test import WalkingTest
+from creatures.sprites_tree.zombie import Zombie
 from pygame.sprite import Group
 from settings import FPS
 
-from PyRarria.creatures.vector import PVector
+from creatures.vector import PVector
 
 LIMITS = {
-    'walking_test': 0,
-    'birds': 0,
-    'skeletons': 1,
-    'zombies': 0,
-    'cows': 0,
-    'sheeps': 0,
-    'bats': 0,
-    'chickens': 0,
+    "walking_test": 0,
+    "birds": 0,
+    "skeletons": 1,
+    "zombies": 0,
+    "cows": 0,
+    "sheeps": 0,
+    "bats": 0,
+    "chickens": 0,
 }
 
 
 FREQUENCIES = {
-    'walking_test': 1,
-    'birds': 1,
-    'skeletons': 1,
-    'zombies': 1,
-    'cows': 1,
-    'sheeps': 1,
-    'bats': 1,
-    'chickens': 1,
+    "walking_test": 1,
+    "birds": 1,
+    "skeletons": 1,
+    "zombies": 1,
+    "cows": 1,
+    "sheeps": 1,
+    "bats": 1,
+    "chickens": 1,
 }
 
 CREATURES = {
-    'walking_test': WalkingTest,
-    'bird': Bird,
-    'skeleton': Skeleton,
-    'zombies': Zombie,
-    'cows': Cow,
-    'sheep': Sheep,
-    'bats': Bat,
-    'chickens': Chicken,
+    "walking_test": WalkingTest,
+    "bird": Bird,
+    "skeleton": Skeleton,
+    "zombies": Zombie,
+    "cows": Cow,
+    "sheep": Sheep,
+    "bats": Bat,
+    "chickens": Chicken,
 }
 
 NAMES = {
-    'walking_test': 'walking_test',
-    'bird': 'birds',
-    'skeleton': 'skeletons',
-    'zombies': 'zombie',
-    'cows': 'cow',
-    'sheeps': 'sheep',
-    'bats': 'bat',
-    'chickens': 'chicken',
+    "walking_test": "walking_test",
+    "bird": "birds",
+    "skeleton": "skeletons",
+    "zombies": "zombie",
+    "cows": "cow",
+    "sheeps": "sheep",
+    "bats": "bat",
+    "chickens": "chicken",
 }
 
 
@@ -61,7 +61,6 @@ SPAWN_DISTANCE = 100
 
 
 class CreaturesEngine:
-
     def __init__(self, game):
 
         # window, clock, main position
@@ -81,14 +80,14 @@ class CreaturesEngine:
 
         # groups
         self.groups = {
-            'walking_test': Group(),
-            'birds': Group(),
-            'skeletons': Group(),
-            'zombies': Group(),
-            'cows': Group(),
-            'sheeps': Group(),
-            'bats': Group(),
-            'chickens': Group(),
+            "walking_test": Group(),
+            "birds": Group(),
+            "skeletons": Group(),
+            "zombies": Group(),
+            "cows": Group(),
+            "sheeps": Group(),
+            "bats": Group(),
+            "chickens": Group(),
         }
 
     def update(self):

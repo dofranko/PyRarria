@@ -2,6 +2,9 @@ import pygame
 import random
 from settings import *
 from spritesheet import *
+from creatures.vector import PVector
+
+vector = PVector
 
 
 class SmallSpell(pygame.sprite.Sprite):
@@ -25,14 +28,13 @@ class SelfSpell(pygame.sprite.Sprite):
         self.name = name
 
 
-
 # Klasa zaklęcia smallfire, czyli podpalanie przeciwników
 class SmallFire(SmallSpell):
     def __init__(self, game, pos):
         super().__init__(game, "smallfire")
         self.sheet = SpriteSheet(SPELL_SHEETS["smallfire"], 10, 6, 60)
         self.image = pygame.Surface((self.sheet.cell_width, self.sheet.cell_height), pygame.SRCALPHA).convert_alpha()
-        self.pos = pos + (self.sheet.shift[4][0], self.sheet.shift[4][1] - 20)
+        self.pos = pos + vector(self.sheet.shift[4][0], self.sheet.shift[4][1] - 20)
         self.rect = self.image.get_rect()
         self.rect.center = pos
         # Tutaj są właściwości, które należy później dostosować
@@ -66,16 +68,13 @@ class SmallFire(SmallSpell):
         self.draw(self.frame)
 
 
-
-
-
 # Klasa zaklęcia smallthunder, czyli uderzenie piorunem w przeciwnika
 class SmallThunder(SmallSpell):
     def __init__(self, game, pos):
         super().__init__(game, "smallthunder")
         self.sheet = SpriteSheet(SPELL_SHEETS["smallthunder"], 6, 4, 24)
         self.image = pygame.Surface((self.sheet.cell_width, self.sheet.cell_height), pygame.SRCALPHA).convert_alpha()
-        self.pos = pos + (self.sheet.shift[4][0], self.sheet.shift[4][1] - 70)
+        self.pos = pos + vector(self.sheet.shift[4][0], self.sheet.shift[4][1] - 70)
         self.rect = self.image.get_rect()
         self.rect.center = pos
         # Tutaj są właściwości, które należy później dostosować
@@ -115,7 +114,7 @@ class Boulder(SmallSpell):
         super().__init__(game, "boulder")
         self.sheet = SpriteSheet(SPELL_SHEETS["boulder"], 8, 8, 64)
         self.image = pygame.Surface((self.sheet.cell_width, self.sheet.cell_height), pygame.SRCALPHA).convert_alpha()
-        self.pos = pos + (self.sheet.shift[4][0], self.sheet.shift[4][1] - 100)
+        self.pos = pos + vector(self.sheet.shift[4][0], self.sheet.shift[4][1] - 100)
         self.rect = self.image.get_rect()
         self.rect.center = pos
         self.speed_y = 0.4
@@ -167,7 +166,7 @@ class MagicShield(SelfSpell):
 
     # Zmiana defense gracza o pewną wartość
     def change_player_defense(self, value):
-        pass
+        PLAYER_VALUES["DEFENCE"] += value
 
     # Rysowanie kolejnej klatki tego efektu
     def draw(self, cell_index):
@@ -262,7 +261,7 @@ class Freeze(SmallSpell):
         super().__init__(game, "freeze")
         self.sheet = SpriteSheet(SPELL_SHEETS["freeze"], 10, 10, 86)
         self.image = pygame.Surface((self.sheet.cell_width, self.sheet.cell_height), pygame.SRCALPHA).convert_alpha()
-        self.pos = pos + (self.sheet.shift[4][0], self.sheet.shift[4][1])
+        self.pos = pos + vector(self.sheet.shift[4][0], self.sheet.shift[4][1])
         self.rect = self.image.get_rect()
         self.rect.center = pos
         self.duration = 15000

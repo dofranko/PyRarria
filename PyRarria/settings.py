@@ -5,12 +5,17 @@ HEIGHT = 600
 FPS = 60
 
 # folders
-IMAGES = "resources/images"
-SOUNDS = "resources/sounds"
+IMAGES = "resources/images/"
+BACKGROUND = "resources/images/backgrounds/"
+FOOD = "resources/images/food/"
+TOOL = "resources/images/tools/"
+ARMOUR = "resources/images/armour/"
+SCREENS = "resources/images/screens/"
+SOUNDS = "resources/sounds/"
 
 # Player properties
 PLAYER_MOVE = {"PLAYER_ACC": 5, "PLAYER_GRAV": 0.8, "PLAYER_FRICTION": -0.2, "JUMP_VEL": -20, "MAX_VEL_Y": 15}
-
+PLAYER_VALUES = {"DAMAGE": 0, "DEFENCE": 0, "MANA_REDUCTION": 0, "ACCURACY": 1}
 
 # Health/Mana bar properties
 HEART_VALUE = 195
@@ -24,39 +29,53 @@ MIN_MANA = 5 * STAR_VALUE
 
 IMAGES_LIST = {
     # Player
-    "player": IMAGES + "/player.png",
+    "player": IMAGES + "player.png",
     # GUI
-    "heart": IMAGES + "/heart.png",
-    "mana": IMAGES + "/mana.png",
+    "heart": IMAGES + "heart.png",
+    "mana": IMAGES + "mana.png",
     # Ekuipment
-    "eq_square": IMAGES + "/eq_square.png",
-    "open_eq": IMAGES + "/open_eq.png",
-    "bin": IMAGES + "/bin.png",
-    "helmet": IMAGES + "/helmet.png",
-    "breastplate": IMAGES + "/breastplate.png",
-    "boot": IMAGES + "/boot.png",
+    "eq_square": IMAGES + "eq_square.png",
+    "open_eq": IMAGES + "open_eq.png",
+    "bin": IMAGES + "bin.png",
     # Screens
-    "background": {"main": IMAGES + "/background_moving_main.png", "2": IMAGES + "/background_moving_second.png"},
-    "start_screen": IMAGES + "/random_start.png",
-    "game_over_screen": IMAGES + "/index.png",
+    "background": {"main": BACKGROUND + "background_moving_main.png", "2": BACKGROUND + "background_moving_second.png"},
+    "start_screen": SCREENS + "random_start.png",
+    "game_over_screen": SCREENS + "index.png",
     # START ITEMS
     # Food
-    "potato": IMAGES + "/potato.png",
+    "potato": FOOD + "potato.png",
+    "bacon": FOOD + "bacon.png",
     # Tools
-    "pickaxe_diamond": IMAGES + "/pickaxe_diamond.png",
+    "pickaxe_diamond": TOOL + "pickaxe_diamond.png",
+    "green_sword": TOOL + "green_sword.png",
     # Armor
+    # Helmets
+    "helmet_icon_base": ARMOUR + "helmet_icon_base.png",
+    "mage_helmet": ARMOUR + "mage_helmet.png",
+    "fire_helmet": ARMOUR + "fire_helmet.png",
+    "black_helmet": ARMOUR + "black_helmet.png",
+    # Breastplates
+    "breastplate_icon_base": ARMOUR + "breastplate_icon_base.png",
+    "mage_breastplate": ARMOUR + "mage_breastplate.png",
+    "black_breastplate": ARMOUR + "black_breastplate.png",
+    "fire_breastplate": ARMOUR + "fire_breastplate.png",
+    # Boots
+    "boots_icon_base": ARMOUR + "boots_icon_base.png",
+    "mage_boots": ARMOUR + "mage_boots.png",
+    "black_boots": ARMOUR + "black_boots.png",
+    "fire_boots": ARMOUR + "fire_boots.png",
     # END ITEMS
     # Spells
-    "smallfire": IMAGES + "/smallfire.png",
-    "smallthunder": IMAGES + "/smallthunder.png",
-    "boulder": IMAGES + "/boulder.png",
-    "magicshield": IMAGES + "/magicshield.png",
-    "selfheal": IMAGES + "/selfheal.png",
-    "bard": IMAGES + "/bard.png",
-    "freeze": IMAGES + "/freeze.png",
-    "blank": IMAGES + "/blank.png",
-    "fireball": IMAGES + "/fireball.png",
-    "frostbullet": IMAGES + "/frostbullet.png",
+    "smallfire": IMAGES + "smallfire.png",
+    "smallthunder": IMAGES + "smallthunder.png",
+    "boulder": IMAGES + "boulder.png",
+    "magicshield": IMAGES + "magicshield.png",
+    "selfheal": IMAGES + "selfheal.png",
+    "bard": IMAGES + "bard.png",
+    "freeze": IMAGES + "freeze.png",
+    "blank": IMAGES + "blank.png",
+    "fireball": IMAGES + "fireball.png",
+    "frostbullet": IMAGES + "frostbullet.png",
 }
 
 SPELL_DELAYS = {
@@ -84,26 +103,26 @@ SPELL_COST = {
 }
 
 SPELL_SHEETS = {
-    "fireball_right": "resources/images/fireball_right_54x26.png",
-    "fireball_left": "resources/images/fireball_left_54x26.png",
-    "smallfire": "resources/images/fire_64x64.png",
-    "frostbullet_right": "resources/images/frostbullet_right_64x13.png",
-    "frostbullet_left": "resources/images/frostbullet_left_64x13.png",
-    "smallthunder": "resources/images/thunder_98x203.png",
-    "boulder": "resources/images/boulder_64x64.png",
-    "selfheal": "resources/images/selfheal_127x212.png",
-    "magicshield": "resources/images/magicshield_128x128.png",
-    "bard_1": "resources/images/bard1_150x150.png",
-    "bard_2": "resources/images/bard2_150x150.png",
-    "bard_3": "resources/images/bard3_150x150.png",
-    "freeze": "resources/images/freeze2.png",
-    "collision_explosion": "resources/images/collision_explosion_100x60.png",
+    "fireball_right": IMAGES + "fireball_right_54x26.png",
+    "fireball_left": IMAGES + "fireball_left_54x26.png",
+    "smallfire": IMAGES + "fire_64x64.png",
+    "frostbullet_right": IMAGES + "frostbullet_right_64x13.png",
+    "frostbullet_left": IMAGES + "frostbullet_left_64x13.png",
+    "smallthunder": IMAGES + "thunder_98x203.png",
+    "boulder": IMAGES + "boulder_64x64.png",
+    "selfheal": IMAGES + "selfheal_127x212.png",
+    "magicshield": IMAGES + "magicshield_128x128.png",
+    "bard_1": IMAGES + "bard1_150x150.png",
+    "bard_2": IMAGES + "bard2_150x150.png",
+    "bard_3": IMAGES + "bard3_150x150.png",
+    "freeze": IMAGES + "freeze2.png",
+    "collision_explosion": IMAGES + "collision_explosion_100x60.png",
 }
 
 # Starting platforms
 PLATFORM_LIST = [
     (0, HEIGHT - 40, WIDTH, 40),
-    (WIDTH / 2 - 50, HEIGHT * 3 / 4 , 500, 20),
+    (WIDTH / 2 - 50, HEIGHT * 3 / 4, 500, 20),
     (125, HEIGHT - 350, 600, 20),
     (350, 200, 100, 30),
     (1200, 520, 20, 20),
@@ -128,12 +147,12 @@ GRAY = (125, 125, 125)
 
 # Boosters
 BOOSTERS_SHEETS = {
-    "health": "resources/images/heart.png",
-    "mana": "resources/images/mana.png",
-    "boost_damage": "resources/images/booster_damage.png",
-    "boost_defense": "resources/images/booster_defense.png",
-    "boost_player_speed": "resources/images/booster_player_speed.png",
-    "boost_accuracy": "resources/images/booster_accuracy.png",
+    "health": IMAGES + "heart.png",
+    "mana": IMAGES + "mana.png",
+    "boost_damage": IMAGES + "booster_damage.png",
+    "boost_defense": IMAGES + "booster_defense.png",
+    "boost_player_speed": IMAGES + "booster_player_speed.png",
+    "boost_accuracy": IMAGES + "booster_accuracy.png",
 }
 
 # ustawienia ilości klatek w animacji boosterów

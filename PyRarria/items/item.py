@@ -1,4 +1,6 @@
+import math
 import pygame
+
 from os import path
 from settings import *
 
@@ -13,6 +15,7 @@ class Item(pygame.sprite.Sprite):
 
         self.name = info.name
         self.description = info.description
+        self.variety = info.variety
 
         self.image = pygame.image.load(IMAGES_LIST[self.name])
         self.rect = self.image.get_rect()
@@ -27,6 +30,10 @@ class Item(pygame.sprite.Sprite):
         self.angle = info.angle
 
         self.game = game
+        self.damage = 5
+        self.env_damage = 3
+        self.durability = 100000
+        self.rng = 20
 
     def check_collision(self):
         """Check collision (only to down)"""
@@ -74,19 +81,39 @@ class Item(pygame.sprite.Sprite):
     def draw_on_player(self):
         """Draw item on player when held by player"""
         rot = self.rot_center(self.image, self.angle)
-        align_x = 0
+        player_width = self.game.player.rect.width
+        player_height = self.game.player.rect.height
+        align_x = 2 * player_width // 3
+        rot = pygame.transform.scale(rot, (round(player_width * 2 / 3), round(player_height * 2 / 3)))
         if self.game.player.facing == -1:
             rot = pygame.transform.flip(rot, True, False)
-            align_x = self.game.player.rect.width // 2
+            align_x = -player_width // 3
         obr_rect = rot.get_rect()
-        obr_rect.x = self.game.player.rect.x - align_x
-        obr_rect.y = self.game.player.rect.y
+        obr_rect.x = self.game.player.rect.x + align_x
+        obr_rect.y = self.game.player.rect.y + player_width // 3
         self.game.screen.blit(rot, obr_rect)
 
+    def get_type(self):
+        return self.variety
+
     # implementowane przez podklasy
-    def action(self, mouse_pos, player_pos):
-        """To implement by subclasses
-            IMPORTANT:
-            return if item should be destroyed (like eating food should remove it -> then return True)
-        """
+    def action(self, mouse_pos, player):
+        """By default it makes a little damage and a little env_damage in low range"""
+        if math.hypot(mouse_pos[0] - player.rect.x, mouse_pos[1] - player.rect.y) <= self.rng:
+            damaged = False
+            for creature in self.game.all_creatures:
+                if creature.rect.collidepoint(mouse_pos):
+                    creature.hit(self.damage)
+                    damaged = True
+                    break
+            else:
+                for platform in self.game.platforms:
+                    if platform.rect.collidepoint(mouse_pos):
+                        # platform.hit(self.env_damage)
+                        damaged = True
+                        break
+            if damaged:
+                self.durability -= 1
+            if self.durability <= 0:
+                return True
         return False
