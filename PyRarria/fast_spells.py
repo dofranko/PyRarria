@@ -10,12 +10,15 @@ vector = PVector
 class SmallSpell(pygame.sprite.Sprite):
     """Super class for small spells"""
 
-    def __init__(self, game, name, damage=0):
+    def __init__(self, game, name, damage):
         self.groups = game.all_sprites, game.magics
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.name = name
-        self.damage = damage
+        if damage > 0:
+            self.damage = damage + PLAYER_VALUES["DAMAGE"]
+        else:
+            self.damage = damage
 
 
 class SelfSpell(pygame.sprite.Sprite):
@@ -31,14 +34,12 @@ class SelfSpell(pygame.sprite.Sprite):
 # Klasa zaklęcia smallfire, czyli podpalanie przeciwników
 class SmallFire(SmallSpell):
     def __init__(self, game, pos):
-        super().__init__(game, "smallfire")
+        super().__init__(game, "smallfire", 50)
         self.sheet = SpriteSheet(SPELL_SHEETS["smallfire"], 10, 6, 60)
         self.image = pygame.Surface((self.sheet.cell_width, self.sheet.cell_height), pygame.SRCALPHA).convert_alpha()
         self.pos = pos + vector(self.sheet.shift[4][0], self.sheet.shift[4][1] - 20)
         self.rect = self.image.get_rect()
         self.rect.center = pos
-        # Tutaj są właściwości, które należy później dostosować
-        self.damage = 50
         self.duration = 4000
         self.start = pygame.time.get_ticks()
         self.frame = 0
@@ -71,14 +72,12 @@ class SmallFire(SmallSpell):
 # Klasa zaklęcia smallthunder, czyli uderzenie piorunem w przeciwnika
 class SmallThunder(SmallSpell):
     def __init__(self, game, pos):
-        super().__init__(game, "smallthunder")
+        super().__init__(game, "smallthunder", 50)
         self.sheet = SpriteSheet(SPELL_SHEETS["smallthunder"], 6, 4, 24)
         self.image = pygame.Surface((self.sheet.cell_width, self.sheet.cell_height), pygame.SRCALPHA).convert_alpha()
         self.pos = pos + vector(self.sheet.shift[4][0], self.sheet.shift[4][1] - 70)
         self.rect = self.image.get_rect()
         self.rect.center = pos
-        # Tutaj są właściwości, które należy później dostosować
-        self.damage = 50
         self.duration = 720
         self.start = pygame.time.get_ticks()
         self.frame = 0
@@ -111,14 +110,13 @@ class SmallThunder(SmallSpell):
 # Klasa zaklęcia boulder, czyli głaz spada na przeciwnika
 class Boulder(SmallSpell):
     def __init__(self, game, pos):
-        super().__init__(game, "boulder")
+        super().__init__(game, "boulder", 150)
         self.sheet = SpriteSheet(SPELL_SHEETS["boulder"], 8, 8, 64)
         self.image = pygame.Surface((self.sheet.cell_width, self.sheet.cell_height), pygame.SRCALPHA).convert_alpha()
         self.pos = pos + vector(self.sheet.shift[4][0], self.sheet.shift[4][1] - 100)
         self.rect = self.image.get_rect()
         self.rect.center = pos
         self.speed_y = 0.4
-        self.damage = 150
         self.duration = 1500
         self.start = pygame.time.get_ticks()
         self.frame = 0
@@ -258,7 +256,7 @@ class Bard(SelfSpell):
 # Klasa zaklęcia freeze, czyli spowolnienie przeciwnika przez zamrożenie
 class Freeze(SmallSpell):
     def __init__(self, game, pos):
-        super().__init__(game, "freeze")
+        super().__init__(game, "freeze", 0)
         self.sheet = SpriteSheet(SPELL_SHEETS["freeze"], 10, 10, 86)
         self.image = pygame.Surface((self.sheet.cell_width, self.sheet.cell_height), pygame.SRCALPHA).convert_alpha()
         self.pos = pos + vector(self.sheet.shift[4][0], self.sheet.shift[4][1])
