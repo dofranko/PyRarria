@@ -1,6 +1,6 @@
-# from PyRarria.creatures.test_global_settings import *
-from PyRarria.settings import *
-from PyRarria.creatures.vector import PVector
+# from creatures.test_global_settings import *
+from settings import *
+from creatures.vector import PVector
 import pygame as pg
 import random
 import math
@@ -123,7 +123,7 @@ def run_after(src, target):
 
 def jump(src):
     """Performs single jump"""
-    jmp = PVector(src.velocity.xdirection()*src.maxspeed, -src.maxspeed/8)
+    jmp = PVector(src.velocity.xdirection() * src.maxspeed, -src.maxspeed / 8)
     src.apply_force(jmp)
 
     print(jmp)
@@ -146,11 +146,11 @@ def bullet(src, src_location, dest_location):
     dy = y1 - y0
     sx = x0 + x1
 
-    vx = dx/100
+    vx = dx / 100
 
     if dx == 0:
         return
-    vy = vx * abs(dy/dx) + 0.5 * GRAVITY_BULLET.y * abs(dx/vx)
+    vy = vx * abs(dy / dx) + 0.5 * GRAVITY_BULLET.y * abs(dx / vx)
 
     # STATS
     # print('x0 = ', x0)
@@ -364,7 +364,7 @@ def bounce_from_platform(src, platforms):
     """If creature collides with platforms, moves in opposite direction."""
     hits = pg.sprite.spritecollide(src, platforms, False)
     if hits:
-        print('hits')
+        print("hits")
         if src.rect.left < hits[0].rect.left:
             src.apply_force(PVector(-src.maxforce, 0))
 
@@ -383,4 +383,3 @@ def platform_stop(src, platforms):
     hits = pg.sprite.spritecollide(src, platforms, False)
     if hits:
         src.velocity.zero()
-

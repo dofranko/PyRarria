@@ -2,7 +2,7 @@ from creatures.sprites_attributes import ARROW
 from creatures.sprites_animations import ARROW_ANIMATION
 from creatures.sprites_tree.flying_sprite import FlyingSprite
 from creatures.physical_engine import *
-from creatures.test_global_settings import FPS
+from settings import FPS
 
 import math
 

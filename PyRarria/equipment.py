@@ -6,6 +6,7 @@ from copy import copy
 vector = pygame.math.Vector2
 
 
+# Klasa, która tworzy ekwipunek i zarządza nim
 class Equipment:
     """A class representing equipement and holding items"""
 
@@ -16,9 +17,9 @@ class Equipment:
         self.base_width, self.base_height = 0, 0  # Inicjowane również w funkcji create_eq_GUI()
         self.is_opened = False  # Czy otwarty
         self.eq_size = eq_size  # Rozmiar całego eq
+        self.loaded_images = {}  # Przechowywanie obrazków przedmiotów (żeby nie duplikować ich wczytywania)
         self.change_tool = None  # numer przenoszonego przedmiotu
-        self.equipment_moving = False  # flaga do przenoszenia przedmiotu
-        self.equipment = None  # przenoszony przedmiot
+        self.item_moving = None  # przenoszony przedmiot
         self.eq = vector(-1, -1)  # współrzędne przenoszonego przedmiotu
         self.offset_x = None  # pomocnicze zmienne do przenoszenia
         self.offset_y = None
@@ -36,6 +37,12 @@ class Equipment:
             self.game.factory.create("pickaxe_diamond", 0, 0),
             self.game.factory.create("pickaxe_diamond", 0, 0),
         ]
+        self.collected_items[1] = [
+            self.game.factory.create("green_sword", 0, 0),
+        ]
+        self.collected_items[3] = [self.game.factory.create("black_helmet", 0, 0)]
+        self.collected_items[4] = [self.game.factory.create("black_breastplate", 0, 0)]
+        self.collected_items[5] = [self.game.factory.create("black_boots", 0, 0)]
 
     def __create_eq_GUI(self):
         """"Create base eq gui"""
@@ -77,9 +84,9 @@ class Equipment:
         self.bin.rect = self.bin_image.get_rect()
         self.bin.rect.x = 5 + len(self.base_eq) * self.base_width
         self.bin.rect.y = 10 + self.base_height
-        # armor
+        # armour
         self.list_armour = []
-        for name in ["helmet", "breastplate", "boot"]:
+        for name in ["helmet_icon_base", "breastplate_icon_base", "boots_icon_base"]:
             image = pygame.image.load(IMAGES_LIST[name]).convert_alpha()
             image = pygame.transform.scale(image, (35, 35))
             self.list_armour.append(image)
@@ -97,7 +104,15 @@ class Equipment:
 
     def draw(self, screen):
         """Draw all elements of eq"""
-        # Rysowanie pierwszych 6 paneli (zawsze są pokazywane) i ekwipunku (jeśli jakiś jest)
+        self.draw_base_eq(screen)
+        self.draw_eq_open(screen)
+        self.draw_bin(screen)
+        self.draw_armour(screen)
+        self.draw_moving_item(screen)
+        self.draw_item_description(screen)
+
+    def draw_base_eq(self, screen):
+        """Draw the visible part of equipment"""
         self.base_eq.draw(screen)
         for i in range(len(self.base_eq)):
             eq = self.base_eq.sprites()[i]
@@ -136,10 +151,11 @@ class Equipment:
         if self.open_eq.rect.collidepoint(pygame.mouse.get_pos()):
             x, y = pygame.mouse.get_pos()
             screen.blit(self.open_eq_word, (x - 15, y - 15))
-        # Rysowanie paneli i ekwipunku, gdy eq jest otwarte
+
+    def draw_eq_open(self, screen):
+        """Draw the rest of equipment when is open"""
         if self.is_opened:
             self.extended_eq.draw(screen)
-            self.armor_eq.draw(screen)
             for pos in range(6, self.eq_size):
                 i = pos % 6  # Położenie panelu na osi x
                 j = pos // 6  # Położenie panelu na osi y
@@ -160,25 +176,31 @@ class Equipment:
                                     5 + self.base_y + j * self.base_height + item_image.get_height() - 15,
                                 ),
                             )
-            # Rysowanie kosza
-            if self.equipment_moving:
-                if self.bin.rect.collidepoint(pygame.mouse.get_pos()):
-                    self.bin.image = pygame.transform.scale(self.bin_image, (42, 42))
-                    screen.blit(self.bin.image, (self.bin.rect.x - 2, self.bin.rect.y - 2))
-                    screen.blit(self.bin_word, (self.eq.x + 40, self.eq.y + 40))
-                else:
-                    self.bin.image = pygame.transform.scale(self.bin_image, (40, 40))
-                    screen.blit(self.bin.image, self.bin.rect)
 
-            # rysowanie zbroi
+    def draw_bin(self, screen):
+        """Draw bin to remove items"""
+        if self.item_moving is not None:
+            if self.bin.rect.collidepoint(pygame.mouse.get_pos()):
+                self.bin.image = pygame.transform.scale(self.bin_image, (42, 42))
+                screen.blit(self.bin.image, (self.bin.rect.x - 2, self.bin.rect.y - 2))
+                screen.blit(self.bin_word, (self.eq.x + 40, self.eq.y + 40))
+            else:
+                self.bin.image = pygame.transform.scale(self.bin_image, (40, 40))
+                screen.blit(self.bin.image, self.bin.rect)
+
+    def draw_armour(self, screen):
+        """Draw armour like helmet, breastplate, boots"""
+        if self.is_opened:
+            self.armor_eq.draw(screen)
             armor_eq_pos = self.eq_size
             for j in [armor_eq_pos, armor_eq_pos + 1, armor_eq_pos + 2]:
                 if self.collected_items[j]:
                     if j != self.change_tool:
                         item_image = self.collected_items[j][0].image
+                        item_image = pygame.transform.scale(item_image, (40, 40))
                         screen.blit(
                             item_image,
-                            (15 * self.base_width - 20, 3 * self.base_height + 5 + (j - 18) * self.base_height),
+                            (15 * self.base_width - 15, 5 + 3 * self.base_height + 5 + (j - 18) * self.base_height),
                         )
                         continue
                 screen.blit(
@@ -186,20 +208,24 @@ class Equipment:
                     (15 * self.base_width - 13, 3 * self.base_height + 12 + (j - 18) * self.base_height),
                 )
 
-        # Rysowanie przenoszonego przedmiotu
-        if self.equipment is not None:
-            screen.blit(self.equipment, (self.eq.x, self.eq.y))
+    def draw_moving_item(self, screen):
+        """"Draw a moving item"""
+        if self.item_moving is not None:  # rysowanie przenoszonego przedmiotu
+            screen.blit(self.item_moving, (self.eq.x, self.eq.y))
             num = str(len(self.collected_items[self.change_tool]))
             number = self.font.render(num, True, WHITE)
             if num != "1":
                 screen.blit(
                     number,
                     (
-                        self.eq.x + self.equipment.get_width() - 7 * len(num),
-                        self.eq.y + self.equipment.get_height() - 15,
+                        self.eq.x + self.item_moving.get_width() - 7 * len(num),
+                        self.eq.y + self.item_moving.get_height() - 15,
                     ),
                 )
-        elif self.is_opened:  # rysowanie opisów
+
+    def draw_item_description(self, screen):
+        """Draw a description of item"""
+        if self.is_opened and self.item_moving is None:  # rysowanie opisów
             x, y = pygame.mouse.get_pos()
             i = None
             for k, eq in enumerate(self.base_eq):
@@ -208,11 +234,18 @@ class Equipment:
             for k, eq in enumerate(self.extended_eq, 6):
                 if eq.rect.collidepoint(pygame.mouse.get_pos()):
                     i = k
-            if i is not None and self.collected_items[i]:
+            for k, eq in enumerate(self.armor_eq, self.eq_size):
+                if eq.rect.collidepoint(pygame.mouse.get_pos()):
+                    i = k
+            armour_pos = self.eq_size
+            if i is not None and self.collected_items[i] and i >= armour_pos:
+                words = self.font.render(self.collected_items[i][0].description, True, WHITE)
+                screen.blit(words, (x - 120, y - 15))
+            elif i is not None and self.collected_items[i]:
                 words = self.font.render(self.collected_items[i][0].description, True, WHITE)
                 screen.blit(words, (x + 15, y + 15))
-            elif i in [18, 19, 20]:
-                words = self.font.render(self.armour_description[i - 18], True, WHITE)
+            elif i in [armour_pos, armour_pos + 1, armour_pos + 2]:
+                words = self.font.render(self.armour_description[i - self.eq_size], True, WHITE)
                 screen.blit(words, (x - 120, y - 15))
 
     def add_item(self, new_item):
@@ -263,11 +296,24 @@ class Equipment:
 
     # Return: atkualnie wybrany item
     def get_active_item(self):
-        """Return actualy held item"""
+        """Return actually held item"""
         try:
             return self.collected_items[self.active_tool_number][0]
         except IndexError:
             return None
+
+    # zwraca elementy zbroi w specjalnych slotach
+    def get_armour(self):
+        """Return armour items which were chosen to be wear"""
+        armour = []
+        armour_position = self.eq_size
+        if self.collected_items[armour_position]:
+            armour.append(self.collected_items[armour_position][0])
+        if self.collected_items[armour_position + 1]:
+            armour.append(self.collected_items[armour_position + 1][0])
+        if self.collected_items[armour_position + 2]:
+            armour.append(self.collected_items[armour_position + 2][0])
+        return armour
 
     # Przechwycenie zdarzeń myszki: -otwarcie/zamknięcie eq; -zmiana pozycji przedmiotów
     # (wysyła main, ponieważ wywołanie kilka razy pobrania eventu myszki daje inne rezultaty)
@@ -285,9 +331,11 @@ class Equipment:
                 for k, eq in enumerate(self.extended_eq, 6):
                     if eq.rect.collidepoint(event.pos) and self.collected_items[k]:
                         i = k
+                for k, eq in enumerate(self.armor_eq, self.eq_size):
+                    if eq.rect.collidepoint(event.pos) and self.collected_items[k]:
+                        i = k
                 if i is not None:
-                    self.equipment_moving = True
-                    self.equipment = pygame.transform.scale(self.collected_items[i][0].image, (40, 40))
+                    self.item_moving = pygame.transform.scale(self.collected_items[i][0].image, (40, 40))
                     if i < len(self.base_eq):
                         self.eq.x = 5 + self.base_x + i * self.base_width
                         self.eq.y = 5 + self.base_y
@@ -296,7 +344,7 @@ class Equipment:
                         j = i // 6  # Położenie na osi y
                         self.eq.x = 5 + self.base_x + k * self.base_width
                         self.eq.y = 5 + self.base_y + j * self.base_height
-                    else:  # armor
+                    else:  # armour
                         self.eq.x = 15 * self.base_width - 20
                         self.eq.y = 3 * self.base_height + 5 + (i - 18) * self.base_height
                     self.offset_x = self.eq.x - event.pos[0]
@@ -304,20 +352,22 @@ class Equipment:
                     self.change_positions(i)
         elif event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:
-                if self.equipment_moving:
-                    self.equipment_moving = False
-                    self.equipment = None
+                if self.item_moving is not None:
+                    self.item_moving = None
                     for i, eq in enumerate(self.base_eq):
                         if eq.rect.collidepoint(event.pos):
                             self.change_positions(i)
                     for i, eq in enumerate(self.extended_eq, 6):
                         if eq.rect.collidepoint(event.pos):
                             self.change_positions(i)
+                    for i, eq in enumerate(self.armor_eq, self.eq_size):
+                        if eq.rect.collidepoint(event.pos):
+                            self.change_positions(i)
                     if self.bin.rect.collidepoint(event.pos):
                         self.collected_items[self.change_tool] = []
                     self.change_tool = None
         elif event.type == pygame.MOUSEMOTION:
-            if self.equipment_moving:
+            if self.item_moving is not None:
                 self.eq.x = event.pos[0] + self.offset_x
                 self.eq.y = event.pos[1] + self.offset_y
 
@@ -329,10 +379,42 @@ class Equipment:
             if self.collected_items[position]:
                 self.change_tool = position
         else:  # Swap items
-            # warunek
-            # if self.collected_items[self.change_tool].name = 'armour' and
-            self.collected_items[self.change_tool], self.collected_items[position] = (
-                self.collected_items[position],
-                self.collected_items[self.change_tool],
-            )
+            # warunki by w armour była tylko zbroja
+            armour_pos = self.eq_size
+            flag = True
+            # zmienianie itemsów wewnątrz slotów armour
+            if self.change_tool in [armour_pos, armour_pos + 1, armour_pos + 2] and \
+                    position in [armour_pos, armour_pos + 1, armour_pos + 2]:
+                flag = False
+            # zmienianie itemsów z armour na eq
+            elif self.change_tool in [armour_pos, armour_pos + 1, armour_pos + 2]:
+                flag = self.check_armour_condition(position, self.change_tool, armour_pos)
+            # zmienianie itemsów z eq na armour
+            elif position in [armour_pos, armour_pos + 1, armour_pos + 2]:
+                flag = self.check_armour_condition(self.change_tool, position, armour_pos)
+            if flag:
+                self.collected_items[self.change_tool], self.collected_items[position] = (
+                    self.collected_items[position],
+                    self.collected_items[self.change_tool],
+                )
             self.change_tool = None
+
+    def check_armour_condition(self, new_index, index, armour_pos):
+        """Check conditions to change items that are connected with armour slots"""
+        flag = True
+        if self.collected_items[new_index]:
+            if index == armour_pos:
+                if self.collected_items[new_index][0].get_type() != "helmet":
+                    flag = False
+            elif index == armour_pos + 1:
+                if self.collected_items[new_index][0].get_type() != "breastplate":
+                    flag = False
+            elif index == armour_pos + 2:
+                if self.collected_items[new_index][0].get_type() != "boots":
+                    flag = False
+        if flag:
+            if self.collected_items[index]:
+                self.collected_items[index][0].deactivate()
+            if self.collected_items[new_index]:
+                self.collected_items[new_index][0].activate()
+        return flag

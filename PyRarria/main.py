@@ -113,7 +113,6 @@ class Game:
         self.explosions.update()
         self.items.update()
 
-
     def events(self):
         # Game Loop - events
         for event in pygame.event.get():
@@ -144,12 +143,11 @@ class Game:
         self.background.draw()
         self.creatures_engine.draw()
         self.all_sprites.draw(self.screen)
+        self.player.draw()
         self.health_bar.draw()
         self.mana_bar.draw()
         self.spells.draw(self.screen)
         self.equipment.draw(self.screen)
-        if self.player.held_item:
-            self.player.held_item.draw_on_player()
         # żeby przenoszony itemik był widoczny, nic go nie ma przykrywać, więc rysuje się na końcu
         self.spells.draw_moving_item(self.screen)
         # *after* drawing everything, flip the display

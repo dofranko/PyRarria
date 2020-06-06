@@ -38,12 +38,12 @@ class Explosion(pygame.sprite.Sprite):
 class BulletSpell(pygame.sprite.Sprite):
     """Super class for spells"""
 
-    def __init__(self, game, name, damage=0):
+    def __init__(self, game, name, damage):
         self.groups = game.all_sprites, game.magics
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.name = name
-        self.damage = damage
+        self.damage = damage + PLAYER_VALUES["DAMAGE"]
 
     def check_collision(self):
         # Detekcja kolizji z przeciwnikami
@@ -65,7 +65,7 @@ class BulletSpell(pygame.sprite.Sprite):
 # Klasa zaklęcia fireball, czyli lecący ognisty pocisk
 class Fireball(BulletSpell):
     def __init__(self, game, pos, speed_y, direction):
-        super().__init__(game, "fireball")
+        super().__init__(game, "fireball", 50)
         if direction == 1:
             self.sheet = SpriteSheet(SPELL_SHEETS["fireball_right"], 8, 8, 64)
         else:
@@ -78,8 +78,6 @@ class Fireball(BulletSpell):
         vector = self.game.get_main_stage_position()
         pos += vector
         self.rect.center = pos
-        # Tutaj są właściwości, które należy później dostosować
-        self.damage = 50
         self.speed_x = 3
         self.speed_y = speed_y
         self.accuracy = 0.95
@@ -133,7 +131,7 @@ class Fireball(BulletSpell):
 # Klasa zaklęcia frostbullet, czyli lecący lodowy pocisk
 class FrostBullet(BulletSpell):
     def __init__(self, game, pos, speed_y, direction):
-        super().__init__(game, "frostbullet")
+        super().__init__(game, "frostbullet", 50)
         if direction == 1:
             self.sheet = SpriteSheet(SPELL_SHEETS["frostbullet_right"], 8, 1, 8)
         else:
@@ -145,8 +143,6 @@ class FrostBullet(BulletSpell):
         vector = self.game.get_main_stage_position()
         pos += vector
         self.rect.center = pos
-        # Tutaj są właściwości, które należy później dostosować
-        self.damage = 50
         self.speed_x = 3
         self.speed_y = speed_y
         self.accuracy = 0.95

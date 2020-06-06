@@ -1,9 +1,7 @@
-from PyRarria.creatures.physical_engine import *
-from PyRarria.creatures.sprites_attributes import COW
-from PyRarria.creatures.sprites_animations import COW_ANIMATION
-from PyRarria.creatures.sprites_tree.arrow import Arrow
-from PyRarria.creatures.sprites_tree.walking_sprite import WalkingSprite
-from PyRarria.creatures.test_global_settings import FPS
+from creatures.sprites_attributes import COW
+from creatures.sprites_animations import COW_ANIMATION
+from creatures.sprites_tree.walking_sprite import WalkingSprite
+from settings import FPS
 
 import math
 

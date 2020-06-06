@@ -1,5 +1,4 @@
 import pygame as pg
-
 from creatures.vector import PVector
 
 

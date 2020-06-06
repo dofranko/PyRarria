@@ -94,7 +94,7 @@ class DamageBooster(SpinningBooster):
             self.game.active_boosters.add(self)
             self.image.fill((0, 0, 0, 0))
             self.start = pygame.time.get_ticks()
-            # TODO Aktywowanie damage boost dla playera
+        PLAYER_VALUES['DAMAGE'] += value
 
     # Sprawdzanie, czy jego czas działania upłynął | aktualizacja pozycji i rysowanie (jeśli gracz nie podniósł)
     def update(self):
@@ -131,7 +131,7 @@ class DefenseBooster(SpinningBooster):
             self.game.active_boosters.add(self)
             self.image.fill((0, 0, 0, 0))
             self.start = pygame.time.get_ticks()
-            # TODO Aktywowanie defense boost dla playera
+        PLAYER_VALUES['DEFENCE'] += value
 
     # Sprawdzanie, czy jego czas działania upłynął | aktualizacja pozycji i rysowanie (jeśli gracz nie podniósł)
     def update(self):
@@ -205,7 +205,7 @@ class AccuracyBooster(SpinningBooster):
             self.game.active_boosters.add(self)
             self.image.fill((0, 0, 0, 0))
             self.start = pygame.time.get_ticks()
-            # TODO Aktywowanie accuracy boost dla playera
+        PLAYER_VALUES["ACCURACY"] += value
 
     # Sprawdzanie, czy jego czas działania upłynął | aktualizacja pozycji i rysowanie (jeśli gracz nie podniósł)
     def update(self):

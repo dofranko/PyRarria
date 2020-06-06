@@ -1,8 +1,8 @@
-from PyRarria.creatures.physical_engine import *
-from PyRarria.creatures.sprites_attributes import ZOMBIE
-from PyRarria.creatures.sprites_animations import ZOMBIE_ANIMATION
-from PyRarria.creatures.sprites_tree.walking_sprite import WalkingSprite
-from PyRarria.creatures.test_global_settings import FPS
+from creatures.physical_engine import *
+from creatures.sprites_attributes import ZOMBIE
+from creatures.sprites_animations import ZOMBIE_ANIMATION
+from creatures.sprites_tree.walking_sprite import WalkingSprite
+from settings import FPS
 
 import math
 
