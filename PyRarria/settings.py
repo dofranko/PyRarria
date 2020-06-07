@@ -28,7 +28,7 @@ MIN_HEALTH = 5 * HEART_VALUE
 MAX_MANA = 20 * STAR_VALUE
 MIN_MANA = 5 * STAR_VALUE
 
-BLOCK_SIZE = 48
+BLOCK_SIZE = 50
 BLOCK_RENDER_DISTANCE = (10, 10)
 
 IMAGES_LIST = {
@@ -129,19 +129,19 @@ SPELL_SHEETS = {
 }
 
 # Starting blocks
-PLATFORM_LIST = [
-    (0, HEIGHT - 40, WIDTH, 40),
-    (WIDTH / 2 - 50, HEIGHT * 3 / 4, 500, 20),
-    (125, HEIGHT - 350, 600, 20),
-    (350, 200, 100, 30),
-    (1200, 520, 20, 20),
-    (1300, 530, 20, 20),
-    (1000, 490, 40, 10),
-    (1042, 490, 40, 10),
-    (1084, 490, 40, 10),
-    (175, 100, 500, 20),
-    (450, HEIGHT - 50, 10000, 5),
-]
+# PLATFORM_LIST = [
+#     (0, HEIGHT - 40, WIDTH, 40),
+#     (WIDTH / 2 - 50, HEIGHT * 3 / 4, 500, 20),
+#     (125, HEIGHT - 350, 600, 20),
+#     (350, 200, 100, 30),
+#     (1200, 520, 20, 20),
+#     (1300, 530, 20, 20),
+#     (1000, 490, 40, 10),
+#     (1042, 490, 40, 10),
+#     (1084, 490, 40, 10),
+#     (175, 100, 500, 20),
+#     (450, HEIGHT - 50, 10000, 5),
+# ]
 
 # define colors
 WHITE = (255, 255, 255)

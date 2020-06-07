@@ -25,7 +25,7 @@ class Player(pygame.sprite.Sprite):
         # self.image = pygame.transform.scale(self.image, (36, 50))
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH / 2, 0)
-        self.position = vector(WIDTH / 2, 0)
+        self.position = vector(WIDTH * 2, 0)
         self.vel = vector(0, 0)
         self.acc = vector(0, PLAYER_MOVE["PLAYER_GRAV"])
         self.mask = pygame.mask.from_surface(self.image)
@@ -199,9 +199,17 @@ class Player(pygame.sprite.Sprite):
             return
 
         thrown.position = vector(self.position.x + 80 * self.facing + 15, self.position.y - 50)
-
-        self.game.all_sprites.add(thrown)
+        Item.scale(thrown, BLOCK_SIZE // 1.6)
         self.game.items.add(thrown)
+
+    def scale(self, item, rozm):
+        """Scales image when placed or destroyed"""
+        self.image = pygame.transform.scale(self.image, (rozm, rozm))
+        X = self.rect.x
+        Y = self.rect.y
+        self.rect = self.image.get_rect()
+        self.rect.x = X
+        self.rect.y = Y
 
     def update(self):
         """Update player position, check collisons, collect/throw items, handle keys pressed"""

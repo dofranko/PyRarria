@@ -21,9 +21,9 @@ SPAWN_RANGE = 100
 LIMITS = {
     "walking_test": 0,
     "birds": 0,
-    "skeletons": 1,
+    "skeletons": 0,
     "skeletons_boss": 0,
-    "zombies": 0,
+    "zombies": 1,
     "cows": 0,
     "sheeps": 0,
     "bats": 0,

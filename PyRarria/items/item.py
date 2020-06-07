@@ -11,23 +11,14 @@ vector = pygame.math.Vector2
 class Item(pygame.sprite.Sprite):
     """A class representing item (on map or held in eq)"""
 
+    items_loaded_images = {}
+
     def __init__(self, x, y, info, game):
         pygame.sprite.Sprite.__init__(self)
 
         self.name = info.name
         self.description = info.description
         self.variety = info.variety
-
-        self.image = pygame.image.load(IMAGES_LIST[self.name])
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-
-        self.position = vector(x, y)
-
-        self.vel_y = 0
-        self.acc_y = 0
-
         self.angle = info.angle
 
         self.game = game
@@ -35,6 +26,17 @@ class Item(pygame.sprite.Sprite):
         self.env_damage = 3
         self.durability = 100000
         self.range = 20
+
+        self.vel_y = 0
+        self.acc_y = 0
+
+        self.image = self.load_image(self.name)
+
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+        self.position = vector(x, y)
 
     def check_collision(self):
         """Check collision (only to down)"""
@@ -54,10 +56,10 @@ class Item(pygame.sprite.Sprite):
 
     def get_state(self):
         """Get if item is held by player or dropped on map"""
-        if self == self.game.player.held_item:
-            return "held"
         if self in self.game.items:
             return "lying"
+        if self == self.game.player.held_item:
+            return "held"
         return "eq"
 
     def rot_center(self, image, angle):
@@ -121,6 +123,11 @@ class Item(pygame.sprite.Sprite):
                 return True
         return False
 
+    def load_image(self, name):
+        if name not in Item.items_loaded_images.keys():
+            Item.items_loaded_images[name] = pygame.image.load(IMAGES_LIST[self.name]).convert_alpha()
+        return Item.items_loaded_images[name]
+
     @staticmethod
     def get_neighbours(start_point, depth, grid):
         pos = Item.cursor_to_grid(start_point.x, start_point.y)
@@ -140,3 +147,13 @@ class Item(pygame.sprite.Sprite):
         grid_x = (x // BLOCK_SIZE) * BLOCK_SIZE
         grid_y = (y // BLOCK_SIZE) * BLOCK_SIZE
         return (grid_x, grid_y)
+
+    @staticmethod
+    def scale(to_scale_object, size):
+        """scales image when placed or destroyed"""
+        to_scale_object.image = pygame.transform.scale(to_scale_object.image, (int(size), int(size)))
+        X = to_scale_object.rect.x
+        Y = to_scale_object.rect.y
+        to_scale_object.rect = to_scale_object.image.get_rect()
+        to_scale_object.rect.x = X
+        to_scale_object.rect.y = Y

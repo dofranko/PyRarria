@@ -13,6 +13,7 @@ from boosters import *
 from items.items_generator import *
 from creatures.creatures_engine import CreaturesEngine
 from creatures.vector import PVector
+from map_generator import generuj
 
 vector = pygame.math.Vector2
 
@@ -60,8 +61,7 @@ class Game:
         for i in range(300):
             for j in range(-20, 300):
                 self.grid[(i * BLOCK_SIZE, j * BLOCK_SIZE)] = None
-
-        block_list = [self.items_factory.create("dirt", i * BLOCK_SIZE, 5 * BLOCK_SIZE) for i in range(30)]
+        block_list = [self.items_factory.create("dirt", block[0], block[1]) for block in generuj()]
         for blok in block_list:
             self.blocks.add(blok)
             self.grid[(blok.position.x, blok.position.y)] = blok
@@ -69,9 +69,10 @@ class Game:
         self.waiting = True
 
         # test
-        potato = self.items_factory.create("potato", 1000, 0)
-        self.all_sprites.add(potato)
-        self.items.add(potato)
+        bacon = self.items_factory.create("bacon", 1750, 100)
+        self.bacon = bacon
+        # self.all_sprites.add(potato)
+        self.items.add(bacon)
 
         # Tutaj testowanie dodawania boosterów
         position = vector(1193, 478)
@@ -108,7 +109,8 @@ class Game:
         self.player.update()
         self.equipment.update()
         self.background.update()
-        self.blocks.update()
+        for blok in Item.get_neighbours(self.player.position, BLOCK_RENDER_DISTANCE, self.grid):
+            blok.update()
         self.creatures_engine.update()
         self.health_bar.update()
         self.mana_bar.update()
@@ -118,7 +120,8 @@ class Game:
         self.explosions.update()
         self.items.update()
         self.items_engine.update()
-        self.blocks.update()
+        # self.blocks.update()
+        print(f"{self.bacon.rect} {self.player.position}")
 
     def events(self):
         # Game Loop - events
@@ -158,6 +161,7 @@ class Game:
         self.mana_bar.draw()
         self.spells.draw(self.screen)
         self.equipment.draw(self.screen)
+        self.items.draw(self.screen)
         # żeby przenoszony itemik był widoczny, nic go nie ma przykrywać, więc rysuje się na końcu
         self.spells.draw_moving_item(self.screen)
         # *after* drawing everything, flip the display

@@ -150,7 +150,7 @@ def push_away(src, player, damage):
     delta = src.position - player.position
     direction = delta.xdirection()
 
-    force = PVector(direction * damage*MAX_XPUSH, -damage*MAX_YPUSH)
+    force = PVector(direction * damage * MAX_XPUSH, -damage * MAX_YPUSH)
     src.apply_force_no_limit(force)
 
 
@@ -376,4 +376,3 @@ def platform_stop(src, blocks):
         return True
 
     return False
-

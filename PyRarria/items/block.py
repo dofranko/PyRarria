@@ -48,7 +48,7 @@ class Block(Item):
         if self.hp <= 0:
             self.game.blocks.remove(self)
             self.game.grid[(self.position.x, self.position.y)] = None
-            self.skaluj(BLOCK_SIZE // 2)
+            Item.scale(self, BLOCK_SIZE // 1.6)
             self.game.items.add(self)
             return
 
@@ -71,15 +71,6 @@ class Block(Item):
         if not self.dmg_image:
             return
         self.game.screen.blit(self.dmg_image, self.rect)
-
-    def skaluj(self, rozm):
-        """scales image when placed or destroyed"""
-        self.image = pygame.transform.scale(self.image, (rozm, rozm))
-        X = self.rect.x
-        Y = self.rect.y
-        self.rect = self.image.get_rect()
-        self.rect.x = X
-        self.rect.y = Y
 
     def hit(self, dmg):
         self.hp -= dmg
