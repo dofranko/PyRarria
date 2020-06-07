@@ -35,11 +35,13 @@ class Sprite(AbstractSprite):
         self.anim_count = 0
         self.bite_count = 0
         self.shot_count = 0
+        self.freeze_count = 0
 
         # vectors
         self.position = PVector(x, y)
         self.velocity = PVector(0, 0.001)
         self.acceleration = PVector(0, 0)
+        self.acceleration_no_limit = PVector(0, 0)
 
         # body
         w, h = self.width, self.height
@@ -57,9 +59,6 @@ class Sprite(AbstractSprite):
     def draw(self, win):
         pass
 
-    def hit(self, damage_value):
-        self.hp -= damage_value
-
     def bite(self, player):
         if self.is_enemy and self.rect.colliderect(player):
             if self.bite_count > 0:
@@ -71,10 +70,15 @@ class Sprite(AbstractSprite):
                 player.hit(self.damage, direction)
                 self.bite_count = 20
 
-    def update(self, player, platforms, map_position):
+    def hit(self, player, damage_points):
+        self.hp -= damage_points
+        push_away(self, player, damage_points/self.maxhp)
+        print(damage_points/self.maxhp)
+
+    def update(self, player, platforms, map_position, items_factory):
         # dead
         if self.hp <= 0:
-            self.die()
+            self.die(items_factory)
             return
 
         # alive
@@ -82,15 +86,14 @@ class Sprite(AbstractSprite):
         self.move(map_position)
         self.fix_move(platforms, map_position)
 
-    def update_forces(self, player, platforms):
-        pass
-
     def move(self, map_position):
-        # move
+        # velocity
         self.velocity += self.acceleration
         self.velocity.xlimit(self.maxspeed)
+        self.velocity += self.acceleration_no_limit
         self.position += self.velocity
         self.acceleration.zero()
+        self.acceleration_no_limit.zero()
 
         # update body
         self.body.topleft = (self.position + map_position).repr()
@@ -144,6 +147,20 @@ class Sprite(AbstractSprite):
         force.limit(self.maxforce)
         self.acceleration += force
 
-    def die(self):
-        print("die")
+    def apply_force_no_limit(self, force):
+        self.acceleration_no_limit += force
+
+    def die(self, items_factory):
+        # creature has got its own items
+        if self.items:
+            for item_name in self.items:
+                items_factory.add_item(item_name, *self.position.repr())
+
+        # creature hasn't got its own items
+        else:
+            items_factory.add_random_item(*self.position.repr())
+
         self.kill()
+
+    def update_forces(self, player, platforms):
+        pass

@@ -23,3 +23,4 @@ class WalkingSprite(Sprite):
         run(self)
         gravity(self)
         keep_on_platform(self, platforms)
+        freeze(self)

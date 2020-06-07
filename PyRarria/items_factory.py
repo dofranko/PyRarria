@@ -1,7 +1,7 @@
 from items.tool import *
 from items.food import *
 from items.armour import *
-
+import random
 
 class ItemInfo:
     """A class representing item's informations - used by Factory"""
@@ -92,3 +92,14 @@ class Factory:
 
     def create_boots(self, info, x, y):
         return Boots(x, y, info, self.game)
+
+    def add_random_item(self, x, y):
+        item_name = random.choice(list(self.ITEMS_DICT.keys()))
+        item = self.create(item_name, x, y)
+        self.game.items.add(item)
+        self.game.all_sprites.add(item)
+
+    def add_item(self, item_name, x, y):
+        item = self.create(item_name, x, y)
+        self.game.items.add(item)
+        self.game.all_sprites.add(item)

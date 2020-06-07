@@ -135,9 +135,11 @@ class PVector(Vector2):
 
     def xlimit(self, maxi):
         self.x = min(self.x, maxi)
+        self.x = max(self.x, -maxi)
 
     def ylimit(self, maxi):
         self.y = min(self.y, maxi)
+        self.y = max(self.y, -maxi)
 
     def repr(self):
         return self.x, self.y
@@ -178,7 +180,7 @@ class PVector(Vector2):
 # print(u)
 
 # TEST 5
-u = PVector(10,200)
-u.ylimit(2)
-
-print(u)
+# u = PVector(10,200)
+# u.ylimit(2)
+#
+# print(u)

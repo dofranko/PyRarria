@@ -53,8 +53,17 @@ BAT_RIGHT = [
     load('img/bat_23.png'), load('img/bat_24.png'),
     load('img/bat_25.png')]
 
-SKELETON_LEFT = [load('img/skeleton_01.png'), load('img/skeleton_02.png')]
-SKELETON_RIGHT = [load('img/skeleton_03.png'), load('img/skeleton_04.png')]
+SKELETON_LEFT = [
+    load('img/skeleton_01.png'), load('img/skeleton_02.png')]
+
+SKELETON_RIGHT = [
+    load('img/skeleton_03.png'), load('img/skeleton_04.png')]
+
+SKELETONBOSS_LEFT = [
+    load('img/skeletonboss_01.png'), load('img/skeletonboss_02.png')]
+
+SKELETONBOSS_RIGHT = [
+    load('img/skeletonboss_03.png'), load('img/skeletonboss_04.png')]
 
 ARROW_LEFT = [load('img/arrow_01.png')]
 ARROW_RIGHT = [load('img/arrow_02.png')]
@@ -105,6 +114,15 @@ SKELETON_ANIMATION = {
     'frames': len(SKELETON_LEFT),
     'width': SKELETON_LEFT[0].get_rect().width,
     'height': SKELETON_LEFT[0].get_rect().height,
+    'speed': 0.5,
+}
+
+SKELETONBOSS_ANIMATION = {
+    'left': SKELETONBOSS_LEFT,
+    'right': SKELETONBOSS_RIGHT,
+    'frames': len(SKELETONBOSS_LEFT),
+    'width': SKELETONBOSS_LEFT[0].get_rect().width,
+    'height': SKELETONBOSS_LEFT[0].get_rect().height,
     'speed': 0.5,
 }
 

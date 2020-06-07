@@ -10,7 +10,7 @@ WALKING_TEST = {
     'maxhp': 100,
 
     'mass': 20,
-    'items': [],
+    'items': ["fire_helmet", "fire_helmet", "fire_helmet", "fire_helmet"],
     'damage': 14,
     'defense': 10,
 }
@@ -88,6 +88,18 @@ SKELETON = {
     'defense': 10,
 }
 
+SKELETONBOSS = {
+    'manoeuvrability': 0.075,
+    'maxspeed': 4,
+    'maxforce': 5,
+    'maxhp': 150,
+
+    'mass': 20,
+    'items': [],
+    'damage': 25,
+    'defense': 20,
+}
+
 ZOMBIE = {
     'manoeuvrability': 0.075,
     'maxspeed': 4,
@@ -104,10 +116,10 @@ ARROW = {
     'manoeuvrability': 0.075,
     'maxspeed': INFINITY,
     'maxforce': INFINITY,
-    'maxhp': INFINITY,
+    'maxhp': 100,
 
     'mass': 20,
     'items': [],
-    'damage': 14,
+    'damage': 30,
     'defense': INFINITY,
 }
