@@ -22,5 +22,5 @@ class WalkingSprite(Sprite):
     def update_forces(self, player, blocks):
         run(self)
         gravity(self)
-        keep_on_platform(self, platforms)
+        keep_on_platform(self, blocks)
         freeze(self)

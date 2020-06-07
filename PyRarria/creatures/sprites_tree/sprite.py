@@ -75,7 +75,7 @@ class Sprite(AbstractSprite):
         push_away(self, player, damage_points / self.maxhp)
         print(damage_points / self.maxhp)
 
-    def update(self, player, platforms, map_position, items_factory):
+    def update(self, player, blocks, map_position, items_factory):
         # dead
         if self.hp <= 0:
             self.die(items_factory)
@@ -162,5 +162,5 @@ class Sprite(AbstractSprite):
 
         self.kill()
 
-    def update_forces(self, player, platforms):
+    def update_forces(self, player, blocks):
         pass

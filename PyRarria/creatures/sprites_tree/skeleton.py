@@ -45,5 +45,5 @@ class Skeleton(WalkingSprite):
             run_after(self, player)
         else:
             stop(self)
-        jump_from_platform(self, platforms)
+        jump_from_platform(self, blocks)
         freeze(self)

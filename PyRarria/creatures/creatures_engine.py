@@ -73,7 +73,7 @@ class CreaturesEngine:
         # window, clock, main position
         self.game = game
         self.window = game.screen
-        self.items_factory = game.factory
+        self.items_factory = game.items_factory
         self.clock = 0
         self.map_position = PVector(0, 0)
         self.map_position_init = PVector(0, 0)

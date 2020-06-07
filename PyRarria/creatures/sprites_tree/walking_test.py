@@ -28,8 +28,8 @@ class WalkingTest(WalkingSprite):
         # self.position = PVector(400, -500)
         self.is_enemy = False
 
-    def update_forces(self, player, platforms):
+    def update_forces(self, player, blocks):
         gravity(self)
-        keep_on_platform(self, platforms)
+        keep_on_platform(self, blocks)
         run_after(self, player)
         freeze(self)

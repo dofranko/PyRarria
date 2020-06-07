@@ -26,7 +26,7 @@ class Arrow(FlyingSprite):
         self.create(x, y, **OBJECT)
         self.rect = pg.rect.Rect(0, 0, self.radius, self.radius)
 
-    def update(self, player, platforms, map_position, items_factory):
+    def update(self, player, blocks, map_position, items_factory):
         # dead
         if self.hp <= 0:
             self.die(items_factory)
@@ -55,8 +55,8 @@ class Arrow(FlyingSprite):
     def die(self, items_factory):
         self.kill()
 
-    def update_forces(self, player, platforms):
+    def update_forces(self, player, blocks):
         gravity_bullet(self)
         edges_delete(self)
-        if platform_stop(self, platforms):
+        if platform_stop(self, blocks):
             self.is_target = True
