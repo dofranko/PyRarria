@@ -51,10 +51,6 @@ class Game:
         self.mana_bar = ManaBar(self)
         self.player = Player(self, self.equipment, self.health_bar, self.mana_bar, self.spells)
         self.background = Background(self, self.player)
-
-        self.main_position = PVector(*self.get_main_stage_position())
-        self.last_main_position = PVector(*self.get_main_stage_position())
-        self.delta = PVector(0, 0)
         self.creatures_engine = CreaturesEngine(self)
 
         self.waiting = True

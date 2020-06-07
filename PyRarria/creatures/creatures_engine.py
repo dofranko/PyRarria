@@ -18,9 +18,9 @@ FREEZE_RANGE = 120
 SPAWN_RANGE = 100
 
 LIMITS = {
-    "walking_test": 1,
+    "walking_test": 0,
     "birds": 0,
-    "skeletons": 0,
+    "skeletons": 1,
     "skeletons_boss": 0,
     "zombies": 0,
     "cows": 0,
@@ -128,7 +128,8 @@ class CreaturesEngine:
             print(self.platforms)
             print(self.map_position)
             print(self.items_factory)
-
+            print(arrow)
+            print(arrow.update)
             arrow.update(self.player, self.platforms, self.map_position, self.items_factory)
 
         # spawn
