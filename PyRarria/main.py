@@ -37,7 +37,6 @@ class Game:
         # start a new game
         self.grid = {}
         self.all_sprites = pygame.sprite.Group()
-        self.blocks = pygame.sprite.Group()
         self.boosters = pygame.sprite.Group()
         self.active_boosters = pygame.sprite.Group()
         self.magics = pygame.sprite.Group()
@@ -63,7 +62,6 @@ class Game:
                 self.grid[(i * BLOCK_SIZE, j * BLOCK_SIZE)] = None
         block_list = [self.items_factory.create("dirt", block[0], block[1]) for block in generuj()]
         for blok in block_list:
-            self.blocks.add(blok)
             self.grid[(blok.position.x, blok.position.y)] = blok
 
         self.waiting = True

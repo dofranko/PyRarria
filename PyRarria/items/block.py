@@ -39,7 +39,6 @@ class Block(Item):
             blok_pos = Item.cursor_to_grid(position.x, position.y)
             if self.can_place(blok_pos):
                 self.position = vector(blok_pos)
-                self.game.blocks.add(self)
                 self.game.grid[(self.position.x, self.position.y)] = self
                 self.game.items.remove(self)
                 return True
@@ -48,7 +47,6 @@ class Block(Item):
     def update(self):
         super().update()
         if self.hp <= 0:
-            self.game.blocks.remove(self)
             self.game.grid[(self.position.x, self.position.y)] = None
             Item.scale(self, BLOCK_SIZE // 1.6)
             self.game.items.add(self)
