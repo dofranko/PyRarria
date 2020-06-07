@@ -124,13 +124,8 @@ class CreaturesEngine:
 
         # update arrows
         for arrow in self.arrows:
-            print(self.player)
-            print(self.platforms)
-            print(self.map_position)
-            print(self.items_factory)
-            print(arrow)
-            print(arrow.update)
-            arrow.update(self.player, self.platforms, self.map_position, self.items_factory)
+            arrow.update(self.player, self.platforms,
+                         self.map_position, self.items_factory)
 
         # spawn
         self.spawn()
