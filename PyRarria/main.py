@@ -121,7 +121,6 @@ class Game:
         self.items.update()
         self.items_engine.update()
         # self.blocks.update()
-        print(f"{self.bacon.rect} {self.player.position}")
 
     def events(self):
         # Game Loop - events

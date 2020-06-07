@@ -32,6 +32,7 @@ class Block(Item):
 
     def action(self, mouse_pos, player):
         """places block at cur_pos scaled to range of the player"""
+        Item.scale(self, BLOCK_SIZE)
         mouse_pos = vector(mouse_pos[0], mouse_pos[1])
         if math.hypot(mouse_pos.x - player.rect.x, mouse_pos.y - player.rect.y) <= self.range:
             position = vector(player.position.x, player.position.y) + mouse_pos - vector(WIDTH / 2, HEIGHT / 2)
@@ -40,6 +41,7 @@ class Block(Item):
                 self.position = vector(blok_pos)
                 self.game.blocks.add(self)
                 self.game.grid[(self.position.x, self.position.y)] = self
+                self.game.items.remove(self)
                 return True
         return False
 
@@ -50,6 +52,9 @@ class Block(Item):
             self.game.grid[(self.position.x, self.position.y)] = None
             Item.scale(self, BLOCK_SIZE // 1.6)
             self.game.items.add(self)
+            self.hp = self.max_hp
+            self.stan = 0
+            self.dmg_image = None
             return
 
         stan = 0
