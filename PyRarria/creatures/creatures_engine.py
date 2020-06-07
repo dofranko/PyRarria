@@ -126,7 +126,7 @@ class CreaturesEngine:
 
         # update arrows
         for arrow in self.arrows:
-            arrow.update(self.player, self._get_close_blocks(creature.position), self.map_position, self.items_factory)
+            arrow.update(self.player, self._get_close_blocks(arrow.position), self.map_position, self.items_factory)
 
         # spawn
         self.spawn()
