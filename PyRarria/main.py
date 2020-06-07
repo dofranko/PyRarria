@@ -2,7 +2,6 @@ import pygame
 import sys
 
 from settings import *
-from platforms import *
 from player import *
 from equipment import *
 from spells_icon import *
@@ -11,7 +10,7 @@ from health_bar import *
 from mana_bar import *
 from items_factory import *
 from boosters import *
-
+from items.items_generator import *
 from creatures.creatures_engine import CreaturesEngine
 from creatures.vector import PVector
 
@@ -35,8 +34,9 @@ class Game:
     def new_game(self):
         """Start new game"""
         # start a new game
+        self.grid = {}
         self.all_sprites = pygame.sprite.Group()
-        self.platforms = pygame.sprite.Group()
+        self.blocks = pygame.sprite.Group()
         self.boosters = pygame.sprite.Group()
         self.active_boosters = pygame.sprite.Group()
         self.magics = pygame.sprite.Group()
@@ -44,23 +44,32 @@ class Game:
         self.items = pygame.sprite.Group()
         self.all_creatures = pygame.sprite.Group()
         self.arrows = pygame.sprite.Group()
-        self.factory = Factory(self)
+        self.items_factory = Factory(self)
         self.equipment = Equipment(self)
         self.spells = Spells(self)
         self.health_bar = HealthBar(self)
         self.mana_bar = ManaBar(self)
         self.player = Player(self, self.equipment, self.health_bar, self.mana_bar, self.spells)
         self.background = Background(self, self.player)
+        self.items_engine = ItemsEngine(self)
+        self.main_position = PVector(*self.get_main_stage_position())
+        self.last_main_position = PVector(*self.get_main_stage_position())
+        self.delta = PVector(0, 0)
         self.creatures_engine = CreaturesEngine(self)
 
+        for i in range(300):
+            for j in range(-20, 300):
+                self.grid[(i * BLOCK_SIZE, j * BLOCK_SIZE)] = None
+
+        block_list = [self.items_factory.create("dirt", i * BLOCK_SIZE, 12 * BLOCK_SIZE) for i in range(30)]
+        for blok in block_list:
+            self.blocks.add(blok)
+            self.grid[(blok.position.x, blok.position.y)] = blok
+
         self.waiting = True
-        for plat in PLATFORM_LIST:
-            p = Platform(*plat, self)
-            self.all_sprites.add(p)
-            self.platforms.add(p)
 
         # test
-        potato = self.factory.create("potato", 1000, 300)
+        potato = self.items_factory.create("potato", 1000, 300)
         self.all_sprites.add(potato)
         self.items.add(potato)
 
@@ -99,7 +108,7 @@ class Game:
         self.player.update()
         self.equipment.update()
         self.background.update()
-        self.platforms.update()
+        self.blocks.update()
         self.creatures_engine.update()
         self.health_bar.update()
         self.mana_bar.update()
@@ -108,6 +117,8 @@ class Game:
         self.magics.update()
         self.explosions.update()
         self.items.update()
+        self.items_engine.update()
+        self.blocks.update()
 
     def events(self):
         # Game Loop - events
@@ -140,6 +151,9 @@ class Game:
         self.creatures_engine.draw()
         self.all_sprites.draw(self.screen)
         self.player.draw()
+
+        for blok in Item.get_neighbours(self.player.position, BLOCK_RENDER_DISTANCE, self.grid):
+            blok.draw()
         self.health_bar.draw()
         self.mana_bar.draw()
         self.spells.draw(self.screen)

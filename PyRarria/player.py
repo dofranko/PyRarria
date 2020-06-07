@@ -3,6 +3,8 @@ import pygame
 from settings import *
 from bullet_spells import *
 from fast_spells import *
+from items.item import Item
+from items.block import *
 import random
 
 from creatures.vector import PVector
@@ -66,6 +68,9 @@ class Player(pygame.sprite.Sprite):
         """Player jumps (only if on platform) - change velocity y value"""
         self.vel.y = PLAYER_MOVE["JUMP_VEL"]
 
+    def _get_close_blocks(self):
+        return Item.get_neighbours(self.position, (5, 5), self.game.grid)
+
     # Sprawdzenie kolizji (stania) od góry platform
     def check_collision_vertically(self):
         """Check collistion up/down and move if collided
@@ -74,7 +79,7 @@ class Player(pygame.sprite.Sprite):
         can_jump = False
         # Gdy porusza się w dół
         if self.vel.y > 0:
-            hits = pygame.sprite.spritecollide(self, self.game.platforms, False)
+            hits = pygame.sprite.spritecollide(self, self._get_close_blocks(), False)
             if hits:
                 self.is_pushed = False
                 new_position = min([hits[i].position.y for i in range(len(hits))])
@@ -87,7 +92,7 @@ class Player(pygame.sprite.Sprite):
 
         # Gdy porusza się w górę
         elif self.vel.y < 0:
-            hits = pygame.sprite.spritecollide(self, self.game.platforms, False)
+            hits = pygame.sprite.spritecollide(self, self._get_close_blocks(), False)
             if hits:
                 self.is_pushed = False
                 new_position = max([hits[i].position.y + hits[i].rect.height + 1 for i in range(len(hits))])
@@ -102,7 +107,9 @@ class Player(pygame.sprite.Sprite):
         """Check collistion left/right and move if collided"""
         # Gdy porusza się w prawo
         if self.acc.x > 0:
-            hits = pygame.sprite.spritecollide(self, self.game.platforms, False)  # False -> don't remove from platforms
+            hits = pygame.sprite.spritecollide(
+                self, self._get_close_blocks(), False
+            )  # False -> don't remove from blocks
             if hits:
                 self.is_pushed = False
                 new_position = min([hits[i].position.x for i in range(len(hits))])
@@ -112,7 +119,9 @@ class Player(pygame.sprite.Sprite):
                 self.acc.x = 0
         # Gdy porusza się w lewo
         elif self.acc.x < 0:
-            hits = pygame.sprite.spritecollide(self, self.game.platforms, False)  # False -> don't remove from platforms
+            hits = pygame.sprite.spritecollide(
+                self, self._get_close_blocks(), False
+            )  # False -> don't remove from blocks
             if hits:
                 self.is_pushed = False
                 new_position = max([hits[i].position.x + hits[i].rect.width for i in range(len(hits))])
@@ -189,7 +198,7 @@ class Player(pygame.sprite.Sprite):
         if not thrown:
             return
 
-        thrown.pos = vector(self.position.x + 80 * self.facing + 15, self.position.y - 50)
+        thrown.position = vector(self.position.x + 80 * self.facing + 15, self.position.y - 50)
 
         self.game.all_sprites.add(thrown)
         self.game.items.add(thrown)

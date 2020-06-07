@@ -11,6 +11,7 @@ from creatures.sprites_tree.zombie import Zombie
 from creatures.vector import PVector
 from pygame.sprite import Group
 from settings import FPS
+from items.item import *
 
 
 BARD_RANGE = 120
@@ -78,7 +79,7 @@ class CreaturesEngine:
         self.map_position_init = PVector(0, 0)
 
         # map, player, arrows
-        self.platforms = game.platforms
+        self.grid = game.grid
         self.player = game.player
 
         # creatures, arrows
@@ -119,13 +120,13 @@ class CreaturesEngine:
 
         # update creatures
         for creature in self.all_creatures:
-            creature.update(self.player, self.platforms,
-                            self.map_position, self.items_factory)
+            creature.update(
+                self.player, self._get_close_blocks(creature.position), self.map_position, self.items_factory
+            )
 
         # update arrows
         for arrow in self.arrows:
-            arrow.update(self.player, self.platforms,
-                         self.map_position, self.items_factory)
+            arrow.update(self.player, self._get_close_blocks(creature.position), self.map_position, self.items_factory)
 
         # spawn
         self.spawn()
@@ -179,3 +180,6 @@ class CreaturesEngine:
         for group, name in zip(self.groups.values(), NAMES):
             print(f"{name:10}:{len(group)}")
         print()
+
+    def _get_close_blocks(self, position):
+        return Item.get_neighbours(position, (5, 5), self.game.grid)

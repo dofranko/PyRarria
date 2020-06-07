@@ -1,4 +1,4 @@
-# Sprite class for platforms
+# Sprite class for blocks
 # ============WATCH OUT========= DO NOT RENAME IT INTO "platform.py" !!!!!!!!!!!!!!
 import pygame
 from settings import *

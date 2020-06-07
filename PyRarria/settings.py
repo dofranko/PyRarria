@@ -9,13 +9,14 @@ IMAGES = "resources/images/"
 BACKGROUND = "resources/images/backgrounds/"
 FOOD = "resources/images/food/"
 TOOL = "resources/images/tools/"
+TERRAIN = "resources/images/terrain/"
 ARMOUR = "resources/images/armour/"
 SCREENS = "resources/images/screens/"
 SOUNDS = "resources/sounds/"
 
 # Player properties
 PLAYER_MOVE = {"PLAYER_ACC": 5, "PLAYER_GRAV": 0.8, "PLAYER_FRICTION": -0.2, "JUMP_VEL": -20, "MAX_VEL_Y": 15}
-PLAYER_VALUES = {"DAMAGE": 0, "DEFENCE": 0, "MANA_REDUCTION": 0, "ACCURACY": 1}
+PLAYER_VALUES = {"DAMAGE": 0, "DEFENCE": 0, "MANA_REDUCTION": 0, "ACCURACY": 1, "TERRAIN_RANGE": 150}
 
 # Health/Mana bar properties
 HEART_VALUE = 195
@@ -26,6 +27,9 @@ MAX_HEALTH = 20 * HEART_VALUE
 MIN_HEALTH = 5 * HEART_VALUE
 MAX_MANA = 20 * STAR_VALUE
 MIN_MANA = 5 * STAR_VALUE
+
+BLOCK_SIZE = 48
+BLOCK_RENDER_DISTANCE = (10, 10)
 
 IMAGES_LIST = {
     # Player
@@ -64,6 +68,11 @@ IMAGES_LIST = {
     "mage_boots": ARMOUR + "mage_boots.png",
     "black_boots": ARMOUR + "black_boots.png",
     "fire_boots": ARMOUR + "fire_boots.png",
+    # Blocks
+    "dirt": TERRAIN + "dirt.png",
+    "damaged_1": TERRAIN + "damaged_1.png",
+    "damaged_2": TERRAIN + "damaged_2.png",
+    "damaged_3": TERRAIN + "damaged_3.png",
     # END ITEMS
     # Spells
     "smallfire": IMAGES + "smallfire.png",
@@ -119,7 +128,7 @@ SPELL_SHEETS = {
     "collision_explosion": IMAGES + "collision_explosion_100x60.png",
 }
 
-# Starting platforms
+# Starting blocks
 PLATFORM_LIST = [
     (0, HEIGHT - 40, WIDTH, 40),
     (WIDTH / 2 - 50, HEIGHT * 3 / 4, 500, 20),

@@ -4,6 +4,7 @@ import pygame
 from os import path
 from settings import *
 
+# from items.block import *
 vector = pygame.math.Vector2
 
 
@@ -22,7 +23,7 @@ class Item(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-        self.pos = vector(x, y)
+        self.position = vector(x, y)
 
         self.vel_y = 0
         self.acc_y = 0
@@ -33,14 +34,14 @@ class Item(pygame.sprite.Sprite):
         self.damage = 5
         self.env_damage = 3
         self.durability = 100000
-        self.rng = 20
+        self.range = 20
 
     def check_collision(self):
         """Check collision (only to down)"""
         if self.vel_y > 0:
-            hits = pygame.sprite.spritecollide(self, self.game.platforms, False)
+            hits = pygame.sprite.spritecollide(self, Item.get_neighbours(self.position, (5, 5), self.game.grid), False)
             if hits:
-                self.pos.y = min([(hits[i].position.y - self.rect.height) for i in range(len(hits))])
+                self.position.y = min([(hits[i].position.y - self.rect.height) for i in range(len(hits))])
                 self.vel_y = 0
 
     def falling(self):
@@ -49,7 +50,7 @@ class Item(pygame.sprite.Sprite):
         self.acc_y = PLAYER_MOVE["PLAYER_GRAV"]
         self.vel_y += self.acc_y
         if self.vel_y != 0:
-            self.pos.y += self.vel_y + 0.5 * self.acc_y
+            self.position.y += self.vel_y + 0.5 * self.acc_y
 
     def get_state(self):
         """Get if item is held by player or dropped on map"""
@@ -71,8 +72,8 @@ class Item(pygame.sprite.Sprite):
     def update(self):
         """Update item position"""
         main_stage_pos = self.game.get_main_stage_position()
-        self.rect.x = self.pos.x + main_stage_pos.x
-        self.rect.y = self.pos.y + main_stage_pos.y
+        self.rect.x = self.position.x + main_stage_pos.x
+        self.rect.y = self.position.y + main_stage_pos.y
 
         if self.get_state() == "lying":
             self.falling()
@@ -99,7 +100,7 @@ class Item(pygame.sprite.Sprite):
     # implementowane przez podklasy
     def action(self, mouse_pos, player):
         """By default it makes a little damage and a little env_damage in low range"""
-        if math.hypot(mouse_pos[0] - player.rect.x, mouse_pos[1] - player.rect.y) <= self.rng:
+        if math.hypot(mouse_pos[0] - player.rect.x, mouse_pos[1] - player.rect.y) <= self.range:
             damaged = False
             for creature in self.game.all_creatures:
                 if creature.rect.collidepoint(mouse_pos):
@@ -107,9 +108,11 @@ class Item(pygame.sprite.Sprite):
                     damaged = True
                     break
             else:
-                for platform in self.game.platforms:
-                    if platform.rect.collidepoint(mouse_pos):
-                        # platform.hit(self.env_damage)
+                position = vector(player.position.x, player.position.y) + mouse_pos - vector(WIDTH / 2, HEIGHT / 2)
+                blok_pos = vector(*Item.cursor_to_grid(position.x, position.y))
+                for block in Item.get_neighbours(blok_pos, (3, 3), self.game.grid):
+                    if block.rect.collidepoint(mouse_pos):
+                        block.hit(self.env_damage)
                         damaged = True
                         break
             if damaged:
@@ -117,3 +120,23 @@ class Item(pygame.sprite.Sprite):
             if self.durability <= 0:
                 return True
         return False
+
+    @staticmethod
+    def get_neighbours(start_point, depth, grid):
+        pos = Item.cursor_to_grid(start_point.x, start_point.y)
+        neighbours = []
+        for i in range(-depth[0], depth[0] + 1):
+            for j in range(-depth[1], depth[1] + 1):
+                try:
+                    blok = grid[(BLOCK_SIZE * i + pos[0], BLOCK_SIZE * j + pos[1])]
+                except KeyError:
+                    continue
+                if blok:
+                    neighbours.append(blok)
+        return neighbours
+
+    @staticmethod
+    def cursor_to_grid(x, y):
+        grid_x = (x // BLOCK_SIZE) * BLOCK_SIZE
+        grid_y = (y // BLOCK_SIZE) * BLOCK_SIZE
+        return (grid_x, grid_y)

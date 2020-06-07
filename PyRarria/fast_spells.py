@@ -37,7 +37,7 @@ class SmallFire(SmallSpell):
         super().__init__(game, "smallfire", 50)
         self.sheet = SpriteSheet(SPELL_SHEETS["smallfire"], 10, 6, 60)
         self.image = pygame.Surface((self.sheet.cell_width, self.sheet.cell_height), pygame.SRCALPHA).convert_alpha()
-        self.pos = pos + vector(self.sheet.shift[4][0], self.sheet.shift[4][1] - 20)
+        self.position = pos + vector(self.sheet.shift[4][0], self.sheet.shift[4][1] - 20)
         self.rect = self.image.get_rect()
         self.rect.center = pos
         self.duration = 4000
@@ -60,8 +60,8 @@ class SmallFire(SmallSpell):
             self.kill()
 
         main_stage_position = self.game.get_main_stage_position()
-        self.rect.x = self.pos.x - (self.stage_pos_x - main_stage_position.x)
-        self.rect.y = self.pos.y - (self.stage_pos_y - main_stage_position.y)
+        self.rect.x = self.position.x - (self.stage_pos_x - main_stage_position.x)
+        self.rect.y = self.position.y - (self.stage_pos_y - main_stage_position.y)
 
         if self.frame == 60:
             self.frame = 0
@@ -75,7 +75,7 @@ class SmallThunder(SmallSpell):
         super().__init__(game, "smallthunder", 50)
         self.sheet = SpriteSheet(SPELL_SHEETS["smallthunder"], 6, 4, 24)
         self.image = pygame.Surface((self.sheet.cell_width, self.sheet.cell_height), pygame.SRCALPHA).convert_alpha()
-        self.pos = pos + vector(self.sheet.shift[4][0], self.sheet.shift[4][1] - 70)
+        self.position = pos + vector(self.sheet.shift[4][0], self.sheet.shift[4][1] - 70)
         self.rect = self.image.get_rect()
         self.rect.center = pos
         self.duration = 720
@@ -98,8 +98,8 @@ class SmallThunder(SmallSpell):
             self.kill()
 
         main_stage_position = self.game.get_main_stage_position()
-        self.rect.x = self.pos.x - (self.stage_pos_x - main_stage_position.x)
-        self.rect.y = self.pos.y - (self.stage_pos_y - main_stage_position.y)
+        self.rect.x = self.position.x - (self.stage_pos_x - main_stage_position.x)
+        self.rect.y = self.position.y - (self.stage_pos_y - main_stage_position.y)
 
         if self.frame == 72:
             self.frame = 0
@@ -113,7 +113,7 @@ class Boulder(SmallSpell):
         super().__init__(game, "boulder", 150)
         self.sheet = SpriteSheet(SPELL_SHEETS["boulder"], 8, 8, 64)
         self.image = pygame.Surface((self.sheet.cell_width, self.sheet.cell_height), pygame.SRCALPHA).convert_alpha()
-        self.pos = pos + vector(self.sheet.shift[4][0], self.sheet.shift[4][1] - 100)
+        self.position = pos + vector(self.sheet.shift[4][0], self.sheet.shift[4][1] - 100)
         self.rect = self.image.get_rect()
         self.rect.center = pos
         self.speed_y = 0.4
@@ -138,9 +138,9 @@ class Boulder(SmallSpell):
             self.kill()
 
         main_stage_position = self.game.get_main_stage_position()
-        self.rect.x = self.pos.x - (self.stage_pos_x - main_stage_position.x)
-        self.rect.y = self.pos.y - (self.stage_pos_y - main_stage_position.y)
-        self.pos.y += self.speed_y
+        self.rect.x = self.position.x - (self.stage_pos_x - main_stage_position.x)
+        self.rect.y = self.position.y - (self.stage_pos_y - main_stage_position.y)
+        self.position.y += self.speed_y
 
         if self.frame == 192:
             self.frame = 0
@@ -259,7 +259,7 @@ class Freeze(SmallSpell):
         super().__init__(game, "freeze", 0)
         self.sheet = SpriteSheet(SPELL_SHEETS["freeze"], 10, 10, 86)
         self.image = pygame.Surface((self.sheet.cell_width, self.sheet.cell_height), pygame.SRCALPHA).convert_alpha()
-        self.pos = pos + vector(self.sheet.shift[4][0], self.sheet.shift[4][1])
+        self.position = pos + vector(self.sheet.shift[4][0], self.sheet.shift[4][1])
         self.rect = self.image.get_rect()
         self.rect.center = pos
         self.duration = 15000
@@ -295,8 +295,8 @@ class Freeze(SmallSpell):
             self.kill()
 
         main_stage_position = self.game.get_main_stage_position()
-        self.rect.x = self.pos.x - (self.stage_pos_x - main_stage_position.x)
-        self.rect.y = self.pos.y - (self.stage_pos_y - main_stage_position.y)
+        self.rect.x = self.position.x - (self.stage_pos_x - main_stage_position.x)
+        self.rect.y = self.position.y - (self.stage_pos_y - main_stage_position.y)
 
         if self.frame == 86:
             self.frame = 0

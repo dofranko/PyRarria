@@ -296,10 +296,10 @@ def init_move(src):
         src.apply_force(force)
 
 
-def keep_on_platform(src, platforms):
+def keep_on_platform(src, blocks):
     """Inverts speed vector if creature reaches platform edge."""
 
-    hits = pg.sprite.spritecollide(src, platforms, False)
+    hits = pg.sprite.spritecollide(src, blocks, False)
     if hits:
 
         # reaction(src)
@@ -315,10 +315,10 @@ def keep_on_platform(src, platforms):
             src.apply_force(steer)
 
 
-def push_from_platform(src, platforms):
+def push_from_platform(src, blocks):
     """Inverts speed vector if creature reaches platform edge."""
 
-    hits = pg.sprite.spritecollide(src, platforms, False)
+    hits = pg.sprite.spritecollide(src, blocks, False)
     if hits:
 
         # reaction(src)
@@ -334,10 +334,10 @@ def push_from_platform(src, platforms):
             src.apply_force(steer)
 
 
-def jump_from_platform(src, platforms):
+def jump_from_platform(src, blocks):
     """If creature is on edge, jumps forward."""
 
-    hits = pg.sprite.spritecollide(src, platforms, False)
+    hits = pg.sprite.spritecollide(src, blocks, False)
     if hits:
 
         # reaction(src)
@@ -349,9 +349,9 @@ def jump_from_platform(src, platforms):
             jump(src)
 
 
-def bounce_from_platform(src, platforms):
-    """If creature collides with platforms, moves in opposite direction."""
-    hits = pg.sprite.spritecollide(src, platforms, False)
+def bounce_from_platform(src, blocks):
+    """If creature collides with blocks, moves in opposite direction."""
+    hits = pg.sprite.spritecollide(src, blocks, False)
     if hits:
         print("hits")
         if src.rect.left < hits[0].rect.left:
@@ -367,9 +367,9 @@ def bounce_from_platform(src, platforms):
             src.apply_force(PVector(0, +src.maxforce))
 
 
-def platform_stop(src, platforms):
-    """If creature collides with platforms, stopes."""
-    hits = pg.sprite.spritecollide(src, platforms, False)
+def platform_stop(src, blocks):
+    """If creature collides with blocks, stopes."""
+    hits = pg.sprite.spritecollide(src, blocks, False)
     if hits:
         reaction(src)
         src.velocity.x = 0

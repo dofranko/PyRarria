@@ -72,10 +72,10 @@ class AbstractSprite(pg.sprite.Sprite):
     def shoot(self, player, arrows):
         pass
 
-    def update(self, player, platforms, map_position, items_factory):
+    def update(self, player, blocks, map_position, items_factory):
         pass
 
-    def update_forces(self, player, platforms):
+    def update_forces(self, player, blocks):
         pass
 
     def apply_force(self, force):
@@ -87,7 +87,7 @@ class AbstractSprite(pg.sprite.Sprite):
     def move(self, map_position):
         pass
 
-    def fix_move(self, platforms, map_position):
+    def fix_move(self, blocks, map_position):
         pass
 
     def die(self, items_factory):

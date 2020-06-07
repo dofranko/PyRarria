@@ -72,8 +72,8 @@ class Sprite(AbstractSprite):
 
     def hit(self, player, damage_points):
         self.hp -= damage_points
-        push_away(self, player, damage_points/self.maxhp)
-        print(damage_points/self.maxhp)
+        push_away(self, player, damage_points / self.maxhp)
+        print(damage_points / self.maxhp)
 
     def update(self, player, platforms, map_position, items_factory):
         # dead
@@ -82,9 +82,9 @@ class Sprite(AbstractSprite):
             return
 
         # alive
-        self.update_forces(player, platforms)
+        self.update_forces(player, blocks)
         self.move(map_position)
-        self.fix_move(platforms, map_position)
+        self.fix_move(blocks, map_position)
 
     def move(self, map_position):
         # velocity
@@ -104,8 +104,8 @@ class Sprite(AbstractSprite):
         self.anim_count -= 1
         self.anim_count %= self.animation_ticks
 
-    def fix_move(self, platforms, map_position):
-        hits = pg.sprite.spritecollide(self, platforms, False)
+    def fix_move(self, blocks, map_position):
+        hits = pg.sprite.spritecollide(self, blocks, False)
         if hits:
             dx = 0.0
             hit = hits[0].rect
@@ -124,7 +124,7 @@ class Sprite(AbstractSprite):
             self.rect.topleft = (self.position + map_position).repr()
             self.hpbar.center(self.body.midtop)
 
-        hits = pg.sprite.spritecollide(self, platforms, False)
+        hits = pg.sprite.spritecollide(self, blocks, False)
         if hits:
             dy = 0.0
             hit = hits[0].rect

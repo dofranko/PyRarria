@@ -39,7 +39,7 @@ class Skeleton(WalkingSprite):
             arrows.add(arrow)
             self.shot_count = 100
 
-    def update_forces(self, player, platforms):
+    def update_forces(self, player, blocks):
         gravity(self)
         if (player.position - self.position).mag() > 200:
             run_after(self, player)

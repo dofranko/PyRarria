@@ -9,6 +9,7 @@ import math
 ANIMATION = ZOMBIE_ANIMATION
 OBJECT = ZOMBIE
 
+
 class Zombie(WalkingSprite):
 
     # static variables
@@ -17,8 +18,8 @@ class Zombie(WalkingSprite):
     width = ANIMATION["width"]
     height = ANIMATION["height"]
     radius = min(width, height)
-    animation_ticks = math.floor(FPS * ANIMATION['speed'])
-    frame_ticks = math.ceil(FPS * ANIMATION['speed'] / ANIMATION['frames'])
+    animation_ticks = math.floor(FPS * ANIMATION["speed"])
+    frame_ticks = math.ceil(FPS * ANIMATION["speed"] / ANIMATION["frames"])
 
     def __init__(self, x, y):
         super(Zombie, self).__init__(x, y)

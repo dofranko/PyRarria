@@ -11,5 +11,5 @@ class Tool(Item):
         super().__init__(x, y, info, game)
         self.durability = info.attr["durability"]
         self.damage = info.attr["damage"]
-        self.rng = info.attr["range"]
+        self.range = info.attr["range"]
         self.env_damage = info.attr["env_damage"]

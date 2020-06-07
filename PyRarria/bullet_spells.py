@@ -2,6 +2,7 @@ import pygame
 import random
 from settings import *
 from spritesheet import *
+from items.item import *
 
 
 class Explosion(pygame.sprite.Sprite):
@@ -10,7 +11,7 @@ class Explosion(pygame.sprite.Sprite):
         self.game = game
         self.sheet = SpriteSheet(SPELL_SHEETS["collision_explosion"], 10, 6, 60)
         self.image = pygame.Surface((self.sheet.cell_width, self.sheet.cell_height), pygame.SRCALPHA).convert_alpha()
-        self.pos = pos + (self.sheet.shift[4][0], self.sheet.shift[4][1])
+        self.position = pos + (self.sheet.shift[4][0], self.sheet.shift[4][1])
         self.rect = self.image.get_rect()
         self.rect.center = pos
         self.start = pygame.time.get_ticks()
@@ -31,8 +32,8 @@ class Explosion(pygame.sprite.Sprite):
 
         self.draw(self.frame)
         main_stage_position = self.game.get_main_stage_position()
-        self.rect.x = self.pos.x - (self.stage_pos_x - main_stage_position.x)
-        self.rect.y = self.pos.y - (self.stage_pos_y - main_stage_position.y)
+        self.rect.x = self.position.x - (self.stage_pos_x - main_stage_position.x)
+        self.rect.y = self.position.y - (self.stage_pos_y - main_stage_position.y)
 
 
 class BulletSpell(pygame.sprite.Sprite):
@@ -53,7 +54,7 @@ class BulletSpell(pygame.sprite.Sprite):
             hits[0].hit(self.damage)
 
         # Detekcja kolizji ze środowiskiem
-        hits = pygame.sprite.spritecollide(self, self.game.platforms, False)
+        hits = pygame.sprite.spritecollide(self, Item.get_neighbours(self.position, (3, 3), self.game.grid), False)
         if hits:
             self.explode()
 
@@ -73,7 +74,7 @@ class Fireball(BulletSpell):
 
         self.image = pygame.Surface((self.sheet.cell_width, self.sheet.cell_height), pygame.SRCALPHA).convert_alpha()
         self.frame = random.randint(0, 63)
-        self.pos = pos
+        self.position = pos
         self.rect = self.image.get_rect()
         vector = self.game.get_main_stage_position()
         pos += vector
@@ -101,11 +102,11 @@ class Fireball(BulletSpell):
             self.kill()
 
         main_stage_position = self.game.get_main_stage_position()
-        self.rect.x = self.pos.x - (self.stage_pos_x - main_stage_position.x)
-        self.rect.y = self.pos.y - (self.stage_pos_y - main_stage_position.y)
-        self.pos.x += self.speed_x * self.direction
+        self.rect.x = self.position.x - (self.stage_pos_x - main_stage_position.x)
+        self.rect.y = self.position.y - (self.stage_pos_y - main_stage_position.y)
+        self.position.x += self.speed_x * self.direction
         self.rect.x += self.speed_x * self.direction
-        self.pos.y += self.speed_y
+        self.position.y += self.speed_y
         self.rect.y += self.speed_y
 
         if self.frame == 64:
@@ -117,10 +118,10 @@ class Fireball(BulletSpell):
     def explode(self):
         vect = pygame.math.Vector2(self.stage_pos_x, self.stage_pos_y)
         if self.direction == 1:
-            vector = pygame.math.Vector2(self.pos[0] + 50, self.pos[1] + 10)
+            vector = pygame.math.Vector2(self.position[0] + 50, self.position[1] + 10)
             new_explosion = Explosion(self.game, vector, vect)
         else:
-            vector = pygame.math.Vector2(self.pos[0], self.pos[1] + 10)
+            vector = pygame.math.Vector2(self.position[0], self.position[1] + 10)
             new_explosion = Explosion(self.game, vector, vect)
 
         self.game.explosions.add(new_explosion)
@@ -138,7 +139,7 @@ class FrostBullet(BulletSpell):
             self.sheet = SpriteSheet(SPELL_SHEETS["frostbullet_left"], 8, 1, 8)
 
         self.image = pygame.Surface((self.sheet.cell_width, self.sheet.cell_height), pygame.SRCALPHA).convert_alpha()
-        self.pos = pos
+        self.position = pos
         self.rect = self.image.get_rect()
         vector = self.game.get_main_stage_position()
         pos += vector
@@ -167,11 +168,11 @@ class FrostBullet(BulletSpell):
             self.kill()
 
         main_stage_position = self.game.get_main_stage_position()
-        self.rect.x = self.pos.x - (self.stage_pos_x - main_stage_position.x)
-        self.rect.y = self.pos.y - (self.stage_pos_y - main_stage_position.y)
-        self.pos.x += self.speed_x * self.direction
+        self.rect.x = self.position.x - (self.stage_pos_x - main_stage_position.x)
+        self.rect.y = self.position.y - (self.stage_pos_y - main_stage_position.y)
+        self.position.x += self.speed_x * self.direction
         self.rect.x += self.speed_x * self.direction
-        self.pos.y += self.speed_y
+        self.position.y += self.speed_y
         self.rect.y += self.speed_y
 
         if self.frame == 8:

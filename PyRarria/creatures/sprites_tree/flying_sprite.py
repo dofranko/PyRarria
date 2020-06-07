@@ -20,7 +20,7 @@ class FlyingSprite(Sprite):
         if self.is_hpbar:
             self.hpbar.draw(win, self.hp, self.maxhp)
 
-    def update_forces(self, player, platforms):
+    def update_forces(self, player, blocks):
         fly(self)
         edges_bounce(self)
         bounce_from_platform(self, platforms)

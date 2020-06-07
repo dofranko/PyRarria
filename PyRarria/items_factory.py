@@ -2,6 +2,8 @@ from items.tool import *
 from items.food import *
 from items.armour import *
 import random
+from items.block import *
+
 
 class ItemInfo:
     """A class representing item's informations - used by Factory"""
@@ -62,6 +64,8 @@ class Factory:
         "black_boots", "Buty czarne", "boots", -10, {"defence": 9, "speed_value": 3, "double_jump": True}
     )
 
+    ITEMS_DICT["dirt"] = ItemInfo("dirt", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
+
     def __init__(self, game):
         self.game = game
 
@@ -77,6 +81,8 @@ class Factory:
             return self.create_breastplate(info, x, y)
         elif info.variety == "boots":
             return self.create_boots(info, x, y)
+        elif info.variety == "block":
+            return self.create_placed_block(name, info, x, y)
 
     def create_food(self, info, x, y):
         return Food(x, y, info, self.game)
@@ -103,3 +109,6 @@ class Factory:
         item = self.create(item_name, x, y)
         self.game.items.add(item)
         self.game.all_sprites.add(item)
+
+    def create_placed_block(self, name, info, x, y):
+        return Block(x, y, info, self.game)

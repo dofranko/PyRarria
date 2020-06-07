@@ -34,15 +34,17 @@ class Equipment:
         self.collected_items = [[] for i in range(self.eq_size + 3)]  # +3 dla armoru
         # TODO do testów;
         self.collected_items[8] = [
-            self.game.factory.create("pickaxe_diamond", 0, 0),
-            self.game.factory.create("pickaxe_diamond", 0, 0),
+            self.game.items_factory.create("pickaxe_diamond", 0, 0),
+            self.game.items_factory.create("pickaxe_diamond", 0, 0),
         ]
         self.collected_items[1] = [
-            self.game.factory.create("green_sword", 0, 0),
+            self.game.items_factory.create("green_sword", 0, 0),
         ]
-        self.collected_items[3] = [self.game.factory.create("black_helmet", 0, 0)]
-        self.collected_items[4] = [self.game.factory.create("black_breastplate", 0, 0)]
-        self.collected_items[5] = [self.game.factory.create("black_boots", 0, 0)]
+        self.collected_items[3] = [self.game.items_factory.create("black_helmet", 0, 0)]
+        self.collected_items[4] = [self.game.items_factory.create("black_breastplate", 0, 0)]
+        self.collected_items[5] = [self.game.items_factory.create("black_boots", 0, 0)]
+        for _ in range(20):
+            self.collected_items[2].append(self.game.items_factory.create("dirt", 0, 0))
 
     def __create_eq_GUI(self):
         """"Create base eq gui"""
@@ -383,8 +385,11 @@ class Equipment:
             armour_pos = self.eq_size
             flag = True
             # zmienianie itemsów wewnątrz slotów armour
-            if self.change_tool in [armour_pos, armour_pos + 1, armour_pos + 2] and \
-                    position in [armour_pos, armour_pos + 1, armour_pos + 2]:
+            if self.change_tool in [armour_pos, armour_pos + 1, armour_pos + 2] and position in [
+                armour_pos,
+                armour_pos + 1,
+                armour_pos + 2,
+            ]:
                 flag = False
             # zmienianie itemsów z armour na eq
             elif self.change_tool in [armour_pos, armour_pos + 1, armour_pos + 2]:

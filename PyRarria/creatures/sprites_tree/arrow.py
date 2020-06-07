@@ -37,7 +37,7 @@ class Arrow(FlyingSprite):
             self.hp -= 1
 
         # alive
-        self.update_forces(player, platforms)
+        self.update_forces(player, blocks)
         self.move(map_position)
 
     def bite(self, player):
@@ -60,4 +60,3 @@ class Arrow(FlyingSprite):
         edges_delete(self)
         if platform_stop(self, platforms):
             self.is_target = True
-
