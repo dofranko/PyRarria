@@ -3,6 +3,8 @@ from settings import *
 
 
 class Spells:
+    """Class displaying icons and information about spells (only displaying, not casting)"""
+
     def __init__(self, game):
         self.game = game
         self.spells = []
@@ -55,6 +57,7 @@ class Spells:
         self.font = pygame.font.SysFont("comicsansms", 18)
 
     def create_sprites(self):
+        """Create base icons"""
         for i, image in enumerate(self.spells[:4]):
             new_spell = pygame.sprite.Sprite()
             new_spell.image = image
@@ -77,6 +80,7 @@ class Spells:
             self.special_slot.append(new_spell)
 
     def draw(self, screen):
+        """Draw icons"""
         for i, spell in enumerate(self.sprites_list[:4]):  # iterowanie po skillach, które można wybrać
             if i != self.change_spell or not self.spell_moving:  # nie rysujemy przenoszonego spella
                 if i == self.chosen:
@@ -107,6 +111,7 @@ class Spells:
         self.draw_description(screen)
 
     def draw_blocking_time(self, spell, i, screen):
+        """Draw numbers showing remaining time to unblock spell"""
         last_cast = self.game.player.last_cast[self.name_spells[i]]
         block_time = SPELL_DELAYS[self.name_spells[i]]
         now_time = pygame.time.get_ticks()
@@ -119,6 +124,7 @@ class Spells:
             screen.blit(text, (spell.rect.x + 15 - len(str(time_to_end) * 3), spell.rect.y + 10))
 
     def draw_description(self, screen):
+        """Draw description of spell"""
         for i, spell in enumerate(self.sprites_list):
             if spell.rect.collidepoint(pygame.mouse.get_pos()):
                 x, y = pygame.mouse.get_pos()
@@ -131,10 +137,12 @@ class Spells:
             screen.blit(desc, (x + 15, y + 15))
 
     def draw_moving_item(self, screen):
+        """Draw moving spell"""
         if self.spell_moving:
             screen.blit(self.spell, (self.spell_x, self.spell_y))
 
     def handle_mouse(self, event):
+        """Handle swaping spells"""
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 for i, spell in enumerate(self.sprites_list):
@@ -169,6 +177,7 @@ class Spells:
                 self.spell_y = event.pos[1] + self.offset_y
 
     def change_positions(self, position):
+        """Method to swap two spells"""
         # Jeśli wybrano dopiero pierwszy item
         if self.change_spell is None:
             if self.spells[position]:
@@ -194,4 +203,5 @@ class Spells:
                 self.chosen = None
 
     def get_spell_at(self, number):
+        """Return spells at position @number"""
         return self.name_spells[number]
