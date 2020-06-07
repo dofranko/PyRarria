@@ -41,8 +41,8 @@ class Player(pygame.sprite.Sprite):
         self.health_bar = health_bar
         self.mana_bar = mana_bar
         self.spells = spells
-        # TODO usunac location i damage
-        self.location = PVector(self.position.x, self.position.y)
+
+        # TODO teraz usunac tylko damage
         self.damage = 10
 
         # info kiedy gracz ostatnio użył danego zaklęcia
@@ -195,9 +195,6 @@ class Player(pygame.sprite.Sprite):
         self.game.items.add(thrown)
 
     def update(self):
-
-        self.location.set(self.rect.centerx, self.rect.centery)
-
         """Update player position, check collisons, collect/throw items, handle keys pressed"""
         # Równania ruchu. Zabawa na własną odpowiedzialność :v
         self.vel.y += self.acc.y

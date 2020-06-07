@@ -26,9 +26,34 @@ class Arrow(FlyingSprite):
         self.create(x, y, **OBJECT)
         self.rect = pg.rect.Rect(0, 0, self.radius, self.radius)
 
-    def apply_force(self, force):
-        force.limit(self.maxforce)
-        self.acceleration += force
+    def update(self, player, platforms, map_position, items_factory):
+        # dead
+        if self.hp <= 0:
+            self.die(items_factory)
+            return
+
+        # arrow hits the target
+        if self.is_target:
+            self.hp -= 1
+
+        # alive
+        self.update_forces(player, platforms)
+        self.move(map_position)
+
+    def bite(self, player):
+        if self.is_enemy and self.rect.colliderect(player):
+            if self.bite_count > 0:
+                self.bite_count -= 1
+            else:
+                direction = -1
+                if self.position.x < player.position.x:
+                    direction = 1
+                player.hit(self.damage, direction)
+                self.bite_count = 10000
+                self.is_target = True
+
+    def die(self, items_factory):
+        self.kill()
 
     def update(self, player, platforms, map_position):
         # dead
@@ -43,5 +68,6 @@ class Arrow(FlyingSprite):
     def update_forces(self, player, platforms):
         gravity_bullet(self)
         edges_delete(self)
-        platform_stop(self, platforms)
+        if platform_stop(self, platforms):
+            self.is_target = True
 

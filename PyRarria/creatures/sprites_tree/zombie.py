@@ -28,6 +28,7 @@ class Zombie(WalkingSprite):
         self.acceleration += force
 
     def update_forces(self, player, platforms):
-        run_after(self, player)
         gravity(self)
         jump_from_platform(self, platforms)
+        run_after(self, player)
+        freeze(self)

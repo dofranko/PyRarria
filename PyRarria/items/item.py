@@ -103,7 +103,7 @@ class Item(pygame.sprite.Sprite):
             damaged = False
             for creature in self.game.all_creatures:
                 if creature.rect.collidepoint(mouse_pos):
-                    creature.hit(self.damage)
+                    creature.hit(player, self.damage)
                     damaged = True
                     break
             else:

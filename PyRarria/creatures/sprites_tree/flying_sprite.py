@@ -24,3 +24,4 @@ class FlyingSprite(Sprite):
         fly(self)
         edges_bounce(self)
         bounce_from_platform(self, platforms)
+        freeze(self)

@@ -27,3 +27,4 @@ class Bat(FlyingSprite):
     def update_forces(self, player, platforms):
         track(self, player)
         edges_bounce(self)
+        freeze(self)

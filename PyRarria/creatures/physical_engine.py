@@ -1,4 +1,3 @@
-# from creatures.test_global_settings import *
 from settings import *
 from creatures.vector import PVector
 import pygame as pg
@@ -9,7 +8,7 @@ import math
 WIND = PVector(-0.05, 0.0)
 GRAVITY = PVector(0, 0.2)
 GRAVITY_BULLET = PVector(0, 0.1)
-REACTION = PVector(0, -2.0)
+REACTION = PVector(0, -0.1)
 
 # constants
 MI = 0.05
@@ -18,6 +17,8 @@ ARC_LENGTH = 2 * math.pi
 ARC_STEP = ARC_LENGTH / 15
 MOVE_LENGTH = 10
 MOVE_STEP = MOVE_LENGTH / 15
+MAX_XPUSH = 50
+MAX_YPUSH = 15
 
 
 def gravity(src):
@@ -102,6 +103,8 @@ def run_away(src, target):
 
 def run_after(src, target):
     """Runs to the target only on horizontal line."""
+    if src.velocity.y != 0.0:
+        return
 
     # desired velocity
     desired = target.position - src.position
@@ -126,16 +129,33 @@ def jump(src):
     jmp = PVector(src.velocity.xdirection() * src.maxspeed, -src.maxspeed / 8)
     src.apply_force(jmp)
 
-    print(jmp)
-    print(src.velocity.xdirection())
+
+def stop(src):
+    """Stops creature if it doesn't fall."""
+    if src.velocity.y == 0.0:
+        src.velocity.x = 0.0
+
+
+def freeze(src):
+    """Reduces creature acceleration."""
+    if src.freeze_count > 0:
+        src.freeze_count -= 1
+        src.acceleration.limit(0.01)
+        src.acceleration_no_limit.limit(0.01)
+        src.velocity.limit(0.5)
+
+
+def push_away(src, player, damage):
+    """Pushes the opponent of the player."""
+    delta = src.position - player.position
+    direction = delta.xdirection()
+
+    force = PVector(direction * damage*MAX_XPUSH, -damage*MAX_YPUSH)
+    src.apply_force_no_limit(force)
 
 
 def bullet(src, src_location, dest_location):
     """Calculates and applies force to reach dest from src."""
-
-    # TODO zero division error
-
-    # TEST
     x0 = src_location.x
     y0 = src_location.y
 
@@ -144,48 +164,11 @@ def bullet(src, src_location, dest_location):
 
     dx = x1 - x0
     dy = y1 - y0
-    sx = x0 + x1
 
     vx = dx / 100
-
     if dx == 0:
         return
     vy = vx * abs(dy / dx) + 0.5 * GRAVITY_BULLET.y * abs(dx / vx)
-
-    # STATS
-    # print('x0 = ', x0)
-    # print('y0 = ', y0)
-    # print('x1 = ', x1)
-    # print('y1 = ', y1)
-    #
-    # print('sx = ', sx)
-    # print('dx = ', dx)
-    # print('dy = ', dy)
-    #
-    # print('vx = ', vx)
-    # print('vy = ', vy)
-
-    # TEMP
-    # a = dy/dx + 0.1*sx
-    # b = src_location.y + 0.1*(src_location.x**2) - a*src_location.x
-    # print('a = ', a)
-    # print('b = ', b)
-    # print('real y = ', src_location.y)
-    # print('test y = ', -0.1*src_location.x**2 + a*src_location.x + b)
-
-    # p = dy/dx + 0.5 * g * sx
-    # q = y0 + x0 * (0.5*g*x0 - p)
-
-    # a = -g*x0 + p
-    # alpha = 180 * math.atan(a) / math.pi
-
-    # a = (y0*dx + x0*dy) / (x0*x1*dx)
-    # b = dy/dx + a*sx
-
-    # a = dy/dx + 0.5*g*sx
-    # alpha = -g*x0 + a
-    # s = math.sqrt(0.1 * (dx**2) / (dx - dy))
-    # s *= 0.7
 
     force = PVector(vx, -vy)
     src.apply_force(force)
@@ -294,10 +277,15 @@ def edges_delete(src):
     """Deletes object if it goes off the screen."""
 
     if src.rect.right < 0 or src.rect.left > WIDTH:
-        src.die()
+        src.hp = -1.0
 
     elif src.rect.top > HEIGHT:
-        src.die()
+        src.hp = -1.0
+
+
+def map_delete(src):
+    """Deletes object if it flies out of the map."""
+    pass
 
 
 def init_move(src):
@@ -351,6 +339,7 @@ def jump_from_platform(src, platforms):
 
     hits = pg.sprite.spritecollide(src, platforms, False)
     if hits:
+
         # reaction(src)
 
         if src.rect.centerx > hits[0].rect.right:
@@ -382,4 +371,9 @@ def platform_stop(src, platforms):
     """If creature collides with platforms, stopes."""
     hits = pg.sprite.spritecollide(src, platforms, False)
     if hits:
-        src.velocity.zero()
+        reaction(src)
+        src.velocity.x = 0
+        return True
+
+    return False
+
