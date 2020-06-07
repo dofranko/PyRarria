@@ -357,3 +357,4 @@ class Player(pygame.sprite.Sprite):
 #            item = self.equipment.get_active_item()
 #            if item and item.action(mouse_pos, pself.position):
 #                item = self.equipment.remove_item("active")
+
