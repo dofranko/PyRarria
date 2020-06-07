@@ -58,11 +58,11 @@ class ItemsEngine:
         main_stage_position = self.game.get_main_stage_position()
         blank.rect = blank.image.get_rect()
         blank.rect.x, blank.rect.y = position + main_stage_position
-        if pygame.sprite.spritecollide(blank, Item.get_neighbours(blank.rect, (5, 5), self.grid), False):
+        if pygame.sprite.spritecollide(blank, Item.get_neighbours(position, (5, 5), self.grid), False):
             blank.kill()
             return
-        blank.rect.y += 50
-        if not pygame.sprite.spritecollide(blank, Item.get_neighbours(blank.rect, (5, 5), self.grid), False):
+        blank.rect.y += BLOCK_SIZE
+        if not pygame.sprite.spritecollide(blank, Item.get_neighbours(position, (5, 5), self.grid), False):
             blank.kill()
             return
         blank.kill()

@@ -70,6 +70,7 @@ class Factory:
         self.game = game
 
     def create(self, name, x, y):
+        """Create item and return it"""
         info = self.ITEMS_DICT[name]
         if info.variety == "food":
             return self.create_food(info, x, y)
@@ -85,30 +86,38 @@ class Factory:
             return self.create_placed_block(name, info, x, y)
 
     def create_food(self, info, x, y):
+        """Return new food"""
         return Food(x, y, info, self.game)
 
     def create_tool(self, info, x, y):
+        """Return new tool"""
         return Tool(x, y, info, self.game)
 
     def create_helmet(self, info, x, y):
+        """Return new helmet"""
         return Helmet(x, y, info, self.game)
 
     def create_breastplate(self, info, x, y):
+        """Return new breastplat"""
         return Breastplate(x, y, info, self.game)
 
     def create_boots(self, info, x, y):
+        """Return new boots"""
         return Boots(x, y, info, self.game)
 
+    def create_placed_block(self, name, info, x, y):
+        """Return new block"""
+        return Block(x, y, info, self.game)
+
     def add_random_item(self, x, y):
+        """Add random item on (x, y) position (for example when creature dies)"""
         item_name = random.choice(list(self.ITEMS_DICT.keys()))
         item = self.create(item_name, x, y)
         self.game.items.add(item)
         self.game.all_sprites.add(item)
 
     def add_item(self, item_name, x, y):
+        """Add item (using its name) on (x, y) position (for example when creature dies)"""
         item = self.create(item_name, x, y)
         self.game.items.add(item)
         self.game.all_sprites.add(item)
-
-    def create_placed_block(self, name, info, x, y):
-        return Block(x, y, info, self.game)
