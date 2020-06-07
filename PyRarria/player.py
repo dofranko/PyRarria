@@ -179,7 +179,7 @@ class Player(pygame.sprite.Sprite):
                                 thrown_spell = Boulder(self.game, cur_pos)
                             elif self.spell_key == "freeze":
                                 thrown_spell = Freeze(self.game, cur_pos)
-                            sprite.hit(thrown_spell.damage)
+                            sprite.hit(self, thrown_spell.damage)
                             self.spells.chosen = None
                             self.spell_cast_ready = False
                         break

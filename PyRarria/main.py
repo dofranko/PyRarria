@@ -61,7 +61,7 @@ class Game:
             for j in range(-20, 300):
                 self.grid[(i * BLOCK_SIZE, j * BLOCK_SIZE)] = None
 
-        block_list = [self.items_factory.create("dirt", i * BLOCK_SIZE, 12 * BLOCK_SIZE) for i in range(30)]
+        block_list = [self.items_factory.create("dirt", i * BLOCK_SIZE, 5 * BLOCK_SIZE) for i in range(30)]
         for blok in block_list:
             self.blocks.add(blok)
             self.grid[(blok.position.x, blok.position.y)] = blok
@@ -69,7 +69,7 @@ class Game:
         self.waiting = True
 
         # test
-        potato = self.items_factory.create("potato", 1000, 300)
+        potato = self.items_factory.create("potato", 1000, 0)
         self.all_sprites.add(potato)
         self.items.add(potato)
 

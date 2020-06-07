@@ -50,8 +50,9 @@ class BulletSpell(pygame.sprite.Sprite):
         # Detekcja kolizji z przeciwnikami
         hits = pygame.sprite.spritecollide(self, self.game.all_creatures, False)
         if hits:
+            for hit in hits:
+                hit.hit(self, self.damage)
             self.explode()
-            hits[0].hit(self.damage)
 
         # Detekcja kolizji ze środowiskiem
         hits = pygame.sprite.spritecollide(self, Item.get_neighbours(self.position, (3, 3), self.game.grid), False)

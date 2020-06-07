@@ -256,7 +256,7 @@ class Bard(SelfSpell):
 # Klasa zaklęcia freeze, czyli spowolnienie przeciwnika przez zamrożenie
 class Freeze(SmallSpell):
     def __init__(self, game, pos):
-        super().__init__(game, "freeze", 0)
+        super().__init__(game, "freeze", 1)
         self.sheet = SpriteSheet(SPELL_SHEETS["freeze"], 10, 10, 86)
         self.image = pygame.Surface((self.sheet.cell_width, self.sheet.cell_height), pygame.SRCALPHA).convert_alpha()
         self.position = pos + vector(self.sheet.shift[4][0], self.sheet.shift[4][1])
