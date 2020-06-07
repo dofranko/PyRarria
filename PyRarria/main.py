@@ -123,7 +123,6 @@ class Game:
     def events(self):
         # Game Loop - events
         for event in pygame.event.get():
-            # TODO test
             # check for closing window
             if event.type == pygame.QUIT:
                 if self.playing:

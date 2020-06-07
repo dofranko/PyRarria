@@ -105,6 +105,28 @@ class Sprite(AbstractSprite):
         self.anim_count %= self.animation_ticks
 
     def fix_move(self, blocks, map_position):
+        dx, dy = 0.0, 0.0
+
+        hits = pg.sprite.spritecollide(self, blocks, False)
+        if hits:
+            hit = hits[0].rect
+            rect = self.rect
+
+            # vertical up
+            if rect.top < hit.top:
+                dy = hit.top - rect.bottom
+                self.velocity.y = 0.0
+
+            # vertical down
+            elif rect.bottom > hit.bottom and rect.left > hit.left and rect.right < hit.right:
+                dy = hit.bottom - rect.top
+                self.velocity.y = 0.0
+
+            self.position.y += dy
+            self.body.topleft = (self.position + map_position).repr()
+            self.rect.topleft = (self.position + map_position).repr()
+            self.hpbar.center(self.body.midtop)
+
         hits = pg.sprite.spritecollide(self, blocks, False)
         if hits:
             dx = 0.0
@@ -115,30 +137,13 @@ class Sprite(AbstractSprite):
             if rect.left < hit.left:
                 dx = hit.left - rect.right
                 self.velocity.x = 0.0
+                reaction(self)
             elif rect.right > hit.right:
                 dx = hit.right - rect.left
                 self.velocity.x = 0.0
+                reaction(self)
 
             self.position.x += dx
-            self.body.topleft = (self.position + map_position).repr()
-            self.rect.topleft = (self.position + map_position).repr()
-            self.hpbar.center(self.body.midtop)
-
-        hits = pg.sprite.spritecollide(self, blocks, False)
-        if hits:
-            dy = 0.0
-            hit = hits[0].rect
-            rect = self.rect
-
-            # horizontal
-            if rect.top < hit.top:
-                dy = hit.top - rect.bottom
-                self.velocity.y = 0.0
-            elif rect.bottom > hit.bottom:
-                dy = hit.bottom - rect.top
-                self.velocity.y = 0.0
-
-            self.position.y += dy
             self.body.topleft = (self.position + map_position).repr()
             self.rect.topleft = (self.position + map_position).repr()
             self.hpbar.center(self.body.midtop)
