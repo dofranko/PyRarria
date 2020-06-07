@@ -210,8 +210,6 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += self.acc.x
         self.check_collision_horizontally()
 
-        self.location.set(self.rect.x, self.rect.y)
-
         self.collect()
         self.held_item = self.equipment.get_active_item()
         self.armour = self.equipment.get_armour()
