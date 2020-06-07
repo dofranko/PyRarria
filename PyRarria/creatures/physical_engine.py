@@ -8,7 +8,8 @@ import math
 WIND = PVector(-0.05, 0.0)
 GRAVITY = PVector(0, 0.2)
 GRAVITY_BULLET = PVector(0, 0.1)
-REACTION = PVector(0, -0.1)
+REACTION = PVector(0, -0.19)
+REACTION_BULLET = PVector(0, -0.1)
 
 # constants
 MI = 0.05
@@ -42,6 +43,15 @@ def reaction(src):
     R = Q
     """
     reac = REACTION.copy()
+    src.apply_force(reac)
+    src.velocity.y = 0
+
+
+def reaction_bullet(src):
+    """Reaction force.
+    R = Q
+    """
+    reac = REACTION_BULLET.copy()
     src.apply_force(reac)
     src.velocity.y = 0
 

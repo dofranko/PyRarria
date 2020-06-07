@@ -13,6 +13,7 @@ TERRAIN = "resources/images/terrain/"
 ARMOUR = "resources/images/armour/"
 SCREENS = "resources/images/screens/"
 SOUNDS = "resources/sounds/"
+CREATURES = "resources/images/creatures/"
 
 # Player properties
 PLAYER_MOVE = {"PLAYER_ACC": 5, "PLAYER_GRAV": 0.8, "PLAYER_FRICTION": -0.2, "JUMP_VEL": -20, "MAX_VEL_Y": 15}
