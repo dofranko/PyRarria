@@ -1,6 +1,7 @@
 from items.tool import *
 from items.food import *
 from items.armour import *
+from items.tree import *
 import random
 from items.block import *
 
@@ -65,6 +66,9 @@ class Factory:
     )
 
     ITEMS_DICT["dirt"] = ItemInfo("dirt", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
+    ITEMS_DICT["grass"] = ItemInfo("grass", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
+    ITEMS_DICT["iron"] = ItemInfo("iron", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
+    ITEMS_DICT["tree"] = ItemInfo("tree", "Wszedzie jej pelno.", "tree", -10, {"hp": 20, "probability": 0.5})
 
     def __init__(self, game):
         self.game = game
@@ -83,6 +87,10 @@ class Factory:
         elif info.variety == "boots":
             return self.create_boots(info, x, y)
         elif info.variety == "block":
+            return self.create_placed_block(name, info, x, y)
+        elif info.variety == "ore":
+            return self.create_placed_block(name, info, x, y)
+        elif info.variety == "tree":
             return self.create_placed_block(name, info, x, y)
 
     def create_food(self, info, x, y):
@@ -108,6 +116,10 @@ class Factory:
     def create_placed_block(self, name, info, x, y):
         """Return new block"""
         return Block(x, y, info, self.game)
+
+    def create_placed_tree(self, name, info, x, y):
+        """Return new tree"""
+        return Tree(x, y, info, self.game)
 
     def add_random_item(self, x, y):
         """Add random item on (x, y) position (for example when creature dies)"""

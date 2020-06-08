@@ -2,6 +2,8 @@ import random
 
 platformy = []
 powierzchnia = []
+ruda = []
+tree = []
 
 
 def remove(x, y):
@@ -10,9 +12,37 @@ def remove(x, y):
         platformy.remove(usun)
 
 
-def generuj():
+def sasiad(L):
+    list = []
+    for i in L:
+        tmp = i
+        p = random.randint(0, 10)
+        l = random.randint(0, 10)
+        g = random.randint(0, 10)
+        d = random.randint(0, 10)
+        if p < 4:
+            tmp = (tmp[0] + 50, tmp[1], 50, 50)
+            list.append(tmp)
+            tmp = i
+        if l < 4:
+            tmp = (tmp[0] - 50, tmp[1], 50, 50)
+            list.append(tmp)
+            tmp = i
+        if d < 4:
+            tmp = (tmp[0], tmp[1] + 50, 50, 50)
+            list.append(tmp)
+            tmp = i
+        if g < 4:
+            tmp = (tmp[0], tmp[1] - 50, 50, 50)
+            list.append(tmp)
+            tmp = i
+        list.append(i)
+        return list
 
+
+def generuj():
     # generator powierzchni
+    global ruda
     w = 0
     W = 1000
     H = 1000
@@ -88,6 +118,52 @@ def generuj():
                 remove(x + 50, y)  # usuwa klocek po prawej
             if szerokosc in (4, 6, 7, 9, 11, 13, 14, 15):
                 remove(x - 50, y)  # usuwa klocek po lewej
+    # generator RUDY
 
+    for i in range(100):
+        tmp = random.randint(0, len(platformy) - 1)
+        ruda.append(platformy[tmp])
+        sasiad(ruda)
+        ruda = sasiad(ruda)
+        ruda = sasiad(ruda)
+        for i in ruda:
+            remove(i[0], i[1])
+
+    # generator drzew
+    for i in range(100):
+        tmp = powierzchnia[random.randint(0, len(powierzchnia) - 1)]
+        x = tmp[0]
+        tmptree = []
+        hight = random.randint(8, 20)
+        for j in range(hight):
+            tmptree.append((x, y - 25 * (j + 1), 25, 25))
+        branch = random.randint(0, 2)
+        if branch == 0:
+            tmptree.append((x + 25, y + 25 * (j + 1) - 100, 25, 25))
+            tmptree.append((x + 50, y + 25 * (j + 1) - 100, 25, 25))
+        if branch == 1:
+            tmptree.append((x - 25, y + 25 * (j + 1) - 100, 25, 25))
+            tmptree.append((x - 50, y + 25 * (j + 1) - 100, 25, 25))
+        if branch == 2:
+            tmptree.append((x + 25, y + 25 * (j + 1) - 100, 25, 25))
+            tmptree.append((x + 50, y + 25 * (j + 1) - 100, 25, 25))
+            tmptree.append((x - 25, y + 25 * (j + 1) - 100, 25, 25))
+            tmptree.append((x - 50, y + 25 * (j + 1) - 100, 25, 25))
+        for i in tmptree:
+            tree.append(i)
+
+
+def platform():
     return platformy
 
+
+def trees():
+    return tree
+
+
+def ore():
+    return ruda
+
+
+def ground():
+    return powierzchnia
