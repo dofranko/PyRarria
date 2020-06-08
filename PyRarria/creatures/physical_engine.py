@@ -20,6 +20,7 @@ MOVE_LENGTH = 10
 MOVE_STEP = MOVE_LENGTH / 15
 MAX_XPUSH = 50
 MAX_YPUSH = 15
+PLAYER_DISTANCE = 600
 
 
 def gravity(src):
@@ -298,6 +299,11 @@ def map_delete(src):
     pass
 
 
+def player_delete(src, player):
+    """Deletes object if it is too far from the player"""
+    pass
+
+
 def init_move(src):
     """Initializes velocity if creature isn't moving."""
 
@@ -384,5 +390,4 @@ def platform_stop(src, blocks):
         reaction(src)
         src.velocity.x = 0
         return True
-
     return False

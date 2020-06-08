@@ -47,3 +47,4 @@ class Skeleton(WalkingSprite):
             stop(self)
         jump_from_platform(self, blocks)
         freeze(self)
+        player_delete(self, player)

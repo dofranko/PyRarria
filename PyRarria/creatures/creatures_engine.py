@@ -12,22 +12,22 @@ from creatures.vector import PVector
 from pygame.sprite import Group
 from settings import FPS
 from items.item import *
-
+from random import choice
 
 BARD_RANGE = 120
 FREEZE_RANGE = 120
-SPAWN_RANGE = 100
+SPAWN_RANGE = 500
 
 LIMITS = {
     "walking_test": 0,
-    "birds": 0,
-    "skeletons": 0,
-    "skeletons_boss": 0,
+    "birds": 20,
+    "skeletons": 2,
+    "skeletons_boss": 1,
     "zombies": 1,
-    "cows": 0,
-    "sheeps": 0,
-    "bats": 0,
-    "chickens": 0,
+    "cows": 3,
+    "sheeps": 3,
+    "bats": 10,
+    "chickens": 3,
 }
 
 FREQUENCIES = {
@@ -154,7 +154,10 @@ class CreaturesEngine:
             if self.clock % (frequency * FPS) != 0:
                 continue
 
-            new_creature = Creature(self.player.position.x, self.player.position.y)
+            d = choice([-1,1])
+            new_creature = Creature(
+                self.player.position.x + d*SPAWN_RANGE,
+                self.player.position.y - SPAWN_RANGE)
             group.add(new_creature)
             self.all_creatures.add(new_creature)
 
@@ -175,6 +178,11 @@ class CreaturesEngine:
             distance = (self.player.position - creature.position).mag()
             if distance < BARD_RANGE:
                 push_away(creature, self.player, bard_power)
+
+        for arrow in self.arrows:
+            distance = (self.player.position - arrow.position).mag()
+            if distance < BARD_RANGE:
+                push_away(arrow, self.player, bard_power/5)
 
     def print_stats(self):
         for group, name in zip(self.groups.values(), NAMES):

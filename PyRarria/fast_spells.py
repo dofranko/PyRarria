@@ -232,6 +232,7 @@ class Bard(SelfSpell):
         self.rect.center = self.game.player.rect.center
         self.offset_x = random.uniform(-40, 40)
         self.frame = 0
+        self.game.creatures_engine.bard(1.0)
 
     # Rysowanie kolejnej klatki tego efektu
     def draw(self, cell_index):
@@ -271,7 +272,8 @@ class Freeze(SmallSpell):
         self.freezed_enemies = [
             [enemy, enemy.maxspeed] for enemy in self.game.all_creatures if pygame.sprite.collide_rect(enemy, self)
         ]
-        self.freeze_enemies()
+        # self.freeze_enemies()
+        self.game.creatures_engine.freeze(100)
 
     def freeze_enemies(self):
         for enemy, _ in self.freezed_enemies:

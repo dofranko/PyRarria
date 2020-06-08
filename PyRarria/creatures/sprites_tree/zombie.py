@@ -24,6 +24,7 @@ class Zombie(WalkingSprite):
     def __init__(self, x, y):
         super(Zombie, self).__init__(x, y)
         self.create(x, y, **OBJECT)
+        self.is_enemy = False
 
     def apply_force(self, force):
         self.acceleration += force
@@ -33,3 +34,4 @@ class Zombie(WalkingSprite):
         jump_from_platform(self, blocks)
         run_after(self, player)
         freeze(self)
+        player_delete(self, player)

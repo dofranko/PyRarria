@@ -25,3 +25,4 @@ class FlyingSprite(Sprite):
         edges_bounce(self)
         bounce_from_platform(self, blocks)
         freeze(self)
+        player_delete(self, player)

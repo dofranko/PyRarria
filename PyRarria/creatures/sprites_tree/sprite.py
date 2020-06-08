@@ -74,6 +74,7 @@ class Sprite(AbstractSprite):
         self.hp -= damage_points
         push_away(self, player, damage_points / self.maxhp)
         print(damage_points / self.maxhp)
+        self.is_hpbar = True
 
     def update(self, player, blocks, map_position, items_factory):
         # dead
@@ -113,7 +114,7 @@ class Sprite(AbstractSprite):
             rect = self.rect
 
             # vertical up
-            if rect.top < hit.top:
+            if rect.top < hit.top and abs(rect.bottom - hit.bottom) > abs(rect.bottom - hit.top):
                 dy = hit.top - rect.bottom
                 self.velocity.y = 0.0
 

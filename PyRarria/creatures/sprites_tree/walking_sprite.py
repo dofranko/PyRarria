@@ -24,3 +24,4 @@ class WalkingSprite(Sprite):
         gravity(self)
         keep_on_platform(self, blocks)
         freeze(self)
+        player_delete(self, player)

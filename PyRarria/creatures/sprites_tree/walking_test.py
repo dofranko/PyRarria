@@ -33,3 +33,4 @@ class WalkingTest(WalkingSprite):
         keep_on_platform(self, blocks)
         run_after(self, player)
         freeze(self)
+        player_delete(self, player)

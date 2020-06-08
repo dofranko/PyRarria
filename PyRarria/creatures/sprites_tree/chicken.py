@@ -22,3 +22,4 @@ class Chicken(WalkingSprite):
     def __init__(self, x, y):
         super(Chicken, self).__init__(x, y)
         self.create(x, y, **OBJECT)
+        self.is_enemy = False

@@ -28,3 +28,4 @@ class Bat(FlyingSprite):
         track(self, player)
         edges_bounce(self)
         freeze(self)
+        player_delete(self, player)

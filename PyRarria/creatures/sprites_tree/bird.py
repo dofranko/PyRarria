@@ -25,3 +25,4 @@ class Bird(FlyingSprite):
     def __init__(self, x, y):
         super(Bird, self).__init__(x, y)
         self.create(x, y, **OBJECT)
+        self.is_enemy = False
