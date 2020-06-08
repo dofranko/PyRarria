@@ -2,144 +2,75 @@ import pygame as pg
 from settings import *
 load = pg.image.load
 
-
 BIRD_LEFT = [
-    load('img/bird_01.png'), load('img/bird_02.png'),
-    load('img/bird_03.png'), load('img/bird_04.png')]
+    load(CREATURES+'bird_01.png'), load(CREATURES+'bird_02.png'),
+    load(CREATURES+'bird_03.png'), load(CREATURES+'bird_04.png')]
 
 BIRD_RIGHT = [
-    load('img/bird_10.png'), load('img/bird_11.png'),
-    load('img/bird_12.png'), load('img/bird_13.png')]
-
-# BIRD_LEFT = [
-#     load(CREATURES+'bird_01.png'), load(CREATURES+'bird_02.png'),
-#     load(CREATURES+'bird_03.png'), load(CREATURES+'bird_04.png')]
-#
-# BIRD_RIGHT = [
-#     load(CREATURES+'bird_10.png'), load(CREATURES+'bird_11.png'),
-#     load(CREATURES+'bird_12.png'), load(CREATURES+'bird_13.png')]
+    load(CREATURES+'bird_10.png'), load(CREATURES+'bird_11.png'),
+    load(CREATURES+'bird_12.png'), load(CREATURES+'bird_13.png')]
 
 COW_LEFT = [
-    load('img/cow_05.png'), load('img/cow_06.png'),
-    load('img/cow_07.png'), load('img/cow_08.png')]
+    load(CREATURES+'cow_05.png'), load(CREATURES+'cow_06.png'),
+    load(CREATURES+'cow_07.png'), load(CREATURES+'cow_08.png')]
 
 COW_RIGHT = [
-    load('img/cow_13.png'), load('img/cow_14.png'),
-    load('img/cow_15.png'), load('img/cow_16.png')]
-
-# COW_LEFT = [
-#     load(CREATURES+'cow_05.png'), load(CREATURES+'cow_06.png'),
-#     load(CREATURES+'cow_07.png'), load(CREATURES+'cow_08.png')]
-#
-# COW_RIGHT = [
-#     load(CREATURES+'cow_13.png'), load(CREATURES+'cow_14.png'),
-#     load(CREATURES+'cow_15.png'), load(CREATURES+'cow_16.png')]
+    load(CREATURES+'cow_13.png'), load(CREATURES+'cow_14.png'),
+    load(CREATURES+'cow_15.png'), load(CREATURES+'cow_16.png')]
 
 SHEEP_LEFT = [
-    load('img/sheep_05.png'), load('img/sheep_06.png'),
-    load('img/sheep_07.png'), load('img/sheep_08.png')]
+    load(CREATURES+'sheep_05.png'), load(CREATURES+'sheep_06.png'),
+    load(CREATURES+'sheep_07.png'), load(CREATURES+'sheep_08.png')]
 
 SHEEP_RIGHT = [
-    load('img/sheep_13.png'), load('img/sheep_14.png'),
-    load('img/sheep_15.png'), load('img/sheep_16.png')]
-
-# SHEEP_LEFT = [
-#     load(CREATURES+'sheep_05.png'), load(CREATURES+'sheep_06.png'),
-#     load(CREATURES+'sheep_07.png'), load(CREATURES+'sheep_08.png')]
-#
-# SHEEP_RIGHT = [
-#     load(CREATURES+'sheep_13.png'), load(CREATURES+'sheep_14.png'),
-#     load(CREATURES+'sheep_15.png'), load(CREATURES+'sheep_16.png')]
+    load(CREATURES+'sheep_13.png'), load(CREATURES+'sheep_14.png'),
+    load(CREATURES+'sheep_15.png'), load(CREATURES+'sheep_16.png')]
 
 ZOMBIE_LEFT = [
-    load('img/zombie_01.png'), load('img/zombie_02.png'),
-    load('img/zombie_03.png'), load('img/zombie_04.png')]
+    load(CREATURES+'zombie_01.png'), load(CREATURES+'zombie_02.png'),
+    load(CREATURES+'zombie_03.png'), load(CREATURES+'zombie_04.png')]
 
 ZOMBIE_RIGHT = [
-    load('img/zombie_05.png'), load('img/zombie_06.png'),
-    load('img/zombie_07.png'), load('img/zombie_08.png')]
-
-# ZOMBIE_LEFT = [
-#     load(CREATURES+'zombie_01.png'), load(CREATURES+'zombie_02.png'),
-#     load(CREATURES+'zombie_03.png'), load(CREATURES+'zombie_04.png')]
-#
-# ZOMBIE_RIGHT = [
-#     load(CREATURES+'zombie_05.png'), load(CREATURES+'zombie_06.png'),
-#     load(CREATURES+'zombie_07.png'), load(CREATURES+'zombie_08.png')]
+    load(CREATURES+'zombie_05.png'), load(CREATURES+'zombie_06.png'),
+    load(CREATURES+'zombie_07.png'), load(CREATURES+'zombie_08.png')]
 
 CHICKEN_LEFT = [
-    load('img/chicken_05.png'), load('img/chicken_06.png'),
-    load('img/chicken_07.png'), load('img/chicken_08.png')]
+    load(CREATURES+'chicken_05.png'), load(CREATURES+'chicken_06.png'),
+    load(CREATURES+'chicken_07.png'), load(CREATURES+'chicken_08.png')]
 
 CHICKEN_RIGHT = [
-    load('img/chicken_13.png'), load('img/chicken_14.png'),
-    load('img/chicken_15.png'), load('img/chicken_16.png')]
-
-# CHICKEN_LEFT = [
-#     load(CREATURES+'chicken_05.png'), load(CREATURES+'chicken_06.png'),
-#     load(CREATURES+'chicken_07.png'), load(CREATURES+'chicken_08.png')]
-#
-# CHICKEN_RIGHT = [
-#     load(CREATURES+'chicken_13.png'), load(CREATURES+'chicken_14.png'),
-#     load(CREATURES+'chicken_15.png'), load(CREATURES+'chicken_16.png')]
+    load(CREATURES+'chicken_13.png'), load(CREATURES+'chicken_14.png'),
+    load(CREATURES+'chicken_15.png'), load(CREATURES+'chicken_16.png')]
 
 BAT_LEFT = [
-    load('img/bat_06.png'), load('img/bat_07.png'),
-    load('img/bat_08.png'), load('img/bat_09.png'),
-    load('img/bat_10.png')]
+    load(CREATURES+'bat_06.png'), load(CREATURES+'bat_07.png'),
+    load(CREATURES+'bat_08.png'), load(CREATURES+'bat_09.png'),
+    load(CREATURES+'bat_10.png')]
 
 BAT_RIGHT = [
-    load('img/bat_21.png'), load('img/bat_22.png'),
-    load('img/bat_23.png'), load('img/bat_24.png'),
-    load('img/bat_25.png')]
-
-# BAT_LEFT = [
-#     load(CREATURES+'bat_06.png'), load(CREATURES+'bat_07.png'),
-#     load(CREATURES+'bat_08.png'), load(CREATURES+'bat_09.png'),
-#     load(CREATURES+'bat_10.png')]
-#
-# BAT_RIGHT = [
-#     load(CREATURES+'bat_21.png'), load(CREATURES+'bat_22.png'),
-#     load(CREATURES+'bat_23.png'), load(CREATURES+'bat_24.png'),
-#     load(CREATURES+'bat_25.png')]
+    load(CREATURES+'bat_21.png'), load(CREATURES+'bat_22.png'),
+    load(CREATURES+'bat_23.png'), load(CREATURES+'bat_24.png'),
+    load(CREATURES+'bat_25.png')]
 
 SKELETON_LEFT = [
-    load('img/skeleton_01.png'), load('img/skeleton_02.png')]
+    load(CREATURES+'skeleton_01.png'), load(CREATURES+'skeleton_02.png')]
 
 SKELETON_RIGHT = [
-    load('img/skeleton_03.png'), load('img/skeleton_04.png')]
-
-# SKELETON_LEFT = [
-#     load(CREATURES+'skeleton_01.png'), load(CREATURES+'skeleton_02.png')]
-#
-# SKELETON_RIGHT = [
-#     load(CREATURES+'skeleton_03.png'), load(CREATURES+'skeleton_04.png')]
+    load(CREATURES+'skeleton_03.png'), load(CREATURES+'skeleton_04.png')]
 
 SKELETONBOSS_LEFT = [
-    load('img/skeletonboss_01.png'), load('img/skeletonboss_02.png')]
+    load(CREATURES+'skeletonboss_01.png'),
+    load(CREATURES+'skeletonboss_02.png')]
 
 SKELETONBOSS_RIGHT = [
-    load('img/skeletonboss_03.png'), load('img/skeletonboss_04.png')]
+    load(CREATURES+'skeletonboss_03.png'),
+    load(CREATURES+'skeletonboss_04.png')]
 
-# SKELETONBOSS_LEFT = [
-#     load(CREATURES+'skeletonboss_01.png'),
-#     load(CREATURES+'skeletonboss_02.png')]
-#
-# SKELETONBOSS_RIGHT = [
-#     load(CREATURES+'skeletonboss_03.png'),
-#     load(CREATURES+'skeletonboss_04.png')]
+ARROW_LEFT = [load(CREATURES+'arrow_01.png')]
+ARROW_RIGHT = [load(CREATURES+'arrow_02.png')]
 
-ARROW_LEFT = [load('img/arrow_01.png')]
-ARROW_RIGHT = [load('img/arrow_02.png')]
-
-# ARROW_LEFT = [load(CREATURES+'arrow_01.png')]
-# ARROW_RIGHT = [load(CREATURES+'arrow_02.png')]
-
-WALKING_TEST_LEFT = [load('img/walking_test_01.png')]
-WALKING_TEST_RIGHT = [load('img/walking_test_01.png')]
-
-# WALKING_TEST_LEFT = [load(CREATURES+'walking_test_01.png')]
-# WALKING_TEST_RIGHT = [load(CREATURES+'walking_test_01.png')]
+WALKING_TEST_LEFT = [load(CREATURES+'walking_test_01.png')]
+WALKING_TEST_RIGHT = [load(CREATURES+'walking_test_01.png')]
 
 
 BIRD_ANIMATION = {
