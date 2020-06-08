@@ -13,7 +13,7 @@ from boosters import *
 from items.items_generator import *
 from creatures.creatures_engine import CreaturesEngine
 from creatures.vector import PVector
-from map_generator import generuj
+from map_generator import *
 
 vector = pygame.math.Vector2
 
@@ -36,6 +36,7 @@ class Game:
         """Start new game"""
         # start a new game
         self.grid = {}
+        # self.trees = pygame.sprite.Group()
         self.all_sprites = pygame.sprite.Group()
         self.boosters = pygame.sprite.Group()
         self.active_boosters = pygame.sprite.Group()
@@ -54,16 +55,25 @@ class Game:
         self.items_engine = ItemsEngine(self)
         self.main_position = PVector(*self.get_main_stage_position())
         self.last_main_position = PVector(*self.get_main_stage_position())
-        self.delta = PVector(0, 0)
         self.creatures_engine = CreaturesEngine(self)
 
         for i in range(300):
             for j in range(-20, 300):
                 self.grid[(i * BLOCK_SIZE, j * BLOCK_SIZE)] = None
-        block_list = [self.items_factory.create("dirt", block[0], block[1]) for block in generuj()]
+        generuj()
+        block_list = [self.items_factory.create("dirt", block[0], block[1]) for block in platform()]
         for blok in block_list:
             self.grid[(blok.position.x, blok.position.y)] = blok
-
+        surface_list = [self.items_factory.create("dirt", block[0], block[1]) for block in ground()]
+        for blok in block_list:
+            self.grid[(blok.position.x, blok.position.y)] = blok
+        self.waiting = True
+        ore_list = [self.items_factory.create("iron", block[0], block[1]) for block in ore()]
+        for blok in block_list:
+            self.grid[(blok.position.x, blok.position.y)] = blok
+        # trees_list = [self.items_factory.create("tree", block[0], block[1]) for block in trees()]
+        # for tree in block_list:
+        #     self.trees.add(tree)
         self.waiting = True
 
         # test
@@ -109,6 +119,9 @@ class Game:
         self.background.update()
         for blok in Item.get_neighbours(self.player.position, BLOCK_RENDER_DISTANCE, self.grid):
             blok.update()
+        # for tree in self.trees:
+        #     tree.update()
+
         self.creatures_engine.update()
         self.health_bar.update()
         self.mana_bar.update()
@@ -153,6 +166,8 @@ class Game:
 
         for blok in Item.get_neighbours(self.player.position, BLOCK_RENDER_DISTANCE, self.grid):
             blok.draw()
+        # for tree in self.trees:
+        #     tree.draw()
         self.health_bar.draw()
         self.mana_bar.draw()
         self.spells.draw(self.screen)

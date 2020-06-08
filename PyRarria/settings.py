@@ -44,8 +44,8 @@ IMAGES_LIST = {
     "bin": IMAGES + "bin.png",
     # Screens
     "background": {"main": BACKGROUND + "background_moving_main.png", "2": BACKGROUND + "background_moving_second.png"},
-    "start_screen": SCREENS + "random_start.png",
-    "game_over_screen": SCREENS + "index.png",
+    "start_screen": SCREENS + "start_screen.png",
+    "game_over_screen": SCREENS + "game_over_screen.png",
     # START ITEMS
     # Food
     "potato": FOOD + "potato.png",
@@ -71,6 +71,9 @@ IMAGES_LIST = {
     "fire_boots": ARMOUR + "fire_boots.png",
     # Blocks
     "dirt": TERRAIN + "dirt.png",
+    "grass": TERRAIN + "dirt.png",
+    "iron": TERRAIN + "dirt.png",
+    "tree": TERRAIN + "tree.png",
     "damaged_1": TERRAIN + "damaged_1.png",
     "damaged_2": TERRAIN + "damaged_2.png",
     "damaged_3": TERRAIN + "damaged_3.png",
