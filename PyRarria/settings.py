@@ -71,9 +71,9 @@ IMAGES_LIST = {
     "fire_boots": ARMOUR + "fire_boots.png",
     # Blocks
     "dirt": TERRAIN + "dirt.png",
-    "grass": TERRAIN + "dirt.png",
-    "iron": TERRAIN + "dirt.png",
-    "tree": TERRAIN + "tree.png",
+    "grass": TERRAIN + "grass.png",
+    "iron": TERRAIN + "ore.png",
+    "tree": TERRAIN + "dirt.png",
     "damaged_1": TERRAIN + "damaged_1.png",
     "damaged_2": TERRAIN + "damaged_2.png",
     "damaged_3": TERRAIN + "damaged_3.png",

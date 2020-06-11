@@ -21,7 +21,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.game = game
         self.equipment = equipment
-        self.image = pygame.image.load(IMAGES_LIST["player"])
+        self.image = pygame.image.load(IMAGES_LIST["player"]).convert_alpha()
         # self.image = pygame.transform.scale(self.image, (36, 50))
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH / 2, 0)

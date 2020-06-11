@@ -64,12 +64,12 @@ class Game:
         block_list = [self.items_factory.create("dirt", block[0], block[1]) for block in platform()]
         for blok in block_list:
             self.grid[(blok.position.x, blok.position.y)] = blok
-        surface_list = [self.items_factory.create("dirt", block[0], block[1]) for block in ground()]
-        for blok in block_list:
+        surface_list = [self.items_factory.create("grass", block[0], block[1]) for block in ground()]
+        for blok in surface_list:
             self.grid[(blok.position.x, blok.position.y)] = blok
         self.waiting = True
         ore_list = [self.items_factory.create("iron", block[0], block[1]) for block in ore()]
-        for blok in block_list:
+        for blok in ore_list:
             self.grid[(blok.position.x, blok.position.y)] = blok
         # trees_list = [self.items_factory.create("tree", block[0], block[1]) for block in trees()]
         # for tree in block_list:

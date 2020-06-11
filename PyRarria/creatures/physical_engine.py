@@ -369,7 +369,6 @@ def bounce_from_platform(src, blocks):
     """If creature collides with blocks, moves in opposite direction."""
     hits = pg.sprite.spritecollide(src, blocks, False)
     if hits:
-        print("hits")
         if src.rect.left < hits[0].rect.left:
             src.apply_force(PVector(-src.maxforce, 0))
 

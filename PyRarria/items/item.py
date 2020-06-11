@@ -146,7 +146,7 @@ class Item(pygame.sprite.Sprite):
     def cursor_to_grid(x, y):
         grid_x = (x // BLOCK_SIZE) * BLOCK_SIZE
         grid_y = (y // BLOCK_SIZE) * BLOCK_SIZE
-        return (grid_x, grid_y)
+        return (int(grid_x), int(grid_y))
 
     @staticmethod
     def scale(to_scale_object, size):

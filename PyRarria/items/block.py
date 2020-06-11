@@ -37,12 +37,23 @@ class Block(Item):
         if math.hypot(mouse_pos.x - player.rect.x, mouse_pos.y - player.rect.y) <= self.range:
             position = vector(player.position.x, player.position.y) + mouse_pos - vector(WIDTH / 2, HEIGHT / 2)
             blok_pos = Item.cursor_to_grid(position.x, position.y)
-            if self.can_place(blok_pos):
+            if self.can_place(blok_pos) and not self.player_collide(blok_pos, player):
                 self.position = vector(blok_pos)
                 self.game.grid[(self.position.x, self.position.y)] = self
                 self.game.items.remove(self)
                 return True
         return False
+
+    def player_collide(self, block_pos, player):
+        player_surface = pygame.Surface((player.rect.width, player.rect.height), pygame.SRCALPHA)
+        player_mask = pygame.sprite.Sprite()
+        player_mask.rect = player_surface.get_rect()
+        player_mask.rect.x, player_mask.rect.y = player.position.x, player.position.y
+        block_surface = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE), pygame.SRCALPHA)
+        block_mask = pygame.sprite.Sprite()
+        block_mask.rect = block_surface.get_rect()
+        block_mask.rect.x, block_mask.rect.y = block_pos
+        return pygame.sprite.collide_rect(player_mask, block_mask)
 
     def update(self):
         super().update()
