@@ -72,11 +72,18 @@ IMAGES_LIST = {
     # Blocks
     "dirt": TERRAIN + "dirt.png",
     "grass": TERRAIN + "grass.png",
-    "iron": TERRAIN + "ore.png",
-    "tree": TERRAIN + "dirt.png",
+    "iron": TERRAIN + "iron.png",
+    "copper": TERRAIN + "copper.png",
+    "diamond1": TERRAIN + "diamond1.png",
+    "diamond2": TERRAIN + "diamond2.png",
+    "diamond3": TERRAIN + "diamond3.png",
+    "wood": TERRAIN + "wood.png",
+    "leaf": TERRAIN + "leaf.png",
     "damaged_1": TERRAIN + "damaged_1.png",
     "damaged_2": TERRAIN + "damaged_2.png",
     "damaged_3": TERRAIN + "damaged_3.png",
+    "glass": TERRAIN + "glass.png",
+    "cloud": TERRAIN + "cloud.png",
     # END ITEMS
     # Spells
     "smallfire": IMAGES + "smallfire.png",

@@ -20,13 +20,13 @@ SPAWN_RANGE = 500
 
 LIMITS = {
     "walking_test": 0,
-    "birds": 20,
-    "skeletons": 2,
-    "skeletons_boss": 1,
-    "zombies": 1,
+    "birds": 0,
+    "skeletons": 0,
+    "skeletons_boss": 0,
+    "zombies": 0,
     "cows": 3,
     "sheeps": 3,
-    "bats": 10,
+    "bats": 0,
     "chickens": 3,
 }
 
@@ -184,10 +184,10 @@ class CreaturesEngine:
             if distance < BARD_RANGE:
                 push_away(arrow, self.player, bard_power/5)
 
-    def print_stats(self):
-        for group, name in zip(self.groups.values(), NAMES):
-            print(f"{name:10}:{len(group)}")
-        print()
+  #  def print_stats(self):
+   #     for group, name in zip(self.groups.values(), NAMES):
+    #        print(f"{name:10}:{len(group)}")
+     #   print()
 
     def _get_close_blocks(self, position):
         return Item.get_neighbours(position, (5, 5), self.game.grid)

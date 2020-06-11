@@ -12,7 +12,7 @@ class Background:
         self.player = player
         self.stages = []  # Lista dalszych planów tła
         # Main stage
-        self.stage_width = 5000  # Szerokość całej planszy. TODO Można zmienić lub jakoś upłynnić np w settings.py
+        self.stage_width = 13000  # Szerokość całej planszy. TODO Można zmienić lub jakoś upłynnić np w settings.py
         self.start_scrolling_position = vector(0, 0)
         self.main_image = pygame.image.load(IMAGES_LIST["background"]["main"]).convert_alpha()
         self.main_stage = Stage(game, *self.main_image.get_rect().size, slowing_rate=1, image=self.main_image)

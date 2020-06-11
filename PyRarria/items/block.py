@@ -39,6 +39,7 @@ class Block(Item):
             blok_pos = Item.cursor_to_grid(position.x, position.y)
             if self.can_place(blok_pos) and not self.player_collide(blok_pos, player):
                 self.position = vector(blok_pos)
+                self.update()
                 self.game.grid[(self.position.x, self.position.y)] = self
                 self.game.items.remove(self)
                 return True

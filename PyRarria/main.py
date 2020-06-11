@@ -36,6 +36,8 @@ class Game:
         """Start new game"""
         # start a new game
         self.grid = {}
+        generuj()
+
         # self.trees = pygame.sprite.Group()
         self.all_sprites = pygame.sprite.Group()
         self.boosters = pygame.sprite.Group()
@@ -57,23 +59,9 @@ class Game:
         self.last_main_position = PVector(*self.get_main_stage_position())
         self.creatures_engine = CreaturesEngine(self)
 
-        for i in range(300):
-            for j in range(-20, 300):
-                self.grid[(i * BLOCK_SIZE, j * BLOCK_SIZE)] = None
-        generuj()
-        block_list = [self.items_factory.create("dirt", block[0], block[1]) for block in platform()]
-        for blok in block_list:
-            self.grid[(blok.position.x, blok.position.y)] = blok
-        surface_list = [self.items_factory.create("grass", block[0], block[1]) for block in ground()]
-        for blok in surface_list:
-            self.grid[(blok.position.x, blok.position.y)] = blok
-        self.waiting = True
-        ore_list = [self.items_factory.create("iron", block[0], block[1]) for block in ore()]
-        for blok in ore_list:
-            self.grid[(blok.position.x, blok.position.y)] = blok
-        # trees_list = [self.items_factory.create("tree", block[0], block[1]) for block in trees()]
-        # for tree in block_list:
-        #     self.trees.add(tree)
+
+        create_world(self.grid,self.items_factory)
+
         self.waiting = True
 
         # test
@@ -161,13 +149,10 @@ class Game:
         # Kolejność ma znaczenie
         self.background.draw()
         self.creatures_engine.draw()
-        self.all_sprites.draw(self.screen)
-        self.player.draw()
-
         for blok in Item.get_neighbours(self.player.position, BLOCK_RENDER_DISTANCE, self.grid):
             blok.draw()
-        # for tree in self.trees:
-        #     tree.draw()
+        self.all_sprites.draw(self.screen)
+        self.player.draw()
         self.health_bar.draw()
         self.mana_bar.draw()
         self.spells.draw(self.screen)
@@ -199,7 +184,7 @@ class Game:
                     counter += 1
                 else:
                     counter = 0
-                self.screen.blit(loser, (WIDTH / 4, HEIGHT - 50))
+                self.screen.blit(loser, (int(WIDTH / 4),int(HEIGHT - 50)))
             pygame.display.flip()  # nie zadzieraj z tym przeciwnikiem
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

@@ -67,8 +67,16 @@ class Factory:
 
     ITEMS_DICT["dirt"] = ItemInfo("dirt", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
     ITEMS_DICT["grass"] = ItemInfo("grass", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
-    ITEMS_DICT["iron"] = ItemInfo("iron", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
-    ITEMS_DICT["tree"] = ItemInfo("tree", "Wszedzie jej pelno.", "tree", -10, {"hp": 20, "probability": 0.5})
+    ITEMS_DICT["iron"] = ItemInfo("iron", "Wszedzie jej pelno.", "block", -10, {"hp": 30, "probability": 0.5})
+    ITEMS_DICT["copper"] = ItemInfo("copper", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
+    ITEMS_DICT["wood"] = ItemInfo("wood", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
+    ITEMS_DICT["leaf"] = ItemInfo("leaf", "Wszedzie jej pelno.", "block", -10, {"hp": 5, "probability": 0.5})
+    ITEMS_DICT["diamond1"] = ItemInfo("diamond1", "Najcenniejszy na świecie.", "block", -10, {"hp": 50, "probability": 0.5})
+    ITEMS_DICT["diamond2"] = ItemInfo("diamond2", "Błyszczy się jak....", "block", -10, {"hp": 50, "probability": 0.5})
+    ITEMS_DICT["diamond3"] = ItemInfo("diamond3", "Najtańczy z najdroższych.", "block", -10, {"hp": 50, "probability": 0.5})
+    ITEMS_DICT["glass"] = ItemInfo("glass", "Wszedzie jej pelno.", "block", -10, {"hp": 99999, "probability": 0.5})
+    ITEMS_DICT["cloud"] = ItemInfo("cloud", "Wszedzie jej pelno.", "block", -10, {"hp": 1, "probability": 0.0})
+
 
     def __init__(self, game):
         self.game = game
@@ -88,10 +96,7 @@ class Factory:
             return self.create_boots(info, x, y)
         elif info.variety == "block":
             return self.create_placed_block(name, info, x, y)
-        elif info.variety == "ore":
-            return self.create_placed_block(name, info, x, y)
-        elif info.variety == "tree":
-            return self.create_placed_block(name, info, x, y)
+        
 
     def create_food(self, info, x, y):
         """Return new food"""

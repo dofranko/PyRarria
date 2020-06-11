@@ -1,12 +1,12 @@
 # Sprite class for player
 import pygame
+import random
 from settings import *
 from bullet_spells import *
 from fast_spells import *
 from items.item import Item
 from items.block import *
-import random
-
+from map_generator import powierzchnia
 from creatures.vector import PVector
 
 vector = PVector
@@ -19,13 +19,16 @@ class Player(pygame.sprite.Sprite):
     #               ^ rect.x, rect.y - pozycja względem monitora
     def __init__(self, game, equipment, health_bar, mana_bar, spells):
         super().__init__()
+        poz_x = powierzchnia[int(len(powierzchnia) / 2)]
+        poz_y = poz_x[1] + 50
+        poz_x = poz_x[0]
         self.game = game
         self.equipment = equipment
         self.image = pygame.image.load(IMAGES_LIST["player"]).convert_alpha()
         # self.image = pygame.transform.scale(self.image, (36, 50))
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH / 2, 0)
-        self.position = vector(WIDTH * 2, 0)
+        self.position = vector(poz_x,poz_y)
         self.vel = vector(0, 0)
         self.acc = vector(0, PLAYER_MOVE["PLAYER_GRAV"])
         self.mask = pygame.mask.from_surface(self.image)
@@ -69,7 +72,7 @@ class Player(pygame.sprite.Sprite):
         self.vel.y = PLAYER_MOVE["JUMP_VEL"]
 
     def _get_close_blocks(self):
-        return Item.get_neighbours(self.position, (5, 5), self.game.grid)
+        return [block for block in Item.get_neighbours(self.position, (5, 5), self.game.grid) if block.name != "wood"]
 
     # Sprawdzenie kolizji (stania) od góry platform
     def check_collision_vertically(self):
