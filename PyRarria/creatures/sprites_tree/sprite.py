@@ -168,5 +168,8 @@ class Sprite(AbstractSprite):
 
         self.kill()
 
+    def quiet_die(self):
+        self.kill()
+
     def update_forces(self, player, blocks):
         pass

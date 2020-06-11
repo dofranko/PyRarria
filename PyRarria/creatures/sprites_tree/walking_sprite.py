@@ -20,7 +20,10 @@ class WalkingSprite(Sprite):
             self.hpbar.draw(win, self.hp, self.maxhp)
 
     def update_forces(self, player, blocks):
-        run(self)
+        if self.is_hpbar:
+            run_away(self, player)
+        else:
+            run(self)
         gravity(self)
         keep_on_platform(self, blocks)
         freeze(self)

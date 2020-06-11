@@ -92,3 +92,6 @@ class AbstractSprite(pg.sprite.Sprite):
 
     def die(self, items_factory):
         pass
+
+    def quiet_die(self):
+        pass

@@ -16,17 +16,18 @@ from random import choice
 
 BARD_RANGE = 120
 FREEZE_RANGE = 120
-SPAWN_RANGE = 500
+SPAWN_RANGE = 650
+SPAWN_HEIGHT = 100
 
 LIMITS = {
     "walking_test": 0,
-    "birds": 0,
-    "skeletons": 0,
-    "skeletons_boss": 0,
-    "zombies": 0,
-    "cows": 3,
+    "birds": 10,
+    "skeletons": 1,
+    "skeletons_boss": 1,
+    "zombies": 1,
+    "cows": 4,
     "sheeps": 3,
-    "bats": 0,
+    "bats": 1,
     "chickens": 3,
 }
 
@@ -155,7 +156,7 @@ class CreaturesEngine:
                 continue
 
             d = choice([-1, 1])
-            new_creature = Creature(self.player.position.x + d * SPAWN_RANGE, self.player.position.y - SPAWN_RANGE)
+            new_creature = Creature(self.player.position.x + d * SPAWN_RANGE, self.player.position.y - SPAWN_HEIGHT)
             group.add(new_creature)
             self.all_creatures.add(new_creature)
 
@@ -182,10 +183,10 @@ class CreaturesEngine:
             if distance < BARD_RANGE:
                 push_away(arrow, self.player, bard_power / 5)
 
-    #  def print_stats(self):
-    #     for group, name in zip(self.groups.values(), NAMES):
-    #        print(f"{name:10}:{len(group)}")
-    #   print()
+    def print_stats(self):
+        for group, name in zip(self.groups.values(), NAMES):
+            print(f"{name:10}:{len(group)}")
+        print()
 
     def _get_close_blocks(self, position):
         return Item.get_neighbours(position, (5, 5), self.game.grid)

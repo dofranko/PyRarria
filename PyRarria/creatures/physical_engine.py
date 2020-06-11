@@ -20,7 +20,7 @@ MOVE_LENGTH = 10
 MOVE_STEP = MOVE_LENGTH / 15
 MAX_XPUSH = 50
 MAX_YPUSH = 15
-PLAYER_DISTANCE = 600
+PLAYER_DISTANCE = 1000
 
 
 def gravity(src):
@@ -301,7 +301,8 @@ def map_delete(src):
 
 def player_delete(src, player):
     """Deletes object if it is too far from the player"""
-    pass
+    if (player.position - src.position).mag() > PLAYER_DISTANCE:
+        src.quiet_die()
 
 
 def init_move(src):
