@@ -112,7 +112,7 @@ class Item(pygame.sprite.Sprite):
             else:
                 position = vector(player.position.x, player.position.y) + mouse_pos - vector(WIDTH / 2, HEIGHT / 2)
                 blok_pos = vector(*Item.cursor_to_grid(position.x, position.y))
-                for block in Item.get_neighbours(blok_pos, (3, 3), self.game.grid):
+                for block in Item.get_neighbours(blok_pos, (3, 3), self.game.grid, do_collision=False):
                     if block.rect.collidepoint(mouse_pos):
                         block.hit(self.env_damage)
                         damaged = True
