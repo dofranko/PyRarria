@@ -37,7 +37,6 @@ class Player(pygame.sprite.Sprite):
         self.facing = 1
         self.q_trigger = False
         self.held_item = None
-        self.armour = []  # lista przechowująca nałożone zbroje
         self.last_shift = 0
         self.spell_cast_ready = False
         self.double_jump = False  # wskazuje czy można skoczyć w powietrzu
@@ -239,7 +238,6 @@ class Player(pygame.sprite.Sprite):
 
         self.collect()
         self.held_item = self.equipment.get_active_item()
-        self.armour = self.equipment.get_armour()
 
         # Sprawdzanie kolizji z boosterami
         self.check_collision_boosters()
@@ -250,7 +248,7 @@ class Player(pygame.sprite.Sprite):
         self.key_actions(can_jump)
 
     def draw(self):
-        for armour in self.armour:
+        for armour in reversed(self.equipment.get_armour()):
             armour.get_dressed()
         if self.held_item:
             self.held_item.draw_on_player()

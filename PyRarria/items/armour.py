@@ -9,7 +9,7 @@ class Armour(Item):
     def __init__(self, x, y, info, game, value):
         super().__init__(x, y, info, game)
         self.delta_y = value
-        self.size = 2 / 5
+        self.size = 9 / 20
 
     def activate(self):
         """To implement by subclasses"""
@@ -35,7 +35,7 @@ class Helmet(Armour):
     """Subclass of Armour class."""
 
     def __init__(self, x, y, info, game):
-        super().__init__(x, y, info, game, 0)
+        super().__init__(x, y, info, game, -1 / 10)
         self.defence = info.attr["defence"]
         self.mana_power = info.attr["mana_power"]
 
@@ -52,8 +52,9 @@ class Breastplate(Armour):
     """Subclass of Armour class."""
 
     def __init__(self, x, y, info, game):
-        super().__init__(x, y, info, game, 1 / 3)
+        super().__init__(x, y, info, game, 4 / 15)
         self.defence = info.attr["defence"]
+        self.size = 1 / 2
 
     def activate(self):
         PLAYER_VALUES["DEFENCE"] += self.defence

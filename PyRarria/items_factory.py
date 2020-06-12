@@ -65,6 +65,16 @@ class Factory:
         "black_boots", "Buty czarne", "boots", -10, {"defence": 9, "speed_value": 3, "double_jump": True}
     )
 
+    ITEMS_DICT["black_cat_helmet"] = ItemInfo(
+        "black_cat_helmet", "Helm czarnego kota", "helmet", -10, {"defence": 3, "mana_power": 10}
+    )
+    ITEMS_DICT["black_cat_breastplate"] = ItemInfo(
+        "black_cat_breastplate", "Napiersciennik czarnego kota", "breastplate", -10, {"defence": 6}
+    )
+    ITEMS_DICT["black_cat_boots"] = ItemInfo(
+        "black_cat_boots", "Buty czarnego kota", "boots", -10, {"defence": 2, "speed_value": 5.5, "double_jump": True}
+    )
+
     ITEMS_DICT["dirt"] = ItemInfo("dirt", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
     ITEMS_DICT["stone"] = ItemInfo("stone", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
     ITEMS_DICT["grass"] = ItemInfo("grass", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})

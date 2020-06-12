@@ -62,15 +62,18 @@ IMAGES_LIST = {
     "mage_helmet": ARMOUR + "mage_helmet.png",
     "fire_helmet": ARMOUR + "fire_helmet.png",
     "black_helmet": ARMOUR + "black_helmet2.png",
+    "black_cat_helmet": ARMOUR + "black_cat_helmet.png",
     # Breastplates
     "breastplate_icon_base": ARMOUR + "breastplate_icon_base.png",
     "mage_breastplate": ARMOUR + "mage_breastplate.png",
     "black_breastplate": ARMOUR + "black_breastplate2.png",
     "fire_breastplate": ARMOUR + "fire_breastplate.png",
+    "black_cat_breastplate": ARMOUR + "black_cat_breastplate.png",
     # Boots
     "boots_icon_base": ARMOUR + "boots_icon_base.png",
     "mage_boots": ARMOUR + "mage_boots.png",
     "black_boots": ARMOUR + "black_boots2.png",
+    "black_cat_boots": ARMOUR + "black_cat_boots.png",
     "fire_boots": ARMOUR + "fire_boots.png",
     # Blocks
     "dirt": TERRAIN + "dirt2.png",
