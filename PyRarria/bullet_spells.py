@@ -6,7 +6,7 @@ from items.item import *
 
 
 class Explosion(pygame.sprite.Sprite):
-    def __init__(self, game, pos, vect):
+    def __init__(self, game, pos):
         pygame.sprite.Sprite.__init__(self)
         self.game = game
         self.sheet = SpriteSheet(SPELL_SHEETS["collision_explosion"], 10, 6, 60)
@@ -16,8 +16,6 @@ class Explosion(pygame.sprite.Sprite):
         self.rect.center = pos
         self.start = pygame.time.get_ticks()
         self.frame = 0
-        self.stage_pos_x = vect.x
-        self.stage_pos_y = vect.y
 
     # Rysowanie kolejnej klatki tego efektu
     def draw(self, cell_index):
@@ -32,8 +30,8 @@ class Explosion(pygame.sprite.Sprite):
 
         self.draw(self.frame)
         main_stage_position = self.game.get_main_stage_position()
-        self.rect.x = self.position.x - (self.stage_pos_x - main_stage_position.x)
-        self.rect.y = self.position.y - (self.stage_pos_y - main_stage_position.y)
+        self.rect.x = self.position.x + main_stage_position.x
+        self.rect.y = self.position.y + main_stage_position.y
 
 
 class BulletSpell(pygame.sprite.Sprite):
@@ -55,7 +53,7 @@ class BulletSpell(pygame.sprite.Sprite):
             self.explode()
 
         # Detekcja kolizji ze środowiskiem
-        hits = pygame.sprite.spritecollide(self, Item.get_neighbours(self.position, (3, 3), self.game.grid), False)
+        hits = pygame.sprite.spritecollide(self, Item.get_neighbours(self.position, (5, 5), self.game.grid), False)
         if hits:
             self.explode()
 
@@ -77,18 +75,12 @@ class Fireball(BulletSpell):
         self.frame = random.randint(0, 63)
         self.position = pos
         self.rect = self.image.get_rect()
-        vector = self.game.get_main_stage_position()
-        pos += vector
-        self.rect.center = pos
         self.speed_x = 3
         self.speed_y = speed_y
         self.accuracy = 0.95
         self.direction = direction
         self.duration = 4000
         self.start = pygame.time.get_ticks()
-        main_stage_position = self.game.get_main_stage_position()
-        self.stage_pos_x = main_stage_position.x
-        self.stage_pos_y = main_stage_position.y
 
     # Rysowanie kolejnej klatki tego efektu
     def draw(self, cell_index):
@@ -103,8 +95,8 @@ class Fireball(BulletSpell):
             self.kill()
 
         main_stage_position = self.game.get_main_stage_position()
-        self.rect.x = self.position.x - (self.stage_pos_x - main_stage_position.x)
-        self.rect.y = self.position.y - (self.stage_pos_y - main_stage_position.y)
+        self.rect.x = self.position.x + main_stage_position.x
+        self.rect.y = self.position.y + main_stage_position.y
         self.position.x += self.speed_x * self.direction
         self.rect.x += self.speed_x * self.direction
         self.position.y += self.speed_y
@@ -117,13 +109,13 @@ class Fireball(BulletSpell):
         self.check_collision()
 
     def explode(self):
-        vect = pygame.math.Vector2(self.stage_pos_x, self.stage_pos_y)
+        vect = pygame.math.Vector2(self.position.x, self.position.y)
         if self.direction == 1:
             vector = pygame.math.Vector2(self.position[0] + 50, self.position[1] + 10)
-            new_explosion = Explosion(self.game, vector, vect)
+            new_explosion = Explosion(self.game, vector)
         else:
             vector = pygame.math.Vector2(self.position[0], self.position[1] + 10)
-            new_explosion = Explosion(self.game, vector, vect)
+            new_explosion = Explosion(self.game, vector)
 
         self.game.explosions.add(new_explosion)
         self.game.all_sprites.add(new_explosion)
@@ -142,8 +134,6 @@ class FrostBullet(BulletSpell):
         self.image = pygame.Surface((self.sheet.cell_width, self.sheet.cell_height), pygame.SRCALPHA).convert_alpha()
         self.position = pos
         self.rect = self.image.get_rect()
-        vector = self.game.get_main_stage_position()
-        pos += vector
         self.rect.center = pos
         self.speed_x = 3
         self.speed_y = speed_y
@@ -152,9 +142,6 @@ class FrostBullet(BulletSpell):
         self.duration = 3000
         self.start = pygame.time.get_ticks()
         self.frame = 0
-        main_stage_position = self.game.get_main_stage_position()
-        self.stage_pos_x = main_stage_position.x
-        self.stage_pos_y = main_stage_position.y
 
     # Rysowanie kolejnej klatki tego efektu
     def draw(self, cell_index):
@@ -169,8 +156,8 @@ class FrostBullet(BulletSpell):
             self.kill()
 
         main_stage_position = self.game.get_main_stage_position()
-        self.rect.x = self.position.x - (self.stage_pos_x - main_stage_position.x)
-        self.rect.y = self.position.y - (self.stage_pos_y - main_stage_position.y)
+        self.rect.x = self.position.x + main_stage_position.x
+        self.rect.y = self.position.y + main_stage_position.y
         self.position.x += self.speed_x * self.direction
         self.rect.x += self.speed_x * self.direction
         self.position.y += self.speed_y
