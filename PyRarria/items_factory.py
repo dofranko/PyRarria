@@ -145,10 +145,8 @@ class Factory:
         item_name = random.choice(list(self.ITEMS_DICT.keys()))
         item = self.create(item_name, x, y)
         self.game.items.add(item)
-        self.game.all_sprites.add(item)
 
     def add_item(self, item_name, x, y):
         """Add item (using its name) on (x, y) position (for example when creature dies)"""
         item = self.create(item_name, x, y)
         self.game.items.add(item)
-        self.game.all_sprites.add(item)

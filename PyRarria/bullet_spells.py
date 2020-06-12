@@ -38,7 +38,7 @@ class BulletSpell(pygame.sprite.Sprite):
     """Super class for spells"""
 
     def __init__(self, game, name, damage):
-        self.groups = game.all_sprites, game.magics
+        self.groups = game.magics
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.name = name
@@ -118,7 +118,6 @@ class Fireball(BulletSpell):
             new_explosion = Explosion(self.game, vector)
 
         self.game.explosions.add(new_explosion)
-        self.game.all_sprites.add(new_explosion)
         self.kill()
 
 

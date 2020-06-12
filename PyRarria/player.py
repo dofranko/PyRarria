@@ -198,7 +198,6 @@ class Player(pygame.sprite.Sprite):
         collected = pygame.sprite.spritecollide(self, self.game.items, False)
         for it in collected:
             if self.equipment.add_item(it):
-                self.game.all_sprites.remove(it)
                 self.game.items.remove(it)
 
     def throw(self):
@@ -247,7 +246,8 @@ class Player(pygame.sprite.Sprite):
 
         self.key_actions(can_jump)
 
-    def draw(self):
+    def draw(self, screen):
+        screen.blit(self.image, (self.rect.x, self.rect.y))
         for armour in reversed(self.equipment.get_armour()):
             armour.get_dressed()
         if self.held_item:

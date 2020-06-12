@@ -39,7 +39,6 @@ class Game:
         generuj()
 
         # self.trees = pygame.sprite.Group()
-        self.all_sprites = pygame.sprite.Group()
         self.boosters = pygame.sprite.Group()
         self.active_boosters = pygame.sprite.Group()
         self.magics = pygame.sprite.Group()
@@ -66,7 +65,6 @@ class Game:
         # test
         bacon = self.items_factory.create("bacon", 1750, 100)
         self.bacon = bacon
-        # self.all_sprites.add(potato)
         self.items.add(bacon)
 
         # Tutaj testowanie dodawania boosterów
@@ -83,7 +81,6 @@ class Game:
         boost_test4 = DamageBooster(self, position4)
         boost_test5 = DefenseBooster(self, position5)
         boost_test6 = AccuracyBooster(self, position6)
-        self.all_sprites.add(self.player)
         self.run()
 
     def run(self):
@@ -106,8 +103,6 @@ class Game:
         self.background.update()
         for blok in Item.get_neighbours(self.player.position, BLOCK_RENDER_DISTANCE, self.grid, do_collision=False):
             blok.update()
-        # for tree in self.trees:
-        #     tree.update()
 
         self.creatures_engine.update()
         self.health_bar.update()
@@ -118,7 +113,6 @@ class Game:
         self.explosions.update()
         self.items.update()
         self.items_engine.update()
-        # self.blocks.update()
 
     def events(self):
         # Game Loop - events
@@ -151,11 +145,9 @@ class Game:
 
         for blok in Item.get_neighbours(self.player.position, BLOCK_RENDER_DISTANCE, self.grid, do_collision=False):
             blok.draw()
-        self.all_sprites.draw(self.screen)
-        self.player.draw()
-
-        # for tree in self.trees:
-        #     tree.draw()
+        self.player.draw(self.screen)
+        self.magics.draw(self.screen)
+        self.explosions.draw(self.screen)
         self.health_bar.draw()
         self.mana_bar.draw()
         self.spells.draw(self.screen)

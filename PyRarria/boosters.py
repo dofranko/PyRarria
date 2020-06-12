@@ -8,7 +8,7 @@ vector = pygame.math.Vector2
 
 class Booster(pygame.sprite.Sprite):
     def __init__(self, game, pos, name, lifespan):
-        self.groups = game.all_sprites, game.boosters
+        self.groups = game.boosters
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.name = name

@@ -11,7 +11,7 @@ class SmallSpell(pygame.sprite.Sprite):
     """Super class for small spells"""
 
     def __init__(self, game, name, damage):
-        self.groups = game.all_sprites, game.magics
+        self.groups = game.magics
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.name = name
@@ -25,7 +25,7 @@ class SelfSpell(pygame.sprite.Sprite):
     """Super class for self spells"""
 
     def __init__(self, game, name):
-        self.groups = game.all_sprites, game.magics
+        self.groups = game.magics
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.name = name
