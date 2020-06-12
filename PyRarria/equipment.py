@@ -76,6 +76,7 @@ class Equipment:
         # Przycisk otwierania
         self.open_eq = pygame.sprite.Sprite()
         self.open_eq.image = pygame.image.load(IMAGES_LIST["open_eq"]).convert_alpha()
+        self.open_eq.image = pygame.transform.scale(self.open_eq.image, (17, 17))
         self.open_eq.rect = self.open_eq.image.get_rect()
         self.open_eq.rect.x = 5 + self.base_x + len(self.base_eq) * self.base_width
         self.open_eq.rect.y = 5 + self.base_y

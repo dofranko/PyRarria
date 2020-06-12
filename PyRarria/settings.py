@@ -34,16 +34,19 @@ BLOCK_RENDER_DISTANCE = (10, 10)
 
 IMAGES_LIST = {
     # Player
-    "player": IMAGES + "player.png",
+    "player": IMAGES + "player2.png",
     # GUI
     "heart": IMAGES + "heart.png",
     "mana": IMAGES + "mana.png",
     # Ekuipment
-    "eq_square": IMAGES + "eq_square.png",
-    "open_eq": IMAGES + "open_eq.png",
-    "bin": IMAGES + "bin.png",
+    "eq_square": IMAGES + "eq_square2.png",
+    "open_eq": IMAGES + "open_eq2.png",
+    "bin": IMAGES + "bin2.png",
     # Screens
-    "background": {"main": BACKGROUND + "background_moving_main.png", "2": BACKGROUND + "background_moving_second.png"},
+    "background": {
+        "main": BACKGROUND + "background_moving_main2.png",
+        "2": BACKGROUND + "background_moving_second2.png",
+    },
     "start_screen": SCREENS + "start_screen.png",
     "game_over_screen": SCREENS + "game_over_screen.png",
     # START ITEMS
@@ -58,27 +61,29 @@ IMAGES_LIST = {
     "helmet_icon_base": ARMOUR + "helmet_icon_base.png",
     "mage_helmet": ARMOUR + "mage_helmet.png",
     "fire_helmet": ARMOUR + "fire_helmet.png",
-    "black_helmet": ARMOUR + "black_helmet.png",
+    "black_helmet": ARMOUR + "black_helmet2.png",
     # Breastplates
     "breastplate_icon_base": ARMOUR + "breastplate_icon_base.png",
     "mage_breastplate": ARMOUR + "mage_breastplate.png",
-    "black_breastplate": ARMOUR + "black_breastplate.png",
+    "black_breastplate": ARMOUR + "black_breastplate2.png",
     "fire_breastplate": ARMOUR + "fire_breastplate.png",
     # Boots
     "boots_icon_base": ARMOUR + "boots_icon_base.png",
     "mage_boots": ARMOUR + "mage_boots.png",
-    "black_boots": ARMOUR + "black_boots.png",
+    "black_boots": ARMOUR + "black_boots2.png",
     "fire_boots": ARMOUR + "fire_boots.png",
     # Blocks
-    "dirt": TERRAIN + "dirt.png",
-    "grass": TERRAIN + "grass.png",
-    "iron": TERRAIN + "iron.png",
-    "copper": TERRAIN + "copper.png",
-    "diamond1": TERRAIN + "diamond1.png",
-    "diamond2": TERRAIN + "diamond2.png",
-    "diamond3": TERRAIN + "diamond3.png",
-    "wood": TERRAIN + "wood.png",
-    "leaf": TERRAIN + "leaf.png",
+    "dirt": TERRAIN + "dirt2.png",
+    "stone": TERRAIN + "stone2.png",
+    "clump": TERRAIN + "clump2.png",
+    "grass": TERRAIN + "grass2.png",
+    "iron": TERRAIN + "iron2.png",
+    "copper": TERRAIN + "copper2.png",
+    "diamond1": TERRAIN + "diamond12.png",
+    "diamond2": TERRAIN + "diamond22.png",
+    "diamond3": TERRAIN + "diamond32.png",
+    "wood": TERRAIN + "wood2.png",
+    "leaf": TERRAIN + "leaf2.png",
     "damaged_1": TERRAIN + "damaged_1.png",
     "damaged_2": TERRAIN + "damaged_2.png",
     "damaged_3": TERRAIN + "damaged_3.png",
@@ -189,3 +194,5 @@ BOOSTERS_VALUE = {"damage": 10, "defense": 20, "player_speed": 5, "accuracy": 0.
 # Ustawienia oscylacji boostera
 BOB_RANGE = 20
 BOB_SPEED = 0.8
+
+NON_COLLISION_OBJECTS = []

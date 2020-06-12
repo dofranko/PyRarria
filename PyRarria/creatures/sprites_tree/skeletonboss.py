@@ -9,7 +9,6 @@ from settings import FPS
 import math
 
 
-
 ANIMATION = SKELETONBOSS_ANIMATION
 OBJECT = SKELETONBOSS
 

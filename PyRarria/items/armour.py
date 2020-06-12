@@ -26,7 +26,7 @@ class Armour(Item):
             rot = pygame.transform.flip(rot, True, False)
         rot = pygame.transform.scale(rot, (player_width, round(player_height * self.size)))
         obr_rect = rot.get_rect()
-        obr_rect.x = self.game.player.rect.x 
+        obr_rect.x = self.game.player.rect.x
         obr_rect.y = self.game.player.rect.y + self.delta_y * player_height
         self.game.screen.blit(rot, obr_rect)
 

@@ -41,7 +41,7 @@ class PVector(Vector2):
         return self
 
     def __str__(self):
-        return f'({self.x},{self.y})'
+        return f"({self.x},{self.y})"
 
     def set(self, x, y):
         self.x = x
@@ -56,10 +56,10 @@ class PVector(Vector2):
         self.y += dy
 
     def dot(self, v):
-        return self.x*v.x + self.y*v.y
+        return self.x * v.x + self.y * v.y
 
     def mag(self):
-        return (self.x**2 + self.y**2) ** 0.5
+        return (self.x ** 2 + self.y ** 2) ** 0.5
 
     def normalize(self):
         mag = self.mag()
@@ -149,8 +149,9 @@ class PVector(Vector2):
 
     @staticmethod
     def random():
-        alpha = random.uniform(0, 2*math.pi)
+        alpha = random.uniform(0, 2 * math.pi)
         return PVector(math.sin(alpha), math.cos(alpha))
+
 
 # TEST 1
 # u = PVector(1, -1)

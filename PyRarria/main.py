@@ -59,8 +59,7 @@ class Game:
         self.last_main_position = PVector(*self.get_main_stage_position())
         self.creatures_engine = CreaturesEngine(self)
 
-
-        create_world(self.grid,self.items_factory)
+        create_world(self.grid, self.items_factory)
 
         self.waiting = True
 
@@ -149,10 +148,14 @@ class Game:
         # Kolejność ma znaczenie
         self.background.draw()
         self.creatures_engine.draw()
+
         for blok in Item.get_neighbours(self.player.position, BLOCK_RENDER_DISTANCE, self.grid):
             blok.draw()
         self.all_sprites.draw(self.screen)
         self.player.draw()
+
+        # for tree in self.trees:
+        #     tree.draw()
         self.health_bar.draw()
         self.mana_bar.draw()
         self.spells.draw(self.screen)
@@ -184,7 +187,7 @@ class Game:
                     counter += 1
                 else:
                     counter = 0
-                self.screen.blit(loser, (int(WIDTH / 4),int(HEIGHT - 50)))
+                self.screen.blit(loser, (int(WIDTH / 4), int(HEIGHT - 50)))
             pygame.display.flip()  # nie zadzieraj z tym przeciwnikiem
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

@@ -10,7 +10,7 @@ from creatures.sprites_tree.walking_test import WalkingTest
 from creatures.sprites_tree.zombie import Zombie
 from creatures.vector import PVector
 from pygame.sprite import Group
-from settings import FPS
+from settings import FPS, NON_COLLISION_OBJECTS
 from items.item import *
 from random import choice
 
@@ -154,10 +154,8 @@ class CreaturesEngine:
             if self.clock % (frequency * FPS) != 0:
                 continue
 
-            d = choice([-1,1])
-            new_creature = Creature(
-                self.player.position.x + d*SPAWN_RANGE,
-                self.player.position.y - SPAWN_RANGE)
+            d = choice([-1, 1])
+            new_creature = Creature(self.player.position.x + d * SPAWN_RANGE, self.player.position.y - SPAWN_RANGE)
             group.add(new_creature)
             self.all_creatures.add(new_creature)
 
@@ -182,12 +180,16 @@ class CreaturesEngine:
         for arrow in self.arrows:
             distance = (self.player.position - arrow.position).mag()
             if distance < BARD_RANGE:
-                push_away(arrow, self.player, bard_power/5)
+                push_away(arrow, self.player, bard_power / 5)
 
-  #  def print_stats(self):
-   #     for group, name in zip(self.groups.values(), NAMES):
+    #  def print_stats(self):
+    #     for group, name in zip(self.groups.values(), NAMES):
     #        print(f"{name:10}:{len(group)}")
-     #   print()
+    #   print()
 
     def _get_close_blocks(self, position):
-        return Item.get_neighbours(position, (5, 5), self.game.grid)
+        return [
+            block
+            for block in Item.get_neighbours(position, (5, 5), self.game.grid)
+            if block.name not in NON_COLLISION_OBJECTS
+        ]

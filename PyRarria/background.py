@@ -30,7 +30,7 @@ class Background:
             self.main_stage.position.x = -self.start_scrolling_position.x
         # Jeśli gracz jest na prawym końcu mapy to nie przewijamy tła
         elif self.player.position.x > self.stage_width - self.start_scrolling_position.x:
-            self.player.rect.x = self.player.position.x - self.stage_width + + WIDTH / 2
+            self.player.rect.x = self.player.position.x - self.stage_width + WIDTH / 2
         # Haha przewijane tło robi suuuuwu suwu
         else:
             # Tu ważne: w tym miejscu centrujemy player.rect - nie w jego klasie.

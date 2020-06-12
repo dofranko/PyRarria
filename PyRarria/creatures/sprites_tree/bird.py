@@ -6,7 +6,6 @@ from settings import FPS
 import math
 
 
-
 ANIMATION = BIRD_ANIMATION
 OBJECT = BIRD
 
