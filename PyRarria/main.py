@@ -104,7 +104,7 @@ class Game:
         self.player.update()
         self.equipment.update()
         self.background.update()
-        for blok in Item.get_neighbours(self.player.position, BLOCK_RENDER_DISTANCE, self.grid):
+        for blok in Item.get_neighbours(self.player.position, BLOCK_RENDER_DISTANCE, self.grid, do_collision=False):
             blok.update()
         # for tree in self.trees:
         #     tree.update()
@@ -149,7 +149,7 @@ class Game:
         self.background.draw()
         self.creatures_engine.draw()
 
-        for blok in Item.get_neighbours(self.player.position, BLOCK_RENDER_DISTANCE, self.grid):
+        for blok in Item.get_neighbours(self.player.position, BLOCK_RENDER_DISTANCE, self.grid, do_collision=False):
             blok.draw()
         self.all_sprites.draw(self.screen)
         self.player.draw()

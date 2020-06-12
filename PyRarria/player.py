@@ -74,11 +74,7 @@ class Player(pygame.sprite.Sprite):
         self.vel.y = PLAYER_MOVE["JUMP_VEL"]
 
     def _get_close_blocks(self):
-        return [
-            block
-            for block in Item.get_neighbours(self.position, (5, 5), self.game.grid)
-            if block.name not in NON_COLLISION_OBJECTS
-        ]
+        return Item.get_neighbours(self.position, (5, 5), self.game.grid)
 
     # def _get_close_blocks1(self):
     #    return [block for block in Item.get_neighbours(self.position, (5, 5), self.game.grid) if block.name not in non_colision1]

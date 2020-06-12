@@ -129,7 +129,7 @@ class Item(pygame.sprite.Sprite):
         return Item.items_loaded_images[name]
 
     @staticmethod
-    def get_neighbours(start_point, depth, grid):
+    def get_neighbours(start_point, depth, grid, do_collision=True):
         pos = Item.cursor_to_grid(start_point.x, start_point.y)
         neighbours = []
         for i in range(-depth[0], depth[0] + 1):
@@ -140,6 +140,8 @@ class Item(pygame.sprite.Sprite):
                     continue
                 if blok:
                     neighbours.append(blok)
+        if do_collision:
+            return [bl for bl in neighbours if bl.name not in NON_COLLISION_OBJECTS]
         return neighbours
 
     @staticmethod

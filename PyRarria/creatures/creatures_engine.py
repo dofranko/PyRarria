@@ -188,8 +188,4 @@ class CreaturesEngine:
     #   print()
 
     def _get_close_blocks(self, position):
-        return [
-            block
-            for block in Item.get_neighbours(position, (5, 5), self.game.grid)
-            if block.name not in NON_COLLISION_OBJECTS
-        ]
+        return Item.get_neighbours(position, (5, 5), self.game.grid)
