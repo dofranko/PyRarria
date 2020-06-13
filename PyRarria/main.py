@@ -221,17 +221,17 @@ class Game:
             self.clock.tick(FPS)
             if counter < 40:
                 counter += 1
-                loser = font.render("Press p to play again or q to quit the game", True, (0, 0, 0))
+                loser = font.render("Press enter to play again or q to quit the game", True, (0, 0, 0))
             else:
                 if counter < 150:
                     counter += 1
                 else:
                     counter = 0
-                loser = font.render("Press p to play again or q to quit the game", True, (255, 0, 0))
+                loser = font.render("Press enter to play again or q to quit the game", True, (255, 0, 0))
             self.screen.blit(loser, (WIDTH / 7, HEIGHT - 100))
             pygame.display.flip()
             keys = pygame.key.get_pressed()
-            if keys[pygame.K_p]:
+            if keys[pygame.K_RETURN]:
                 self.waiting = False
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or keys[pygame.K_q]:
