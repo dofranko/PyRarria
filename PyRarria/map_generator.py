@@ -26,6 +26,7 @@ NON_COLLISION_OBJECTS.append("clump")
 NON_COLLISION_OBJECTS.append("leaf")
 NON_COLLISION_OBJECTS.append("wood")
 
+
 def cave_generator(where, depth1, depth2, propability, go_d, go_l, go_r):
     depth = random.randint(depth1, depth2)
     cave = []
