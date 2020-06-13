@@ -42,7 +42,6 @@ class Player(pygame.sprite.Sprite):
         self.double_jump = False  # wskazuje czy można skoczyć w powietrzu
         self.next_jump = False
         self.last_jump = None
-        self.is_pushed = False  # Flaga na odechniecie
 
         self.health_bar = health_bar
         self.mana_bar = mana_bar
@@ -90,7 +89,6 @@ class Player(pygame.sprite.Sprite):
         if self.vel.y > 0:
             hits = pygame.sprite.spritecollide(self, self._get_close_blocks(), False)
             if hits:
-                self.is_pushed = False
                 new_position = min([hits[i].position.y for i in range(len(hits))])
                 new_position += -(self.rect.height)  # SPECIAL ALIGN
                 # Cofnięcie na wcześniejszą pozycję (przed sprawdzaniem kolizji)
@@ -103,7 +101,6 @@ class Player(pygame.sprite.Sprite):
         elif self.vel.y < 0:
             hits = pygame.sprite.spritecollide(self, self._get_close_blocks(), False)
             if hits:
-                self.is_pushed = False
                 new_position = max([hits[i].position.y + hits[i].rect.height + 1 for i in range(len(hits))])
                 # new_position += -(HEIGHT // 2)  # SPECIAL ALIGN
                 # Cofnięcie na wcześniejszą pozycję (przed sprawdzaniem kolizji)
@@ -115,29 +112,27 @@ class Player(pygame.sprite.Sprite):
     def check_collision_horizontally(self):
         """Check collistion left/right and move if collided"""
         # Gdy porusza się w prawo
-        if self.acc.x > 0:
+        if self.vel.x > 0:
             hits = pygame.sprite.spritecollide(
                 self, self._get_close_blocks(), False
             )  # False -> don't remove from blocks
             if hits:
-                self.is_pushed = False
                 new_position = min([hits[i].position.x for i in range(len(hits))])
                 new_position += -self.rect.width  # SPECIAL ALIGN
                 self.rect.x += new_position - self.position.x
                 self.position.x = new_position
-                self.acc.x = 0
+                self.vel.x = 0
         # Gdy porusza się w lewo
-        elif self.acc.x < 0:
+        elif self.vel.x < 0:
             hits = pygame.sprite.spritecollide(
                 self, self._get_close_blocks(), False
             )  # False -> don't remove from blocks
             if hits:
-                self.is_pushed = False
                 new_position = max([hits[i].position.x + hits[i].rect.width for i in range(len(hits))])
                 self.rect.x += new_position - self.position.x
                 self.position.x = new_position
                 # self.position.x += -WIDTH // 2  # SPECIAL ALIGN
-                self.acc.x = 0
+                self.vel.x = 0
 
     # Sprawdzanie kolizji boosterów (prostokątów gracza i ich)
     def check_collision_boosters(self):
@@ -231,16 +226,23 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += self.vel.y + 0.5 * self.acc.y
         can_jump = self.check_collision_vertically()
 
-        self.position.x += self.acc.x
-        self.rect.x += self.acc.x
+        self.acc.x += self.vel.x * PLAYER_MOVE["FRICTION"]
+        self.vel.x += self.acc.x
+
+        self.position.x += self.vel.x + 0.5 * self.acc.x
+        self.rect.x += self.vel.x + 0.5 * self.acc.x
         self.check_collision_horizontally()
+
+        if abs(self.acc.x) < 1e-5:
+            self.acc.x = 0
+        if abs(self.vel.x) < 1e-5:
+            self.vel.x = 0
 
         self.collect()
         self.held_item = self.equipment.get_active_item()
 
         # Sprawdzanie kolizji z boosterami
         self.check_collision_boosters()
-
         # To zostaje nadpisane, jeśli działa tło (background.py) w klasie tła @see class Background
         # self.rect.midbottom = (self.position.x, self.position.y)
 
@@ -259,15 +261,12 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
             self.facing = -1
-            if not self.is_pushed:
-                self.acc.x = -PLAYER_MOVE["PLAYER_ACC"]
+            self.acc.x = -PLAYER_MOVE["PLAYER_ACC"]
         elif keys[pygame.K_RIGHT]:
             self.facing = 1
-            if not self.is_pushed:
-                self.acc.x = PLAYER_MOVE["PLAYER_ACC"]
+            self.acc.x = PLAYER_MOVE["PLAYER_ACC"]
         else:
-            if not self.is_pushed:
-                self.acc.x = 0
+            self.acc.x = 0
         if keys[pygame.K_UP]:
             if can_jump:
                 self.jump()
@@ -369,12 +368,11 @@ class Player(pygame.sprite.Sprite):
     def heal(self, hp_value):
         return self.health_bar.increase_health(hp_value)
 
-    def push_away(self, direction, push_vel_x=4, push_vel_y=14, force=1):
+    def push_away(self, direction, push_vel_x=14, push_vel_y=12, force=1):
         if force < 0.4:
             force = 0.4
         self.vel.y = -push_vel_y * force
-        self.acc.x = push_vel_x * direction * force
-        self.is_pushed = True
+        self.vel.x = push_vel_x * direction * force
 
 
 # Wywolanie akcji przedmiotu

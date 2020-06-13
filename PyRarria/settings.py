@@ -16,7 +16,7 @@ SOUNDS = "resources/sounds/"
 CREATURES = "resources/images/creatures/"
 
 # Player properties
-PLAYER_MOVE = {"PLAYER_ACC": 5, "PLAYER_GRAV": 0.8, "PLAYER_FRICTION": -0.2, "JUMP_VEL": -20, "MAX_VEL_Y": 15}
+PLAYER_MOVE = {"PLAYER_ACC": 1.2, "PLAYER_GRAV": 0.8, "PLAYER_FRICTION": -0.2, "JUMP_VEL": -20, "MAX_VEL_Y": 15, "FRICTION": -0.12}
 PLAYER_VALUES = {"DAMAGE": 0, "DEFENCE": 0, "MANA_REDUCTION": 0, "ACCURACY": 1, "TERRAIN_RANGE": 150}
 
 # Health/Mana bar properties
