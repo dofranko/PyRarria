@@ -71,7 +71,7 @@ class ItemsEngine:
         elif name == "star":
             item = TweeningBooster(self.game, position, "mana")
         elif name == "speed_booster":
-            item = PlayerSpeedBooster(self.game, position)
+            item = SpeedBooster(self.game, position)
         elif name == "damage_booster":
             item = DamageBooster(self.game, position)
         elif name == "defense_booster":
