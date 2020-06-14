@@ -291,7 +291,7 @@ class Equipment:
         self.change_tool = None
 
     def change_state(self):
-        """If opend close, if closed open"""
+        """If opened close, if closed open"""
         if self.is_opened:
             self.close()
         else:

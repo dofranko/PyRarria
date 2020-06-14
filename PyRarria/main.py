@@ -30,7 +30,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
         self.pause = False
-        self.creatures_engine = None
+        # self.creatures_engine = None
 
     def new_game(self):
         """Start new game"""
@@ -57,7 +57,7 @@ class Game:
         self.main_position = PVector(*self.get_main_stage_position())
         self.last_main_position = PVector(*self.get_main_stage_position())
         self.creatures_engine = CreaturesEngine(self)
-
+        self.actual_terrain = []
         create_world(self.grid, self.items_factory)
 
         self.waiting = True
@@ -77,7 +77,7 @@ class Game:
 
         boost_test1 = TweeningBooster(self, position, "health")
         boost_test2 = TweeningBooster(self, position2, "mana")
-        boost_test3 = PlayerSpeedBooster(self, position3)
+        boost_test3 = SpeedBooster(self, position3)
         boost_test4 = DamageBooster(self, position4)
         boost_test5 = DefenseBooster(self, position5)
         boost_test6 = AccuracyBooster(self, position6)
@@ -101,8 +101,11 @@ class Game:
         self.player.update()
         self.equipment.update()
         self.background.update()
-        for blok in Item.get_neighbours(self.player.position, BLOCK_RENDER_DISTANCE, self.grid, do_collision=False):
-            blok.update()
+        self.actual_terrain = Item.get_neighbours(
+            self.player.position, BLOCK_RENDER_DISTANCE, self.grid, noncollidable_objects=True
+        )
+        for block in self.actual_terrain:
+            block.update()
 
         self.creatures_engine.update()
         self.health_bar.update()
@@ -143,8 +146,8 @@ class Game:
         self.background.draw()
         self.creatures_engine.draw()
 
-        for blok in Item.get_neighbours(self.player.position, BLOCK_RENDER_DISTANCE, self.grid, do_collision=False):
-            blok.draw()
+        for block in self.actual_terrain:
+            block.draw()
         self.player.draw(self.screen)
         self.magics.draw(self.screen)
         self.explosions.draw(self.screen)
@@ -153,6 +156,7 @@ class Game:
         self.spells.draw(self.screen)
         self.equipment.draw(self.screen)
         self.items.draw(self.screen)
+        self.boosters.draw(self.screen)
         # żeby przenoszony itemik był widoczny, nic go nie ma przykrywać, więc rysuje się na końcu
         self.spells.draw_moving_item(self.screen)
         # *after* drawing everything, flip the display
@@ -256,7 +260,7 @@ class Game:
 
     # Funkcja potrzebna platformom, żeby mogły dostosować swoją pozcję
     def get_main_stage_position(self):
-        """Return main stage position - classes may need it for properly displaying on screen"""
+        """Return main stage position - classes may need it for properly positioning on the screen"""
         return self.background.main_stage.position + (WIDTH / 2, HEIGHT / 2)
 
 

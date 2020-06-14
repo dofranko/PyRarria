@@ -14,12 +14,12 @@ class Booster(pygame.sprite.Sprite):
         self.name = name
         self.position = pos
         self.lifespan = lifespan
-        self.start = pygame.time.get_ticks()
+        self.start_displaying = pygame.time.get_ticks()
 
     # Sprawdzanie, czy możliwy czas zebrania boostera minął
     def check_lifespan(self):
         now = pygame.time.get_ticks()
-        if now - self.start > self.lifespan:
+        if now - self.start_displaying > self.lifespan:
             self.kill()
 
 
@@ -46,6 +46,13 @@ class TweeningBooster(Booster):
             self.step = 0
             self.dir *= -1
 
+    def apply_boost(self):
+        if self.name == "health":
+            self.game.player.health_bar.add_heart()
+        elif self.name == "mana":
+            self.game.player.mana_bar.add_star()
+        self.kill()
+
 
 # Klasa boosterów z animacją (damage, defense, player speed, accuracy)
 class SpinningBooster(Booster):
@@ -58,163 +65,96 @@ class SpinningBooster(Booster):
         self.frame = 0
         self.mask = pygame.mask.from_surface(self.image)
         self.active = False
+        self.start_boost = 0
 
     # Rysowanie kolejnej klatki tego efektu/aktualizacja maski
-    def draw(self, cell_index):
+    def update_frame(self, cell_index):
         self.image.fill((0, 0, 0, 0))
         self.image.blit(self.sheet.sheet, (0, 0), self.sheet.cells[cell_index])
         self.mask = pygame.mask.from_surface(self.image)
         self.frame += 1
 
-    # Sprawdzanie prawdziwej kolizji (mask collision)
-    def check_true_collision(self, clip, player_rect, player_mask):
-        x1, y1 = clip.x - player_rect.x, clip.y - player_rect.y
-        x2, y2 = clip.x - self.rect.x, clip.y - self.rect.y
-        for x in range(clip.width):
-            for y in range(clip.height):
-                if player_mask.get_at((x1 + x, y1 + y)) and self.mask.get_at((x2 + x, y2 + y)):
-                    return True
+    def apply_boost(self):
+        if self.start_boost != 0:
+            return False
+        self.active = True
+        self.game.boosters.remove(self)
+        self.game.active_boosters.add(self)
+        self.image.fill((0, 0, 0, 0))
+        self.start_boost = pygame.time.get_ticks()
+        return True
+
+    def update(self):
+        if self.active:
+            now = pygame.time.get_ticks()
+            if now - self.start_boost > self.duration:
+                self.disapply_boost()
+                self.kill()
+        else:
+            main_stage_position = self.game.get_main_stage_position()
+            self.rect.x = self.position.x + main_stage_position.x
+            self.rect.y = self.position.y + main_stage_position.y
+
+            if self.frame == ANIM[self.name][2]:
+                self.frame = 0
+            self.update_frame(self.frame)
 
 
 # Booster czasowo zwiększający damage gracza
 class DamageBooster(SpinningBooster):
     def __init__(self, game, pos):
-        super().__init__(game, pos, "boost_damage", 70000)
-        self.duration = 10000  # Czas trwania efektu po podniesieniu
-        self.start = 0
-        self.active = False
+        super().__init__(game, pos, "damage_booster", 70000)
+        self.duration = BOOSTERS_DURATIONS["damage_booster"]  # Czas trwania efektu po podniesieniu
 
     # Aktywacja boostera / Zmiana wartości zadawanych obrażeń
     def apply_boost(self, value=BOOSTERS_VALUE["damage"]):
-        if self.start == 0:
-            self.active = True
-            self.game.boosters.remove(self)
-            self.game.active_boosters.add(self)
-            self.image.fill((0, 0, 0, 0))
-            self.start = pygame.time.get_ticks()
-        PLAYER_VALUES["DAMAGE"] += value
+        if super().apply_boost():
+            PLAYER_VALUES["DAMAGE"] += value
 
-    # Sprawdzanie, czy jego czas działania upłynął | aktualizacja pozycji i rysowanie (jeśli gracz nie podniósł)
-    def update(self):
-        if self.active:
-            now = pygame.time.get_ticks()
-            if now - self.start > self.duration:
-                self.apply_boost(-BOOSTERS_VALUE["damage"])
-                self.kill()
-        else:
-            main_stage_position = self.game.get_main_stage_position()
-            self.rect.x = self.position.x + main_stage_position.x
-            self.rect.y = self.position.y + main_stage_position.y
-
-            if self.frame == ANIM[self.name][2]:
-                self.frame = 0
-
-            self.draw(self.frame)
+    def disapply_boost(self, value=BOOSTERS_VALUE["damage"]):
+        PLAYER_VALUES["DAMAGE"] -= value
 
 
 # Booster czasowo zwiększający defense gracza
 class DefenseBooster(SpinningBooster):
     def __init__(self, game, pos):
-        super().__init__(game, pos, "boost_defense", 70000)
-        self.duration = 15000  # Czas trwania efektu po podniesieniu
-        self.start = 0
-        self.active = False
+        super().__init__(game, pos, "defense_booster", 70000)
+        self.duration = BOOSTERS_DURATIONS["defense_booster"]  # Czas trwania efektu po podniesieniu
 
     # Aktywacja boostera / Zmiana wartości defense gracza
     def apply_boost(self, value=BOOSTERS_VALUE["defense"]):
-        if self.start == 0:
-            self.active = True
-            self.game.boosters.remove(self)
-            self.game.active_boosters.add(self)
-            self.image.fill((0, 0, 0, 0))
-            self.start = pygame.time.get_ticks()
-        PLAYER_VALUES["DEFENCE"] += value
+        if super().apply_boost():
+            PLAYER_VALUES["DEFENCE"] += value
 
-    # Sprawdzanie, czy jego czas działania upłynął | aktualizacja pozycji i rysowanie (jeśli gracz nie podniósł)
-    def update(self):
-        if self.active:
-            now = pygame.time.get_ticks()
-            if now - self.start > self.duration:
-                self.apply_boost(-BOOSTERS_VALUE["defense"])
-                self.kill()
-        else:
-            main_stage_position = self.game.get_main_stage_position()
-            self.rect.x = self.position.x + main_stage_position.x
-            self.rect.y = self.position.y + main_stage_position.y
-
-            if self.frame == ANIM[self.name][2]:
-                self.frame = 0
-
-            self.draw(self.frame)
+    def disapply_boost(self, value=BOOSTERS_VALUE["defense"]):
+        PLAYER_VALUES["DEFENCE"] -= value
 
 
 # Booster czasowo zwiększający prędkość poruszania się gracza
-class PlayerSpeedBooster(SpinningBooster):
+class SpeedBooster(SpinningBooster):
     def __init__(self, game, pos):
-        super().__init__(game, pos, "boost_player_speed", 70000)
+        super().__init__(game, pos, "speed_booster", 70000)
         self.duration = 10000  # Czas trwania efektu po podniesieniu
-        self.start = 0
-        self.active = False
 
     # Aktywacja boostera / Zmiana wartości prędkości gracza
-    def apply_boost(self, value=BOOSTERS_VALUE["player_speed"]):
-        if self.start == 0:
-            self.active = True
-            self.game.boosters.remove(self)
-            self.game.active_boosters.add(self)
-            self.image.fill((0, 0, 0, 0))
-            self.start = pygame.time.get_ticks()
-        PLAYER_MOVE["PLAYER_ACC"] += value
+    def apply_boost(self, value=BOOSTERS_VALUE["speed"]):
+        if super().apply_boost():
+            PLAYER_MOVE["PLAYER_ACC"] += value
 
-    # Sprawdzanie, czy jego czas działania upłynął | aktualizacja pozycji i rysowanie (jeśli gracz nie podniósł)
-    def update(self):
-        if self.active:
-            now = pygame.time.get_ticks()
-            if now - self.start > self.duration:
-                self.apply_boost(-BOOSTERS_VALUE["player_speed"])
-                self.kill()
-        else:
-            main_stage_position = self.game.get_main_stage_position()
-            self.rect.x = self.position.x + main_stage_position.x
-            self.rect.y = self.position.y + main_stage_position.y
-
-            if self.frame == ANIM[self.name][2]:
-                self.frame = 0
-
-            self.draw(self.frame)
+    def disapply_boost(self, value=BOOSTERS_VALUE["speed"]):
+        PLAYER_MOVE["PLAYER_ACC"] -= value
 
 
 # Booster czasowo zwiększający celność gracza
 class AccuracyBooster(SpinningBooster):
     def __init__(self, game, pos):
-        super().__init__(game, pos, "boost_accuracy", 70000)
-        self.duration = 15000  # Czas trwania efektu po podniesieniu
-        self.start = 0
-        self.active = False
+        super().__init__(game, pos, "accuracy_booster", 70000)
+        self.duration = BOOSTERS_DURATIONS["accuracy_booster"]  # Czas trwania efektu po podniesieniu
 
     # Aktywacja boostera / Zmiana wartości celności gracza
     def apply_boost(self, value=BOOSTERS_VALUE["accuracy"]):
-        if self.start == 0:
-            self.active = True
-            self.game.boosters.remove(self)
-            self.game.active_boosters.add(self)
-            self.image.fill((0, 0, 0, 0))
-            self.start = pygame.time.get_ticks()
-        PLAYER_VALUES["ACCURACY"] += value
+        if super().apply_boost():
+            PLAYER_VALUES["ACCURACY"] += value
 
-    # Sprawdzanie, czy jego czas działania upłynął | aktualizacja pozycji i rysowanie (jeśli gracz nie podniósł)
-    def update(self):
-        if self.active:
-            now = pygame.time.get_ticks()
-            if now - self.start > self.duration:
-                self.apply_boost(-BOOSTERS_VALUE["accuracy"])
-                self.kill()
-        else:
-            main_stage_position = self.game.get_main_stage_position()
-            self.rect.x = self.position.x + main_stage_position.x
-            self.rect.y = self.position.y + main_stage_position.y
-
-            if self.frame == ANIM[self.name][2]:
-                self.frame = 0
-
-            self.draw(self.frame)
+    def disapply_boost(self, value=BOOSTERS_VALUE["accuracy"]):
+        PLAYER_VALUES["ACCURACY"] -= value

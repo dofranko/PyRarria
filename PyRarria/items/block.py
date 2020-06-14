@@ -35,7 +35,7 @@ class Block(Item):
         Item.scale(self, BLOCK_SIZE)
         mouse_pos = vector(mouse_pos[0], mouse_pos[1])
         if math.hypot(mouse_pos.x - player.rect.x, mouse_pos.y - player.rect.y) <= self.range:
-            position = vector(player.position.x, player.position.y) + mouse_pos - vector(WIDTH / 2, HEIGHT / 2)
+            position = Item.get_mouse_position_on_map(player, mouse_pos)
             blok_pos = Item.cursor_to_grid(position.x, position.y)
             if self.can_place(blok_pos) and not self.player_collide(blok_pos, player):
                 self.position = vector(blok_pos)
@@ -68,7 +68,7 @@ class Block(Item):
             return
 
         stan = 0
-        if 1 < self.hp <= self.max_hp / 3:
+        if 0 < self.hp <= self.max_hp / 3:
             stan = 3
         elif self.max_hp / 3 < self.hp <= self.max_hp * (2 / 3):
             stan = 2

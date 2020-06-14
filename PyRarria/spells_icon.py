@@ -40,7 +40,7 @@ class Spells:
         self.flag_key = False  # flaga czy key został wciśnięty
         self.last_key = 0  # analogicznie 7 8 9 0
         # tworzenie obrazków zaklęć
-        for i, name in enumerate(self.name_spells):
+        for name in self.name_spells:
             image = pygame.image.load(IMAGES_LIST[name]).convert_alpha()
             image = pygame.transform.scale(image, (30, 30))
             self.spells.append(image)

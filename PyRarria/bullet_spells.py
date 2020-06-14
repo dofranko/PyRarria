@@ -5,6 +5,12 @@ from spritesheet import *
 from items.item import *
 
 
+SPELL_SPEED = {
+    "fireball": 3,
+    "frostbullet": 3,
+}
+
+
 class Explosion(pygame.sprite.Sprite):
     def __init__(self, game, pos):
         pygame.sprite.Sprite.__init__(self)
@@ -37,22 +43,25 @@ class Explosion(pygame.sprite.Sprite):
 class BulletSpell(pygame.sprite.Sprite):
     """Super class for spells"""
 
-    def __init__(self, game, name, damage):
+    def __init__(self, game, pos, name, damage, speed_y, direction):
         self.groups = game.magics
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.name = name
+        self.position = pos
         self.damage = damage + PLAYER_VALUES["DAMAGE"]
+        self.speed_y = speed_y
+        self.start = pygame.time.get_ticks()
+        self.direction = direction
 
     def check_collision(self):
-        # Detekcja kolizji z przeciwnikami
+        """Check collision with creatures and environment"""
         hits = pygame.sprite.spritecollide(self, self.game.all_creatures, False)
         if hits:
             for hit in hits:
                 hit.hit(self, self.damage)
             self.explode()
 
-        # Detekcja kolizji ze środowiskiem
         hits = pygame.sprite.spritecollide(self, Item.get_neighbours(self.position, (5, 5), self.game.grid), False)
         if hits:
             self.explode()
@@ -61,11 +70,27 @@ class BulletSpell(pygame.sprite.Sprite):
         """Make explosion after colliding with object (should override)"""
         self.kill()
 
+    def update(self):
+        now = pygame.time.get_ticks()
+        if now - self.start > self.duration:
+            self.kill()
+
+        main_stage_position = self.game.get_main_stage_position()
+        self.rect.x = self.position.x + main_stage_position.x
+        self.rect.x += self.speed_x * self.direction
+        self.rect.y = self.position.y + main_stage_position.y
+        self.rect.y += self.speed_y
+        self.position.y += self.speed_y
+        self.position.x += self.speed_x * self.direction
+
+        self.draw(self.frame)
+        self.check_collision()
+
 
 # Klasa zaklęcia fireball, czyli lecący ognisty pocisk
-class Fireball(BulletSpell):
+class FireBall(BulletSpell):
     def __init__(self, game, pos, speed_y, direction):
-        super().__init__(game, "fireball", 50)
+        super().__init__(game, pos, "fireball", SPELL_VALUE["fireball"], speed_y, direction)
         if direction == 1:
             self.sheet = SpriteSheet(SPELL_SHEETS["fireball_right"], 8, 8, 64)
         else:
@@ -73,14 +98,9 @@ class Fireball(BulletSpell):
 
         self.image = pygame.Surface((self.sheet.cell_width, self.sheet.cell_height), pygame.SRCALPHA).convert_alpha()
         self.frame = random.randint(0, 63)
-        self.position = pos
         self.rect = self.image.get_rect()
-        self.speed_x = 3
-        self.speed_y = speed_y
-        self.accuracy = 0.95
-        self.direction = direction
-        self.duration = 4000
-        self.start = pygame.time.get_ticks()
+        self.speed_x = SPELL_SPEED["fireball"]
+        self.duration = SPELL_DURATION["fireball"]
 
     # Rysowanie kolejnej klatki tego efektu
     def draw(self, cell_index):
@@ -90,23 +110,9 @@ class Fireball(BulletSpell):
 
     # Sprawdzanie czy czas trwania upłynął, aktualizacja pozycji
     def update(self):
-        now = pygame.time.get_ticks()
-        if now - self.start > self.duration:
-            self.kill()
-
-        main_stage_position = self.game.get_main_stage_position()
-        self.rect.x = self.position.x + main_stage_position.x
-        self.rect.y = self.position.y + main_stage_position.y
-        self.position.x += self.speed_x * self.direction
-        self.rect.x += self.speed_x * self.direction
-        self.position.y += self.speed_y
-        self.rect.y += self.speed_y
-
         if self.frame == 64:
             self.frame = 0
-
-        self.draw(self.frame)
-        self.check_collision()
+        super().update()
 
     def explode(self):
         vect = pygame.math.Vector2(self.position.x, self.position.y)
@@ -124,22 +130,17 @@ class Fireball(BulletSpell):
 # Klasa zaklęcia frostbullet, czyli lecący lodowy pocisk
 class FrostBullet(BulletSpell):
     def __init__(self, game, pos, speed_y, direction):
-        super().__init__(game, "frostbullet", 50)
+        super().__init__(game, pos, "frostbullet", SPELL_VALUE["frostbullet"], speed_y, direction)
         if direction == 1:
             self.sheet = SpriteSheet(SPELL_SHEETS["frostbullet_right"], 8, 1, 8)
         else:
             self.sheet = SpriteSheet(SPELL_SHEETS["frostbullet_left"], 8, 1, 8)
 
         self.image = pygame.Surface((self.sheet.cell_width, self.sheet.cell_height), pygame.SRCALPHA).convert_alpha()
-        self.position = pos
         self.rect = self.image.get_rect()
         self.rect.center = pos
-        self.speed_x = 3
-        self.speed_y = speed_y
-        self.accuracy = 0.95
-        self.direction = direction
-        self.duration = 3000
-        self.start = pygame.time.get_ticks()
+        self.speed_x = SPELL_SPEED["frostbullet"]
+        self.duration = SPELL_DURATION["frostbullet"]
         self.frame = 0
 
     # Rysowanie kolejnej klatki tego efektu
@@ -150,20 +151,12 @@ class FrostBullet(BulletSpell):
 
     # Sprawdzanie, czy czas trwania upłynął, aktualizacja pozycji
     def update(self):
-        now = pygame.time.get_ticks()
-        if now - self.start > self.duration:
-            self.kill()
-
-        main_stage_position = self.game.get_main_stage_position()
-        self.rect.x = self.position.x + main_stage_position.x
-        self.rect.y = self.position.y + main_stage_position.y
-        self.position.x += self.speed_x * self.direction
-        self.rect.x += self.speed_x * self.direction
-        self.position.y += self.speed_y
-        self.rect.y += self.speed_y
-
         if self.frame == 8:
             self.frame = 0
+        super().update()
 
-        self.draw(self.frame)
-        self.check_collision()
+    def explode(self):
+        self.game.creatures_engine.freeze(
+            self.position, SPELL_DURATION["frostbullet_freeze"], SPELL_VALUE["frostbullet_range"]
+        )
+        self.kill()

@@ -29,16 +29,20 @@ PLAYER_VALUES = {"DAMAGE": 0, "DEFENCE": 0, "MANA_REDUCTION": 0, "ACCURACY": 1, 
 # Health/Mana bar properties
 HEART_VALUE = 195
 STAR_VALUE = 195
-HEALTH_RECOVERY_VALUE = 0.2
-MANA_RECOVERY_VALUE = 0.2
+HEALTH_RECOVERY_VALUE = 0.5
+MANA_RECOVERY_VALUE = 0.5
 MAX_HEALTH = 20 * HEART_VALUE
 MIN_HEALTH = 5 * HEART_VALUE
 MAX_MANA = 20 * STAR_VALUE
 MIN_MANA = 5 * STAR_VALUE
 
+# Terrain properties
+MAP_WIDTH = 13000
 BLOCK_SIZE = 50
 BLOCK_RENDER_DISTANCE = (10, 10)
+NON_COLLISION_OBJECTS = []
 
+# Images
 IMAGES_LIST = {
     # Player
     "player": IMAGES + "player2.png",
@@ -137,6 +141,39 @@ SPELL_COST = {
     "freeze": 150,
 }
 
+SPELL_DURATION = {
+    "smallfire": 4000,
+    "smallthunder": 720,
+    "boulder": 1500,
+    "freeze": 15000,
+    "magicshield": 60000,
+    "fireball": 4000,
+    "frostbullet": 3000,
+    "frostbullet_freeze": 5000,
+}
+
+SPELL_VALUE = {
+    "selfheal": 200,
+    "magicshield": 10,
+    "bard": 1.0,
+    "fireball": 50,
+    "frostbullet": 30,
+    "frostbullet_range": 70,
+    "freeze_range": 200,
+}
+
+SPELLS_NORMAL_NAME = {
+    "fireball": "FireBall",
+    "smallfire": "SmallFire",
+    "frostbullet": "FrostBullet",
+    "smallthunder": "SmallThunder",
+    "boulder": "Boulder",
+    "magicshield": "MagicShield",
+    "selfheal": "SelfHeal",
+    "bard": "Bard",
+    "freeze": "Freeze",
+}
+
 SPELL_SHEETS = {
     "fireball_right": IMAGES + "fireball_right_54x26.png",
     "fireball_left": IMAGES + "fireball_left_54x26.png",
@@ -154,22 +191,7 @@ SPELL_SHEETS = {
     "collision_explosion": IMAGES + "collision_explosion_100x60.png",
 }
 
-# Starting blocks
-# PLATFORM_LIST = [
-#     (0, HEIGHT - 40, WIDTH, 40),
-#     (WIDTH / 2 - 50, HEIGHT * 3 / 4, 500, 20),
-#     (125, HEIGHT - 350, 600, 20),
-#     (350, 200, 100, 30),
-#     (1200, 520, 20, 20),
-#     (1300, 530, 20, 20),
-#     (1000, 490, 40, 10),
-#     (1042, 490, 40, 10),
-#     (1084, 490, 40, 10),
-#     (175, 100, 500, 20),
-#     (450, HEIGHT - 50, 10000, 5),
-# ]
-
-# define colors
+# define some colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
@@ -184,25 +206,30 @@ GRAY = (125, 125, 125)
 BOOSTERS_SHEETS = {
     "health": IMAGES + "heart.png",
     "mana": IMAGES + "mana.png",
-    "boost_damage": IMAGES + "booster_damage.png",
-    "boost_defense": IMAGES + "booster_defense.png",
-    "boost_player_speed": IMAGES + "booster_player_speed.png",
-    "boost_accuracy": IMAGES + "booster_accuracy.png",
+    "damage_booster": IMAGES + "booster_damage.png",
+    "defense_booster": IMAGES + "booster_defense.png",
+    "speed_booster": IMAGES + "booster_player_speed.png",
+    "accuracy_booster": IMAGES + "booster_accuracy.png",
+}
+
+BOOSTERS_DURATIONS = {
+    "damage_booster": 10000,
+    "defense_booster": 15000,
+    "speed_booster": 10000,
+    "accuracy_booster": 15000,
 }
 
 # ustawienia ilości klatek w animacji boosterów
 ANIM = {
-    "boost_damage": [8, 8, 61],
-    "boost_defense": [8, 8, 61],
-    "boost_player_speed": [10, 10, 91],
-    "boost_accuracy": [8, 8, 61],
+    "damage_booster": [8, 8, 61],
+    "defense_booster": [8, 8, 61],
+    "speed_booster": [10, 10, 91],
+    "accuracy_booster": [8, 8, 61],
 }
 
 # Ustawienie wartości zebranych boosterów
-BOOSTERS_VALUE = {"damage": 10, "defense": 20, "player_speed": 5, "accuracy": 0.05}
+BOOSTERS_VALUE = {"damage": 10, "defense": 20, "speed": 1, "accuracy": 0.05}
 
 # Ustawienia oscylacji boostera
 BOB_RANGE = 20
 BOB_SPEED = 0.8
-
-NON_COLLISION_OBJECTS = []

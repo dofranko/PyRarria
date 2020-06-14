@@ -15,7 +15,6 @@ from items.item import *
 from random import choice
 
 BARD_RANGE = 120
-FREEZE_RANGE = 120
 SPAWN_RANGE = 650
 SPAWN_HEIGHT = 100
 
@@ -164,11 +163,10 @@ class CreaturesEngine:
         dx, dy = self.game.get_main_stage_position()
         self.map_position.set(dx - self.map_position_init.x, dy - self.map_position_init.y)
 
-    def freeze(self, freeze_duration):
-        # freeze_duration is in range(50, ...)
+    def freeze(self, position, freeze_duration, freeze_range):
         for creature in self.all_creatures:
-            distance = (self.player.position - creature.position).mag()
-            if distance < FREEZE_RANGE:
+            distance = (position - creature.position).mag()
+            if distance < freeze_range:
                 creature.freeze_count = freeze_duration
 
     def bard(self, bard_power):

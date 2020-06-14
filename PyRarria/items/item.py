@@ -3,9 +3,7 @@ import pygame
 
 from os import path
 from settings import *
-
-# from items.block import *
-vector = pygame.math.Vector2
+from creatures.vector import PVector
 
 
 class Item(pygame.sprite.Sprite):
@@ -23,9 +21,9 @@ class Item(pygame.sprite.Sprite):
 
         self.game = game
         self.damage = 5
-        self.env_damage = 3
+        self.env_damage = 1
         self.durability = 100000
-        self.range = 20
+        self.range = 60
 
         self.vel_y = 0
         self.acc_y = 0
@@ -36,7 +34,7 @@ class Item(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-        self.position = vector(x, y)
+        self.position = PVector(x, y)
 
     def check_collision(self):
         """Check collision (only to down)"""
@@ -110,9 +108,9 @@ class Item(pygame.sprite.Sprite):
                     damaged = True
                     break
             else:
-                position = vector(player.position.x, player.position.y) + mouse_pos - vector(WIDTH / 2, HEIGHT / 2)
-                blok_pos = vector(*Item.cursor_to_grid(position.x, position.y))
-                for block in Item.get_neighbours(blok_pos, (3, 3), self.game.grid, do_collision=False):
+                position = Item.get_mouse_position_on_map(player, mouse_pos)
+                blok_pos = PVector(*Item.cursor_to_grid(position.x, position.y))
+                for block in Item.get_neighbours(blok_pos, (3, 3), self.game.grid, noncollidable_objects=True):
                     if block.rect.collidepoint(mouse_pos):
                         block.hit(self.env_damage)
                         damaged = True
@@ -129,7 +127,7 @@ class Item(pygame.sprite.Sprite):
         return Item.items_loaded_images[name]
 
     @staticmethod
-    def get_neighbours(start_point, depth, grid, do_collision=True):
+    def get_neighbours(start_point, depth, grid, noncollidable_objects=False):
         pos = Item.cursor_to_grid(start_point.x, start_point.y)
         neighbours = []
         for i in range(-depth[0], depth[0] + 1):
@@ -140,7 +138,7 @@ class Item(pygame.sprite.Sprite):
                     continue
                 if blok:
                     neighbours.append(blok)
-        if do_collision:
+        if not noncollidable_objects:
             return [bl for bl in neighbours if bl.name not in NON_COLLISION_OBJECTS]
         return neighbours
 
@@ -159,3 +157,8 @@ class Item(pygame.sprite.Sprite):
         to_scale_object.rect = to_scale_object.image.get_rect()
         to_scale_object.rect.x = X
         to_scale_object.rect.y = Y
+
+    @staticmethod
+    def get_mouse_position_on_map(player, mouse_pos):
+        mouse_pos = PVector(mouse_pos[0], mouse_pos[1])
+        return PVector(player.position.x, player.position.y) + mouse_pos - PVector(WIDTH / 2, HEIGHT / 2)

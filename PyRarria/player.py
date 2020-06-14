@@ -74,11 +74,6 @@ class Player(pygame.sprite.Sprite):
     def _get_close_blocks(self):
         return Item.get_neighbours(self.position, (5, 5), self.game.grid)
 
-    # def _get_close_blocks1(self):
-    #    return [block for block in Item.get_neighbours(self.position, (5, 5), self.game.grid) if block.name not in non_colision1]
-    # def _get_close_blocks2(self):
-    #    return [block for block in Item.get_neighbours(self.position, (5, 5), self.game.grid) if block.name not in non_colision2]
-
     # Sprawdzenie kolizji (stania) od góry platform
     def check_collision_vertically(self):
         """Check collistion up/down and move if collided
@@ -137,23 +132,10 @@ class Player(pygame.sprite.Sprite):
     # Sprawdzanie kolizji boosterów (prostokątów gracza i ich)
     def check_collision_boosters(self):
         """Check if player collected boosters"""
-        hits = pygame.sprite.spritecollide(self, self.game.boosters, False)  # , pygame.sprite.collide_mask)
+        hits = pygame.sprite.spritecollide(self, self.game.boosters, False)
         for hit in hits:
-            kill = False
-            if hit.name == "health":
-                if self.health_bar.add_heart():
-                    kill = True
-            elif hit.name == "mana":
-                if self.mana_bar.add_star():
-                    kill = True
-            elif hit.name in ["boost_damage", "boost_defense", "boost_player_speed", "boost_accuracy"]:
-                # Sprawdzanie prawdziwej kolizji (mask collision)
-                clip = self.rect.clip(hit.rect)
-                collision = hit.check_true_collision(clip, self.rect, self.mask)
-                if collision:
-                    hit.apply_boost()
-            if kill:
-                hit.kill()
+            if pygame.sprite.collide_mask(self, hit):
+                hit.apply_boost()
 
     def handle_mouse(self, event):
         self.handle_mouse_cast_spell(event)
@@ -175,14 +157,8 @@ class Player(pygame.sprite.Sprite):
                         if self.mana_bar.decrease_mana(SPELL_COST[self.spell_key] - PLAYER_VALUES["MANA_REDUCTION"]):
                             self.last_cast[self.spell_key] = pygame.time.get_ticks()
                             cur_pos = vector(event.pos[0], event.pos[1])
-                            if self.spell_key == "smallthunder":
-                                thrown_spell = SmallThunder(self.game, cur_pos)
-                            elif self.spell_key == "smallfire":
-                                thrown_spell = SmallFire(self.game, cur_pos)
-                            elif self.spell_key == "boulder":
-                                thrown_spell = Boulder(self.game, cur_pos)
-                            elif self.spell_key == "freeze":
-                                thrown_spell = Freeze(self.game, cur_pos)
+                            # for ex Freeze(self.game, cur_pos)
+                            thrown_spell = eval(f"{SPELLS_NORMAL_NAME[self.spell_key]}(self.game, cur_pos)")
                             sprite.hit(self, thrown_spell.damage)
                             self.spells.chosen = None
                             self.spell_cast_ready = False
@@ -257,8 +233,12 @@ class Player(pygame.sprite.Sprite):
 
     def key_actions(self, can_jump):
         """Handle keys pressed"""
-        # Zmiana wektorów przyspieszenia gracza, gdy wciśnięte przyciski poruszania
         keys = pygame.key.get_pressed()
+        self.make_moves(keys, can_jump)
+        self.skill_key_actions(keys)
+
+    def make_moves(self, keys, can_jump):
+        # Zmiana wektorów przyspieszenia gracza, gdy wciśnięte przyciski poruszania
         if keys[pygame.K_LEFT]:
             self.facing = -1
             self.acc.x = -PLAYER_MOVE["PLAYER_ACC"]
@@ -284,6 +264,7 @@ class Player(pygame.sprite.Sprite):
         else:
             self.q_trigger = False
 
+    def skill_key_actions(self, keys):
         # Wystrzeliwanie magicznych pocisków, gdy wciśnięty ctrl
         if keys[pygame.K_LCTRL]:
             if self.spell_ctrl is not None:
@@ -300,10 +281,8 @@ class Player(pygame.sprite.Sprite):
                         # Prędkość pionowa pocisku po wystrzeleniu
                         value = PLAYER_VALUES["ACCURACY"]
                         speed_y = random.uniform(-0.2 / value, 0.2 / value)
-                        if self.spell_ctrl == "fireball":
-                            Fireball(self.game, cur_pos, speed_y, self.facing)
-                        elif self.spell_ctrl == "frostbullet":
-                            FrostBullet(self.game, cur_pos, speed_y, self.facing)
+                        # For ex. FireBall(self.game, cur_pos, speed_y, self.facing)
+                        eval(f"{SPELLS_NORMAL_NAME[self.spell_ctrl]}(self.game, cur_pos, speed_y, self.facing)")
 
         # zmiana ataku podstawowego, gdy wciśnięty shift
         elif keys[pygame.K_LSHIFT]:
@@ -348,12 +327,7 @@ class Player(pygame.sprite.Sprite):
                     self.last_cast[self.spell_key] = now_key
                     self.spells.flag_key = True
                     self.spells.last_key = now_key
-                    if self.spell_key == "selfheal":
-                        SelfHeal(self.game)
-                    elif self.spell_key == "magicshield":
-                        MagicShield(self.game)
-                    else:
-                        Bard(self.game)
+                    eval(f"{SPELLS_NORMAL_NAME[self.spell_key]}(self.game)")
                 # Skille rzucane ręcznie
                 else:
                     self.spell_cast_ready = True
