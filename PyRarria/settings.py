@@ -38,8 +38,11 @@ MIN_MANA = 5 * STAR_VALUE
 
 # Terrain properties
 MAP_WIDTH = 13000
-BLOCK_SIZE = 50
-BLOCK_RENDER_DISTANCE = (10, 10)
+BLOCK_SIZE = 24
+print(int(WIDTH/BLOCK_SIZE),end="dede")
+print(int(HEIGHT/BLOCK_SIZE),end="dudu")
+BLOCK_RENDER_DISTANCE = (int(WIDTH/BLOCK_SIZE), int(HEIGHT/BLOCK_SIZE))
+#BLOCK_RENDER_DISTANCE = (100,100)
 NON_COLLISION_OBJECTS = []
 
 # Images
@@ -87,17 +90,17 @@ IMAGES_LIST = {
     "black_cat_boots": ARMOUR + "black_cat_boots.png",
     "fire_boots": ARMOUR + "fire_boots.png",
     # Blocks
-    "dirt": TERRAIN + "dirt2.png",
-    "stone": TERRAIN + "stone2.png",
+    "dirt": TERRAIN + "dirt.png",
+    "stone": TERRAIN + "stone.png",
     "clump": TERRAIN + "clump2.png",
-    "grass": TERRAIN + "grass2.png",
+    "grass": TERRAIN + "grass.png",
     "iron": TERRAIN + "iron2.png",
     "copper": TERRAIN + "copper2.png",
     "diamond1": TERRAIN + "diamond12.png",
     "diamond2": TERRAIN + "diamond22.png",
     "diamond3": TERRAIN + "diamond32.png",
-    "wood": TERRAIN + "wood2.png",
-    "leaf": TERRAIN + "leaf2.png",
+    "wood": TERRAIN + "wood.png",
+    "leaf": TERRAIN + "leaves.png",
     "damaged_1": TERRAIN + "damaged_1.png",
     "damaged_2": TERRAIN + "damaged_2.png",
     "damaged_3": TERRAIN + "damaged_3.png",

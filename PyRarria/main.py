@@ -35,8 +35,8 @@ class Game:
     def new_game(self):
         """Start new game"""
         # start a new game
-        self.grid = {}
         generuj()
+        self.grid = {}
 
         # self.trees = pygame.sprite.Group()
         self.boosters = pygame.sprite.Group()
@@ -204,7 +204,7 @@ class Game:
             alpha_surface.set_alpha(alpha)
             self.screen.blit(alpha_surface, (0, 0))
             font = pygame.font.SysFont("dejavusans", 3 * alpha, 0, 10)
-            loser = font.render("YOU LOST", True, (255, 0, 0))
+            loser = font.render("D u p a", True, (255, 0, 0))
             self.screen.blit(loser, ((WIDTH / 2) - 6 * alpha, (HEIGHT / 2) - 10 * alpha))
             pygame.display.flip()  # nie zadzieraj z tym przeciwnikiem
             pygame.time.delay(50)
@@ -217,13 +217,13 @@ class Game:
             self.clock.tick(FPS)
             if counter < 40:
                 counter += 1
-                loser = font.render("Press enter to play again or q to quit the game", True, (0, 0, 0))
+                loser = font.render("Press enter to play again or q żeby wyjść z gry", True, (0, 0, 0))
             else:
                 if counter < 150:
                     counter += 1
                 else:
                     counter = 0
-                loser = font.render("Press enter to play again or q to quit the game", True, (255, 0, 0))
+                loser = font.render("Press enter to play again or q żeby wyjść z gry", True, (255, 0, 0))
             self.screen.blit(loser, (WIDTH / 7, HEIGHT - 100))
             pygame.display.flip()
             keys = pygame.key.get_pressed()
