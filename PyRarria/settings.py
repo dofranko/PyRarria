@@ -39,16 +39,14 @@ MIN_MANA = 5 * STAR_VALUE
 # Terrain properties
 MAP_WIDTH = 13000
 BLOCK_SIZE = 24
-print(int(WIDTH/BLOCK_SIZE),end="dede")
-print(int(HEIGHT/BLOCK_SIZE),end="dudu")
-BLOCK_RENDER_DISTANCE = (int(WIDTH/BLOCK_SIZE), int(HEIGHT/BLOCK_SIZE))
-#BLOCK_RENDER_DISTANCE = (100,100)
+BLOCK_RENDER_DISTANCE = (int((WIDTH / BLOCK_SIZE) / 2) + 1, int((HEIGHT / BLOCK_SIZE) / 2) + 1)
+# BLOCK_RENDER_DISTANCE = (15,15)
 NON_COLLISION_OBJECTS = []
 
 # Images
 IMAGES_LIST = {
     # Player
-    "player": IMAGES + "player2.png",
+    "player": IMAGES + "player.png",
     # GUI
     "heart": IMAGES + "heart.png",
     "mana": IMAGES + "mana.png",
@@ -91,16 +89,26 @@ IMAGES_LIST = {
     "fire_boots": ARMOUR + "fire_boots.png",
     # Blocks
     "dirt": TERRAIN + "dirt.png",
+    "bone_dirt": TERRAIN + "bone_dirt.png",
+    "flint_dirt": TERRAIN + "flint_dirt.png",
     "stone": TERRAIN + "stone.png",
-    "clump": TERRAIN + "clump2.png",
     "grass": TERRAIN + "grass.png",
-    "iron": TERRAIN + "iron2.png",
-    "copper": TERRAIN + "copper2.png",
+    "mushroom_brown": TERRAIN + "mushroom_brown.png",
+    "mushroom_red": TERRAIN + "mushroom_red.png",
+    "grass_dirt": TERRAIN + "grass_dirt.png",
+    "tall_grass": TERRAIN + "tall_grass.png",
+    "iron": TERRAIN + "iron_ore.png",
+    "copper": TERRAIN + "copper_ore.png",
+    "coal_ore": TERRAIN + "coal_ore.png",
+    "chrysoprase_clay": TERRAIN + "chrysoprase_clay.png",
+    "clay": TERRAIN + "clay.png",
     "diamond1": TERRAIN + "diamond12.png",
     "diamond2": TERRAIN + "diamond22.png",
     "diamond3": TERRAIN + "diamond32.png",
-    "wood": TERRAIN + "wood.png",
-    "leaf": TERRAIN + "leaves.png",
+    "log": TERRAIN + "log.png",
+    "log_hole": TERRAIN + "log_hole.png",
+    "leaves": TERRAIN + "leaves.png",
+    "apple_leaves": TERRAIN + "apple_leaves.png",
     "damaged_1": TERRAIN + "damaged_1.png",
     "damaged_2": TERRAIN + "damaged_2.png",
     "damaged_3": TERRAIN + "damaged_3.png",
@@ -203,7 +211,6 @@ BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
 LIGHTBLUE = (0, 155, 155)
 GRAY = (125, 125, 125)
-
 
 # Boosters
 BOOSTERS_SHEETS = {

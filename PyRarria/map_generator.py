@@ -8,25 +8,37 @@ copper = []
 iron = []
 tree = []
 pas_rudy = []
-wood = []
-leaf = []
+log = []
+log_hole = []
+leaves = []
 diamond1 = []
 diamond2 = []
 diamond3 = []
 glass = []
 stone = []
+bone_dirt = []
+flint_dirt = []
 dirt = []
-grass = []
+grass_dirt = []
 cave_seed = []
-clump = []
+grass = []
+tall_grass = []
+apple_leaves = []
+coal_ore = []
+mushroom_brown = []
+mushroom_red = []
+chrysoprase_clay = []
+clay = []
 map_width = 256
 map_height = 128
 
-non_colision1 = ["wood", "leaf"]
-non_colision2 = ["clump"]
-NON_COLLISION_OBJECTS.append("clump")
-NON_COLLISION_OBJECTS.append("leaf")
-NON_COLLISION_OBJECTS.append("wood")
+non_colision1 = ["log", "leaves"]
+non_colision2 = ["grass"]
+NON_COLLISION_OBJECTS.append("grass")
+NON_COLLISION_OBJECTS.append("leaves")
+NON_COLLISION_OBJECTS.append("log")
+NON_COLLISION_OBJECTS.append("log_hole")
+NON_COLLISION_OBJECTS.append("apple_leaves")
 
 
 def cave_generator(where, depth1, depth2, propability, go_d, go_l, go_r):
@@ -77,13 +89,22 @@ def remove(x, y):  #
         dirt.remove(usun)
     if usun in stone:
         stone.remove(usun)
-    if usun in grass:
-        grass.remove(usun)
+    if usun in grass_dirt:
+        grass_dirt.remove(usun)
+    if usun in leaves:
+        leaves.remove(usun)
+    if usun in bone_dirt:
+        bone_dirt.remove(usun)
+    if usun in flint_dirt:
+        flint_dirt.remove(usun)
+    if usun in clay:
+        clay.remove(usun)
+    if usun in chrysoprase_clay:
+        chrysoprase_clay.remove(usun)
 
 
-def sasiad(
-        L, prop
-):  # funkcja pobierająca listę kolcków oraz prawdopodbieństwo dostawienia sąsiada z każdej strony każdego klocka na liście
+def sasiad(L,
+           prop):  # funkcja pobierająca listę kolcków oraz prawdopodbieństwo dostawienia sąsiada z każdej strony każdego klocka na liście
     list = []
     for i in L:
         tmp = i
@@ -113,7 +134,7 @@ def sasiad(
 
 def generuj():
     global ruda
-    global leaf
+    global leaves
 
     # generator powierzchni
 
@@ -159,42 +180,69 @@ def generuj():
                     H += 1
                     w = 1
         powierzchnia.append((W, H))
-        grass.append((W, H))
+        grass_dirt.append((W, H))
         for j in range(127):
             x = random.randint(5, 8)
+            y = random.randint(0, 99)
             if j < x:
-                dirt.append((W, H+j))  # generator ziemi
-            elif H+j < map_height:
-                stone.append((W, H+j))  # generator kamienia
+                if y < 2:
+                    bone_dirt.append((W, H + j))
+                elif 1 < y < 4:
+                    flint_dirt.append((W, H + j))
+                else:
+                    dirt.append((W, H + j))  # generator ziemi
+            elif H + j < map_height:
+                stone.append((W, H + j))  # generator kamienia
             else:
                 break
+    # generator gliny
 
+    for i in range(3):
+        x = random.randint(0, len(dirt) - 1)
+        x = [((dirt[x][0]), (dirt[x][1]))]
+
+        tmp = (sasiad(x, 90))
+        for j in range(5):
+            tmp = (sasiad(tmp, 90))
+            for k in tmp:
+                if k not in dirt:
+                    tmp.remove(k)
+        for j in tmp:
+            if j in dirt or j in flint_dirt or j in bone_dirt or j in stone:
+                remove(j[0], j[1])
+                clay.append(j)
+
+    for i in clay:
+        x = random.randint(0, 999)
+        if x < 18:
+            remove(i[0], i[1])
+            chrysoprase_clay.append((i[0], i[1]))
 
     # generator RUDY
     tmpruda = []
-    for i in range(200):
-        H = random.randrange(60, 127)  # generowanie rudy tylko na określonej wysokości
+    for i in range(100):
+        H = random.randrange(powierzchnia[H][1] + 20, 127)  # generowanie rudy tylko na określonej wysokości
         W = random.randrange(0, map_width)
         tmpruda.append((W, H,))
         tmpruda = sasiad(tmpruda, 70)
         tmpruda = sasiad(tmpruda, 60)
-        r = random.randint(0, 4)
+        r = random.randint(0, 99)
         for j in tmpruda:
             if (j[0], j[1],) in stone:
                 remove(j[0], j[1])
-                if r > 1:
+                if r < 15:
                     iron.append((j[0], j[1]))
-                else:
+                elif 14 < r < 40:
                     copper.append((j[0], j[1]))
+                else:
+                    coal_ore.append((j[0], j[1]))
         tmpruda = []
 
     # generator jaskiń
-    for i in range(9):  # ile jaskiń
-        where = powierzchnia[random.randint(0, len(powierzchnia) - 1)]
-        cave_generator(where, 50, 70, 5, 70, 33,
-                       33)  # (TUPLE Z KOORDYNATORAMI POCZATKU JASKINI, MIN GŁĘBOKOŚĆ, MAX GŁĘBOKOŚĆ, SZANSA NA ODNOGĘ, SZANSA NA KLOCEK W DÓŁ/LEWO/PRAWO
-    size_machine(40, 20,
-                 5)  # powiększanie jaskini (moc powiększania, szansa na średnie powiększenie, szansa na duże powiększenie)
+    # for i in range(6):  # ile jaskiń
+    #    where = powierzchnia[random.randint(0, len(powierzchnia) - 1)]
+    #    cave_generator(where, 50, 70, 5, 70, 33, 33)  # (TUPLE Z KOORDYNATORAMI POCZATKU JASKINI, MIN GŁĘBOKOŚĆ, MAX GŁĘBOKOŚĆ, SZANSA NA ODNOGĘ, SZANSA NA KLOCEK W DÓŁ/LEWO/PRAWO
+    # size_machine(40, 20, 5)  # powiększanie jaskini (moc powiększania, szansa na średnie powiększenie, szansa na duże powiększenie)
 
     # generator chmur
     tmpcloud = []
@@ -212,23 +260,28 @@ def generuj():
     # generator drzew (pień)
     banned = []
     for i in range(20):
-        where = grass[random.randint(0, len(grass) - 1)]
+        where = grass_dirt[random.randint(0, len(grass_dirt) - 1)]
         W = where[0]
         H = where[1] - 1
         height = random.randint(3, 5)
         if W not in banned:
             for h in range(height):
-                wood.append((W, H))
+                x = random.randint(0, 99)
+                if x < 20 and h > 1:
+                    log_hole.append((W, H))
+                else:
+                    log.append((W, H))
                 H -= 1
                 if h + 1 == height:
-                    leaf.append((W, H,))
+                    leaves.append((W, H,))
+
         banned.append(where[0])
         banned.append(where[0] - 1)
         banned.append(where[0] + 1)
 
     # generator drzew (liście)
-    tmpleaf = []
-    for l in leaf:
+    tmpleaves = []
+    for l in leaves:
         for w in range(-2, 3):
             for h in range(-1, 3):
                 if (
@@ -237,20 +290,33 @@ def generuj():
                         and (w != -2 or h != 2)
                         and (w != 2 or h != 2)
                         and 256 > (l[0] + w) > -1
-                        and (l[0] + w, l[1] + h) not in wood
+                        and (l[0] + w, l[1] + h) not in log
+                        and (l[0] + w, l[1] + h) not in log_hole
                 ):
-                    tmpleaf.append((l[0] + w, l[1] + h))
-    leaf = tmpleaf
+                    tmpleaves.append((l[0] + w, l[1] + h))
+    leaves = tmpleaves
+    for i in leaves:
+        x = random.randint(1, 5)
+        if x == 1:
+            leaves.remove(i)
+            apple_leaves.append(i)
 
     # generator kępek
-    for i in grass:
+    for i in grass_dirt:
         x = random.randint(1, 10)
-        if x < 7 and ((i[0], i[1] - 1) not in wood):
-            clump.append((i[0], i[1] - 1))
-
+        if x < 8 and ((i[0], i[1] - 1) not in log) and ((i[0], i[1] - 1) not in log_hole):
+            x = random.randint(0, 99)
+            if x < 45:
+                grass.append((i[0], i[1] - 1))
+            elif 44 < x < 90:
+                tall_grass.append((i[0], i[1] - 1))
+            elif 89 < x < 95:
+                mushroom_brown.append((i[0], i[1] - 1))
+            else:
+                mushroom_red.append((i[0], i[1] - 1))
     # generator diamentów
     for i in range(200):
-        H = random.randrange(80, 127)  # generowanie diamentów tylko na określonej wysokości
+        H = random.randrange(80, 128)  # generowanie diamentów tylko na określonej wysokości
         W = random.randrange(0, map_width)
         r = random.randint(0, 10)
         if (W, H) in stone:
@@ -275,6 +341,14 @@ def dirtlist():
     return dirt
 
 
+def bone_dirtlist():
+    return bone_dirt
+
+
+def flint_dirtlist():
+    return flint_dirt
+
+
 def diamond1list():
     return diamond1
 
@@ -285,6 +359,14 @@ def diamond2list():
 
 def diamond3list():
     return diamond3
+
+
+def chyrsoplase_claylist():
+    return chrysoprase_clay
+
+
+def claylist():
+    return clay
 
 
 def trees():
@@ -299,16 +381,40 @@ def copperlist():
     return copper
 
 
-def woodlist():
-    return wood
+def coal_orelist():
+    return coal_ore
 
 
-def leaflist():
-    return leaf
+def loglist():
+    return log
 
 
-def grasslist():
-    return grass
+def log_holelist():
+    return log_hole
+
+
+def leaveslist():
+    return leaves
+
+
+def appleleaveslist():
+    return apple_leaves
+
+
+def grass_dirtlist():
+    return grass_dirt
+
+
+def tall_grasslist():
+    return tall_grass
+
+
+def mushroom_redlist():
+    return mushroom_red
+
+
+def mushroom_brownlist():
+    return mushroom_brown
 
 
 def glasslist():
@@ -323,8 +429,8 @@ def stonelist():
     return stone
 
 
-def clumplist():
-    return clump
+def grasslist():
+    return grass
 
 
 def create_world(grid, items_factory):
@@ -332,8 +438,27 @@ def create_world(grid, items_factory):
         for j in range(-20, 300):
             grid[(i * BLOCK_SIZE, j * BLOCK_SIZE)] = None
 
-    block_list = [items_factory.create("dirt", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in dirtlist()]
-    for blok in block_list:
+    dirt_list = [items_factory.create("dirt", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in dirtlist()]
+    for blok in dirt_list:
+        grid[(blok.position.x, blok.position.y)] = blok
+
+    bone_dirt_list = [items_factory.create("bone_dirt", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
+                      bone_dirtlist()]
+    for blok in bone_dirt_list:
+        grid[(blok.position.x, blok.position.y)] = blok
+
+    flint_dirt_list = [items_factory.create("flint_dirt", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
+                       flint_dirtlist()]
+    for blok in flint_dirt_list:
+        grid[(blok.position.x, blok.position.y)] = blok
+
+    chrysoprase_clay_list = [items_factory.create("chrysoprase_clay", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for
+                             block in chyrsoplase_claylist()]
+    for blok in chrysoprase_clay_list:
+        grid[(blok.position.x, blok.position.y)] = blok
+
+    clay_list = [items_factory.create("clay", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in claylist()]
+    for blok in clay_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
     stone_list = [items_factory.create("stone", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in stonelist()]
@@ -344,17 +469,32 @@ def create_world(grid, items_factory):
     for blok in iron_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
+    mushroom_brown_list = [items_factory.create("mushroom_brown", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in mushroom_brownlist()]
+    for blok in mushroom_brown_list:
+        grid[(blok.position.x, blok.position.y)] = blok
+
+    mushroom_red_list = [items_factory.create("mushroom_red", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for
+                           block in mushroom_redlist()]
+    for blok in mushroom_red_list:
+        grid[(blok.position.x, blok.position.y)] = blok
+
+    coal_ore_list = [items_factory.create("coal_ore", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
+                     coal_orelist()]
+    for blok in coal_ore_list:
+        grid[(blok.position.x, blok.position.y)] = blok
+
     copper_list = [items_factory.create("copper", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
                    copperlist()]
     for blok in copper_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    wood_list = [items_factory.create("wood", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in woodlist()]
-    for blok in wood_list:
+    log_list = [items_factory.create("log", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in loglist()]
+    for blok in log_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    leaf_list = [items_factory.create("leaf", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in leaflist()]
-    for blok in leaf_list:
+    log_hole_list = [items_factory.create("log_hole", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
+                     log_holelist()]
+    for blok in log_hole_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
     diamond1_list = [items_factory.create("diamond1", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
@@ -367,7 +507,8 @@ def create_world(grid, items_factory):
     for blok in diamond2_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    diamond3_list = [items_factory.create("diamond3", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in diamond3list()]
+    diamond3_list = [items_factory.create("diamond3", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
+                     diamond3list()]
     for blok in diamond3_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
@@ -375,12 +516,28 @@ def create_world(grid, items_factory):
     for blok in cloud_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    clump_list = [items_factory.create("clump", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in clumplist()]
-    for blok in clump_list:
-        grid[(blok.position.x, blok.position.y)] = blok
-
     grass_list = [items_factory.create("grass", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in grasslist()]
     for blok in grass_list:
+        grid[(blok.position.x, blok.position.y)] = blok
+
+    grass_dirt_list = [items_factory.create("grass_dirt", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
+                       grass_dirtlist()]
+    for blok in grass_dirt_list:
+        grid[(blok.position.x, blok.position.y)] = blok
+
+    tall_grass_list = [items_factory.create("tall_grass", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
+                       tall_grasslist()]
+    for blok in tall_grass_list:
+        grid[(blok.position.x, blok.position.y)] = blok
+
+    leaves_list = [items_factory.create("leaves", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
+                   leaveslist()]
+    for blok in leaves_list:
+        grid[(blok.position.x, blok.position.y)] = blok
+
+    apple_leaves_list = [items_factory.create("apple_leaves", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
+                         appleleaveslist()]
+    for blok in apple_leaves_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
     glass_list = [items_factory.create("glass", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in glasslist()]

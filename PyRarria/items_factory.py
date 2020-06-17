@@ -76,22 +76,28 @@ class Factory:
     )
 
     ITEMS_DICT["dirt"] = ItemInfo("dirt", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
+    ITEMS_DICT["bone_dirt"] = ItemInfo("bone_dirt", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
+    ITEMS_DICT["flint_dirt"] = ItemInfo("flint_dirt", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
     ITEMS_DICT["stone"] = ItemInfo("stone", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
     ITEMS_DICT["grass"] = ItemInfo("grass", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
+    ITEMS_DICT["mushroom_brown"] = ItemInfo("mushroom_brown", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
+    ITEMS_DICT["mushroom_red"] = ItemInfo("mushroom_red", "Wszedzie jej pelno.", "block", -10,{"hp": 20, "probability": 0.5})
+    ITEMS_DICT["tall_grass"] = ItemInfo("tall_grass", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
     ITEMS_DICT["iron"] = ItemInfo("iron", "Wszedzie jej pelno.", "block", -10, {"hp": 30, "probability": 0.5})
+    ITEMS_DICT["coal_ore"] = ItemInfo("coal_ore", "Wszedzie jej pelno.", "block", -10, {"hp": 30, "probability": 0.5})
     ITEMS_DICT["copper"] = ItemInfo("copper", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
-    ITEMS_DICT["wood"] = ItemInfo("wood", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
-    ITEMS_DICT["leaf"] = ItemInfo("leaf", "Wszedzie jej pelno.", "block", -10, {"hp": 5, "probability": 0.5})
-    ITEMS_DICT["diamond1"] = ItemInfo(
-        "diamond1", "Najcenniejszy na świecie.", "block", -10, {"hp": 50, "probability": 0.5}
-    )
+    ITEMS_DICT["log"] = ItemInfo("log", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
+    ITEMS_DICT["log_hole"] = ItemInfo("log_hole", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
+    ITEMS_DICT["leaves"] = ItemInfo("leaves", "Wszedzie jej pelno.", "block", -10, {"hp": 5, "probability": 0.5})
+    ITEMS_DICT["apple_leaves"] = ItemInfo("apple_leaves", "Wszedzie jej pelno.", "block", -10, {"hp": 5, "probability": 0.5})
+    ITEMS_DICT["diamond1"] = ItemInfo("diamond1", "Najcenniejszy na świecie.", "block", -10, {"hp": 50, "probability": 0.5})
     ITEMS_DICT["diamond2"] = ItemInfo("diamond2", "Błyszczy się jak....", "block", -10, {"hp": 50, "probability": 0.5})
-    ITEMS_DICT["diamond3"] = ItemInfo(
-        "diamond3", "Najtańczy z najdroższych.", "block", -10, {"hp": 50, "probability": 0.5}
-    )
+    ITEMS_DICT["diamond3"] = ItemInfo("diamond3", "Najtańczy z najdroższych.", "block", -10, {"hp": 50, "probability": 0.5})
     ITEMS_DICT["glass"] = ItemInfo("glass", "Wszedzie jej pelno.", "block", -10, {"hp": 99999, "probability": 0.5})
     ITEMS_DICT["cloud"] = ItemInfo("cloud", "Wszedzie jej pelno.", "block", -10, {"hp": 1, "probability": 0.0})
-    ITEMS_DICT["clump"] = ItemInfo("clump", "Wszedzie jej pelno.", "block", -10, {"hp": 1, "probability": 0.0})
+    ITEMS_DICT["grass_dirt"] = ItemInfo("grass_dirt", "Wszedzie jej pelno.", "block", -10, {"hp": 1, "probability": 0.0})
+    ITEMS_DICT["clay"] = ItemInfo("clay", "Wszedzie jej pelno.", "block", -10, {"hp": 1, "probability": 0.0})
+    ITEMS_DICT["chrysoprase_clay"] = ItemInfo("chrysoprase_clay", "Wszedzie jej pelno.", "block", -10, {"hp": 1, "probability": 0.0})
 
     def __init__(self, game):
         self.game = game
