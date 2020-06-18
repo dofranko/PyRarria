@@ -65,7 +65,6 @@ class Background:
         self.main_stage.draw()
 
 
-# Klasa teł
 class Stage:
     """A class displaying stage of background"""
 

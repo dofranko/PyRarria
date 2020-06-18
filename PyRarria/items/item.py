@@ -29,10 +29,10 @@ class Item(pygame.sprite.Sprite):
         self.acc_y = 0
 
         self.image = self.load_image(self.name)
-
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        Item.scale_item(self, BLOCK_SIZE // 1.6)
 
         self.position = PVector(x, y)
 
@@ -100,7 +100,7 @@ class Item(pygame.sprite.Sprite):
     # implementowane przez podklasy
     def action(self, mouse_pos, player):
         """By default it makes a little damage and a little env_damage in low range"""
-        if math.hypot(mouse_pos[0] - player.rect.x, mouse_pos[1] - player.rect.y) <= self.range:
+        if math.hypot(mouse_pos[0] - player.rect.center[0], mouse_pos[1] - player.rect.center[1]) <= self.range:
             damaged = False
             for creature in self.game.all_creatures:
                 if creature.rect.collidepoint(mouse_pos):
@@ -149,7 +149,7 @@ class Item(pygame.sprite.Sprite):
         return (int(grid_x), int(grid_y))
 
     @staticmethod
-    def scale(to_scale_object, size):
+    def scale_item(to_scale_object, size=BLOCK_SIZE // 1.6):
         """scales image when placed or destroyed"""
         to_scale_object.image = pygame.transform.scale(to_scale_object.image, (int(size), int(size)))
         X = to_scale_object.rect.x

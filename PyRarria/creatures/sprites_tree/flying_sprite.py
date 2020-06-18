@@ -12,7 +12,6 @@ class FlyingSprite(Sprite):
         win.blit(image, self.body)
 
         # hitbox
-        # TODO, moze sie roznic od obrazka
         if self.is_hitbox:
             pg.draw.rect(win, (0, 0, 255), self.rect, 2)
 

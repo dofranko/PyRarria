@@ -22,17 +22,17 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, game, equipment, health_bar, mana_bar, spells):
         super().__init__()
         poz_x = powierzchnia[int(len(powierzchnia) / 2)]
-        poz_y = poz_x[1] * BLOCK_SIZE - 3 * BLOCK_SIZE
-        poz_x = poz_x[0] * BLOCK_SIZE
+        poz_y = poz_x[1]*BLOCK_SIZE - 3*BLOCK_SIZE
+        poz_x = poz_x[0]*BLOCK_SIZE
         self.game = game
         self.equipment = equipment
         self.image = pygame.image.load(IMAGES_LIST["player"]).convert_alpha()
-        self.image = pygame.transform.scale(self.image, ((int(BLOCK_SIZE * 1.5)), (int(BLOCK_SIZE * 2.5))))
+        self.image = pygame.transform.scale(self.image, ((int(BLOCK_SIZE*1.5)), (int(BLOCK_SIZE*2.5))))
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH / 2, 0)
         self.position = vector(poz_x, poz_y)
         self.vel = vector(0, 0)
-        self.acc = vector(0, PLAYER_MOVE["PLAYER_GRAV"])
+        self.acc = vector(0, 0)
         self.mask = pygame.mask.from_surface(self.image)
         self.facing = 1
         self.q_trigger = False
@@ -198,14 +198,14 @@ class Player(pygame.sprite.Sprite):
         # Poruszenie się i sprawdzenie kolizji
         self.position.y += self.vel.y + 0.5 * self.acc.y
         self.rect.y += self.vel.y + 0.5 * self.acc.y
-        can_jump = self.check_collision_vertically()
+        # can_jump = self.check_collision_vertically()
 
         self.acc.x += self.vel.x * PLAYER_MOVE["FRICTION"]
         self.vel.x += self.acc.x
 
         self.position.x += self.vel.x + 0.5 * self.acc.x
         self.rect.x += self.vel.x + 0.5 * self.acc.x
-        self.check_collision_horizontally()
+        # self.check_collision_horizontally()
 
         if abs(self.acc.x) < 1e-5:
             self.acc.x = 0
@@ -220,7 +220,7 @@ class Player(pygame.sprite.Sprite):
         # To zostaje nadpisane, jeśli działa tło (background.py) w klasie tła @see class Background
         # self.rect.midbottom = (self.position.x, self.position.y)
 
-        self.key_actions(can_jump)
+        self.key_actions(False)
 
     def draw(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))
@@ -246,15 +246,13 @@ class Player(pygame.sprite.Sprite):
         else:
             self.acc.x = 0
         if keys[pygame.K_UP]:
-            if can_jump:
-                self.jump()
-                self.next_jump = True
-                self.last_jump = pygame.time.get_ticks()
-            elif self.double_jump and self.next_jump:
-                now = pygame.time.get_ticks()
-                if now - self.last_jump > 150:
-                    self.jump()
-                    self.next_jump = False
+            self.acc.y = -PLAYER_MOVE["PLAYER_ACC"]
+        elif keys[pygame.K_DOWN]:
+            self.facing = 1
+            self.acc.y = PLAYER_MOVE["PLAYER_ACC"]
+        else:
+            self.acc.y = 0
+            self.vel.y = 0
         if keys[pygame.K_q]:
             if not self.q_trigger:
                 self.throw()

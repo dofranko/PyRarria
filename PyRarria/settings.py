@@ -11,6 +11,7 @@ FOOD = "resources/images/food/"
 TOOL = "resources/images/tools/"
 TERRAIN = "resources/images/terrain/"
 ARMOUR = "resources/images/armour/"
+MINERAL = "resources/images/minerals/"
 SCREENS = "resources/images/screens/"
 SOUNDS = "resources/sounds/"
 CREATURES = "resources/images/creatures/"
@@ -114,6 +115,8 @@ IMAGES_LIST = {
     "damaged_3": TERRAIN + "damaged_3.png",
     "glass": TERRAIN + "glass.png",
     "cloud": TERRAIN + "cloud.png",
+    # MINERALS
+    "iron_mineral": MINERAL + "iron_mineral.png",
     # END ITEMS
     # Spells
     "smallfire": IMAGES + "smallfire.png",
@@ -243,3 +246,5 @@ BOOSTERS_VALUE = {"damage": 10, "defense": 20, "speed": 1, "accuracy": 0.05}
 # Ustawienia oscylacji boostera
 BOB_RANGE = 20
 BOB_SPEED = 0.8
+
+BLOCKS_ASSOCIATION_LIST = {"iron": "iron_mineral"}

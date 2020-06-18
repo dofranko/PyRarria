@@ -1,9 +1,10 @@
 from items.tool import *
 from items.food import *
 from items.armour import *
-from items.tree import *
-import random
 from items.block import *
+from items.mineral import *
+from items.ore import *
+import random
 
 
 class ItemInfo:
@@ -77,27 +78,47 @@ class Factory:
 
     ITEMS_DICT["dirt"] = ItemInfo("dirt", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
     ITEMS_DICT["bone_dirt"] = ItemInfo("bone_dirt", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
-    ITEMS_DICT["flint_dirt"] = ItemInfo("flint_dirt", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
+    ITEMS_DICT["flint_dirt"] = ItemInfo(
+        "flint_dirt", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5}
+    )
     ITEMS_DICT["stone"] = ItemInfo("stone", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
     ITEMS_DICT["grass"] = ItemInfo("grass", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
-    ITEMS_DICT["mushroom_brown"] = ItemInfo("mushroom_brown", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
-    ITEMS_DICT["mushroom_red"] = ItemInfo("mushroom_red", "Wszedzie jej pelno.", "block", -10,{"hp": 20, "probability": 0.5})
-    ITEMS_DICT["tall_grass"] = ItemInfo("tall_grass", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
-    ITEMS_DICT["iron"] = ItemInfo("iron", "Wszedzie jej pelno.", "block", -10, {"hp": 30, "probability": 0.5})
+    ITEMS_DICT["mushroom_brown"] = ItemInfo(
+        "mushroom_brown", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5}
+    )
+    ITEMS_DICT["mushroom_red"] = ItemInfo(
+        "mushroom_red", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5}
+    )
+    ITEMS_DICT["tall_grass"] = ItemInfo(
+        "tall_grass", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5}
+    )
+    ITEMS_DICT["iron"] = ItemInfo("iron", "Wszedzie jej pelno.", "ore", -10, {"hp": 30, "probability": 0.5})
     ITEMS_DICT["coal_ore"] = ItemInfo("coal_ore", "Wszedzie jej pelno.", "block", -10, {"hp": 30, "probability": 0.5})
     ITEMS_DICT["copper"] = ItemInfo("copper", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
     ITEMS_DICT["log"] = ItemInfo("log", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
     ITEMS_DICT["log_hole"] = ItemInfo("log_hole", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
     ITEMS_DICT["leaves"] = ItemInfo("leaves", "Wszedzie jej pelno.", "block", -10, {"hp": 5, "probability": 0.5})
-    ITEMS_DICT["apple_leaves"] = ItemInfo("apple_leaves", "Wszedzie jej pelno.", "block", -10, {"hp": 5, "probability": 0.5})
-    ITEMS_DICT["diamond1"] = ItemInfo("diamond1", "Najcenniejszy na świecie.", "block", -10, {"hp": 50, "probability": 0.5})
+    ITEMS_DICT["apple_leaves"] = ItemInfo(
+        "apple_leaves", "Wszedzie jej pelno.", "block", -10, {"hp": 5, "probability": 0.5}
+    )
+    ITEMS_DICT["diamond1"] = ItemInfo(
+        "diamond1", "Najcenniejszy na świecie.", "block", -10, {"hp": 50, "probability": 0.5}
+    )
     ITEMS_DICT["diamond2"] = ItemInfo("diamond2", "Błyszczy się jak....", "block", -10, {"hp": 50, "probability": 0.5})
-    ITEMS_DICT["diamond3"] = ItemInfo("diamond3", "Najtańczy z najdroższych.", "block", -10, {"hp": 50, "probability": 0.5})
+    ITEMS_DICT["diamond3"] = ItemInfo(
+        "diamond3", "Najtańczy z najdroższych.", "block", -10, {"hp": 50, "probability": 0.5}
+    )
     ITEMS_DICT["glass"] = ItemInfo("glass", "Wszedzie jej pelno.", "block", -10, {"hp": 99999, "probability": 0.5})
     ITEMS_DICT["cloud"] = ItemInfo("cloud", "Wszedzie jej pelno.", "block", -10, {"hp": 1, "probability": 0.0})
-    ITEMS_DICT["grass_dirt"] = ItemInfo("grass_dirt", "Wszedzie jej pelno.", "block", -10, {"hp": 1, "probability": 0.0})
+    ITEMS_DICT["grass_dirt"] = ItemInfo(
+        "grass_dirt", "Wszedzie jej pelno.", "block", -10, {"hp": 1, "probability": 0.0}
+    )
     ITEMS_DICT["clay"] = ItemInfo("clay", "Wszedzie jej pelno.", "block", -10, {"hp": 1, "probability": 0.0})
-    ITEMS_DICT["chrysoprase_clay"] = ItemInfo("chrysoprase_clay", "Wszedzie jej pelno.", "block", -10, {"hp": 1, "probability": 0.0})
+    ITEMS_DICT["chrysoprase_clay"] = ItemInfo(
+        "chrysoprase_clay", "Wszedzie jej pelno.", "block", -10, {"hp": 1, "probability": 0.0}
+    )
+
+    ITEMS_DICT["iron_mineral"] = ItemInfo("iron_mineral", "Kryształ żelaza", "mineral", -10, {})
 
     def __init__(self, game):
         self.game = game
@@ -117,6 +138,10 @@ class Factory:
             return self.create_boots(info, x, y)
         elif info.variety == "block":
             return self.create_placed_block(name, info, x, y)
+        elif info.variety == "ore":
+            return self.create_placed_ore(name, info, x, y)
+        elif info.variety == "mineral":
+            return self.create_mineral(name, info, x, y)
 
     def create_food(self, info, x, y):
         """Return new food"""
@@ -142,17 +167,25 @@ class Factory:
         """Return new block"""
         return Block(x, y, info, self.game)
 
-    def create_placed_tree(self, name, info, x, y):
-        """Return new tree"""
-        return Tree(x, y, info, self.game)
+    def create_placed_ore(self, name, info, x, y):
+        """Return new ore"""
+        return Ore(x, y, info, self.game)
+
+    def create_mineral(self, name, info, x, y):
+        """Return new mineral"""
+        return Mineral(x, y, info, self.game)
 
     def add_random_item(self, x, y):
         """Add random item on (x, y) position (for example when creature dies)"""
         item_name = random.choice(list(self.ITEMS_DICT.keys()))
         item = self.create(item_name, x, y)
+        if item.variety == "block":
+            Item.scale_item(item)
         self.game.items.add(item)
 
     def add_item(self, item_name, x, y):
         """Add item (using its name) on (x, y) position (for example when creature dies)"""
         item = self.create(item_name, x, y)
+        if item.variety == "block":
+            Item.scale_item(item)
         self.game.items.add(item)
