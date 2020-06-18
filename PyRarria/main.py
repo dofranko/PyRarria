@@ -2,7 +2,7 @@ import pygame
 import sys
 
 from settings import *
-from player_no_clip import *
+from player import *
 from equipment import *
 from spells_icon import *
 from background import *
