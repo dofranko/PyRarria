@@ -60,26 +60,21 @@ class Block(Item):
     def update(self):
         super().update()
         if self.hp <= 0:
-            self.game.grid[(self.position.x, self.position.y)] = None
-            Item.scale_item(self, BLOCK_SIZE // 1.6)
-            self.game.items.add(self)
-            self.hp = self.max_hp
-            self.damage_state = 0
-            self.dmg_image = None
+            self.destroy()
             return
 
-        stan = 0
+        damage_state = 0
         if 0 < self.hp <= self.max_hp / 3:
-            stan = 3
+            damage_state = 3
         elif self.max_hp / 3 < self.hp <= self.max_hp * (2 / 3):
-            stan = 2
+            damage_state = 2
         elif self.hp < self.max_hp:
-            stan = 1
-        if stan == 0:
+            damage_state = 1
+        if damage_state == 0:
             return
-        if stan != self.stan:
-            self.damage_state = stan
-            self.dmg_image = pygame.image.load(IMAGES_LIST[f"damaged_{self.stan}"]).convert_alpha()
+        if damage_state != self.damage_state:
+            self.damage_state = damage_state
+            self.dmg_image = pygame.image.load(IMAGES_LIST[f"damaged_{self.damage_state}"]).convert_alpha()
             self.dmg_image = pygame.transform.scale(self.dmg_image, (BLOCK_SIZE, BLOCK_SIZE))
 
     def draw(self):
@@ -90,3 +85,12 @@ class Block(Item):
 
     def hit(self, dmg):
         self.hp -= dmg
+
+    def destroy(self):
+        self.game.grid[(self.position.x, self.position.y)] = None
+        Item.scale_item(self, BLOCK_SIZE // 1.6)
+        self.game.items.add(self)
+        self.hp = self.max_hp
+        self.damage_state = 0
+        self.dmg_image = None
+        return
