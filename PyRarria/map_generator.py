@@ -238,11 +238,11 @@ def generuj():
                     coal_ore.append((j[0], j[1]))
         tmpruda = []
 
-    # generator jaskiń
-    # for i in range(6):  # ile jaskiń
-    #    where = powierzchnia[random.randint(0, len(powierzchnia) - 1)]
-    #    cave_generator(where, 50, 70, 5, 70, 33, 33)  # (TUPLE Z KOORDYNATORAMI POCZATKU JASKINI, MIN GŁĘBOKOŚĆ, MAX GŁĘBOKOŚĆ, SZANSA NA ODNOGĘ, SZANSA NA KLOCEK W DÓŁ/LEWO/PRAWO
-    # size_machine(40, 20, 5)  # powiększanie jaskini (moc powiększania, szansa na średnie powiększenie, szansa na duże powiększenie)
+    #generator jaskiń
+    for i in range(6):  # ile jaskiń
+        where = powierzchnia[random.randint(0, len(powierzchnia) - 1)]
+        cave_generator(where, 50, 70, 5, 70, 33, 33)  # (TUPLE Z KOORDYNATORAMI POCZATKU JASKINI, MIN GŁĘBOKOŚĆ, MAX GŁĘBOKOŚĆ, SZANSA NA ODNOGĘ, SZANSA NA KLOCEK W DÓŁ/LEWO/PRAWO
+    size_machine(40, 20, 5)  # powiększanie jaskini (moc powiększania, szansa na średnie powiększenie, szansa na duże powiększenie)
 
     # generator chmur
     tmpcloud = []

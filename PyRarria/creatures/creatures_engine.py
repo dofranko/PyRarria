@@ -21,12 +21,12 @@ SPAWN_HEIGHT = 100
 LIMITS = {
     "walking_test": 0,
     "birds": 6,
-    "skeletons": 0,
-    "skeletons_boss": 0,
-    "zombies": 0,
+    "skeletons": 1,
+    "skeletons_boss": 1,
+    "zombies": 1,
     "cows": 4,
     "sheeps": 3,
-    "bats": 0,
+    "bats": 1,
     "chickens": 3,
 }
 

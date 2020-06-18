@@ -1,11 +1,11 @@
 # game options/settings
 TITLE = "PyRarria"
-WIDTH = 800
-HEIGHT = 600
+WIDTH = 1600
+HEIGHT = 1200
 FPS = 60
 
 # folders
-IMAGES = "resources/images/"
+IMAGES = "resources/images/hud/"
 BACKGROUND = "resources/images/backgrounds/"
 FOOD = "resources/images/food/"
 TOOL = "resources/images/tools/"
