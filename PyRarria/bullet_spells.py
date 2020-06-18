@@ -6,8 +6,8 @@ from items.item import *
 
 
 SPELL_SPEED = {
-    "fireball": 3,
-    "frostbullet": 3,
+    "fireball": 7,
+    "frostbullet": 7,
 }
 
 

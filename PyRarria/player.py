@@ -47,9 +47,6 @@ class Player(pygame.sprite.Sprite):
         self.mana_bar = mana_bar
         self.spells = spells
 
-        # TODO teraz usunac tylko damage
-        self.damage = 10
-
         # info kiedy gracz ostatnio użył danego zaklęcia
         self.last_cast = {
             "fireball": -SPELL_DELAYS["fireball"],
@@ -158,7 +155,8 @@ class Player(pygame.sprite.Sprite):
                             self.last_cast[self.spell_key] = pygame.time.get_ticks()
                             cur_pos = vector(event.pos[0], event.pos[1])
                             # for ex Freeze(self.game, cur_pos)
-                            thrown_spell = eval(f"{SPELLS_NORMAL_NAME[self.spell_key]}(self.game, cur_pos)")
+                            SpellName = eval(f"{SPELLS_NORMAL_NAME[self.spell_key]}")
+                            thrown_spell = SpellName(self.game, cur_pos)
                             sprite.hit(self, thrown_spell.damage)
                             self.spells.chosen = None
                             self.spell_cast_ready = False
@@ -178,7 +176,7 @@ class Player(pygame.sprite.Sprite):
             return
 
         thrown.position = vector(self.position.x + 80 * self.facing + 15, self.position.y - 50)
-        Item.scale(thrown, BLOCK_SIZE // 1.6)
+        Item.scale_item(thrown, BLOCK_SIZE // 1.6)
         self.game.items.add(thrown)
 
     def scale(self, item, rozm):
@@ -280,7 +278,8 @@ class Player(pygame.sprite.Sprite):
                         value = PLAYER_VALUES["ACCURACY"]
                         speed_y = random.uniform(-0.2 / value, 0.2 / value)
                         # For ex. FireBall(self.game, cur_pos, speed_y, self.facing)
-                        eval(f"{SPELLS_NORMAL_NAME[self.spell_ctrl]}(self.game, cur_pos, speed_y, self.facing)")
+                        SpellName = eval(f"{SPELLS_NORMAL_NAME[self.spell_ctrl]}")
+                        SpellName(self.game, cur_pos, speed_y, self.facing)
 
         # zmiana ataku podstawowego, gdy wciśnięty shift
         elif keys[pygame.K_LSHIFT]:
@@ -325,7 +324,8 @@ class Player(pygame.sprite.Sprite):
                     self.last_cast[self.spell_key] = now_key
                     self.spells.flag_key = True
                     self.spells.last_key = now_key
-                    eval(f"{SPELLS_NORMAL_NAME[self.spell_key]}(self.game)")
+                    SpellName = eval(f"{SPELLS_NORMAL_NAME[self.spell_key]}")
+                    SpellName(self.game)
                 # Skille rzucane ręcznie
                 else:
                     self.spell_cast_ready = True

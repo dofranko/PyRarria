@@ -8,12 +8,13 @@ vector = pygame.math.Vector2
 
 
 class Block(Item):
-    def __init__(self, x, y, info, game):
+    def __init__(self, x, y, info, game, placed=True):
         super().__init__(x, y, info, game)
         self.hp = info.attr["hp"]
-        self.stan = 0
+        self.damage_state = 0
         self.max_hp = self.hp
-        self.image = pygame.transform.scale(self.image, (BLOCK_SIZE, BLOCK_SIZE))
+        if placed:
+            Item.scale_item(self, BLOCK_SIZE)
         self.dmg_image = None
         self.propability = info.attr["probability"]
         self.rect = self.image.get_rect()
@@ -32,7 +33,7 @@ class Block(Item):
 
     def action(self, mouse_pos, player):
         """places block at cur_pos scaled to range of the player"""
-        Item.scale(self, BLOCK_SIZE)
+        Item.scale_item(self, BLOCK_SIZE)
         mouse_pos = vector(mouse_pos[0], mouse_pos[1])
         if math.hypot(mouse_pos.x - player.rect.x, mouse_pos.y - player.rect.y) <= self.range:
             position = Item.get_mouse_position_on_map(player, mouse_pos)
@@ -60,10 +61,10 @@ class Block(Item):
         super().update()
         if self.hp <= 0:
             self.game.grid[(self.position.x, self.position.y)] = None
-            Item.scale(self, BLOCK_SIZE // 1.6)
+            Item.scale_item(self, BLOCK_SIZE // 1.6)
             self.game.items.add(self)
             self.hp = self.max_hp
-            self.stan = 0
+            self.damage_state = 0
             self.dmg_image = None
             return
 
@@ -77,7 +78,7 @@ class Block(Item):
         if stan == 0:
             return
         if stan != self.stan:
-            self.stan = stan
+            self.damage_state = stan
             self.dmg_image = pygame.image.load(IMAGES_LIST[f"damaged_{self.stan}"]).convert_alpha()
             self.dmg_image = pygame.transform.scale(self.dmg_image, (BLOCK_SIZE, BLOCK_SIZE))
 

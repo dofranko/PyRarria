@@ -32,7 +32,7 @@ class Tree(Item):
 
     def action(self, mouse_pos, player):
         """places block at cur_pos scaled to range of the player"""
-        Item.scale(self, BLOCK_SIZE)
+        Item.scale_item(self, BLOCK_SIZE)
         mouse_pos = vector(mouse_pos[0], mouse_pos[1])
         if math.hypot(mouse_pos.x - player.rect.x, mouse_pos.y - player.rect.y) <= self.range:
             position = vector(player.position.x, player.position.y) + mouse_pos - vector(WIDTH / 2, HEIGHT / 2)
@@ -48,7 +48,7 @@ class Tree(Item):
         super().update()
         if self.hp <= 0:
             self.game.trees.remove()
-            Item.scale(self, BLOCK_SIZE // 1.6)
+            Item.scale_item(self, BLOCK_SIZE // 1.6)
             self.game.items.add(self)
             self.hp = self.max_hp
             self.stan = 0
