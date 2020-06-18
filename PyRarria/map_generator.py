@@ -39,7 +39,9 @@ NON_COLLISION_OBJECTS.append("leaves")
 NON_COLLISION_OBJECTS.append("log")
 NON_COLLISION_OBJECTS.append("log_hole")
 NON_COLLISION_OBJECTS.append("apple_leaves")
-
+NON_COLLISION_OBJECTS.append("tall_grass")
+NON_COLLISION_OBJECTS.append("mushroom_red")
+NON_COLLISION_OBJECTS.append("mushroom_brown")
 
 def cave_generator(where, depth1, depth2, propability, go_d, go_l, go_r):
     depth = random.randint(depth1, depth2)
