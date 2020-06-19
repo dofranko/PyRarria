@@ -57,8 +57,9 @@ IMAGES_LIST = {
     "bin": IMAGES + "bin2.png",
     # Screens
     "background": {
-        "main": BACKGROUND + "background_moving_main2.png",
-        "2": BACKGROUND + "background_moving_second2.png",
+        "main": BACKGROUND + "background_moving_main.png",
+        "2": BACKGROUND + "background_moving_second.png",
+        "3": BACKGROUND + "background_moving_third.png",
     },
     "start_screen": SCREENS + "start_screen.png",
     "game_over_screen": SCREENS + "game_over_screen.png",

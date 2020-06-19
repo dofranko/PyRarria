@@ -18,10 +18,13 @@ class Background:
         self.main_stage = Stage(game, *self.main_image.get_rect().size, slowing_rate=1, image=self.main_image)
         # Dalsze tła (liczba mnoga)
         stage_2 = Stage(
-            game, *self.main_image.get_rect().size, image_source=IMAGES_LIST["background"]["2"], slowing_rate=3
+            game, *self.main_image.get_rect().size, image_source=IMAGES_LIST["background"]["2"], slowing_rate=2
+        )
+        stage_3 = Stage(
+            game, *self.main_image.get_rect().size, image_source=IMAGES_LIST["background"]["3"], slowing_rate=3
         )
         self.stages.append(stage_2)
-
+        self.stages.append(stage_3)
     def update_player_and_rect_x(self):
         """Updating main stage position x and player rect x"""
         # Jeśli gracz jest na lewym końcu mapy to nie przewijamy tła
