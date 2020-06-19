@@ -21,9 +21,9 @@ class Player(pygame.sprite.Sprite):
     #               ^ rect.x, rect.y - pozycja względem monitora
     def __init__(self, game, equipment, health_bar, mana_bar, spells):
         super().__init__()
-        poz_x = powierzchnia[int(len(powierzchnia) / 2)]
-        poz_y = poz_x[1] * BLOCK_SIZE - 3 * BLOCK_SIZE
-        poz_x = poz_x[0] * BLOCK_SIZE
+        poz_tmp = surface[int(len(surface) / 2)]
+        poz_y = poz_tmp[1] * BLOCK_SIZE - 3 * BLOCK_SIZE
+        poz_x = poz_tmp[0] * BLOCK_SIZE
         self.game = game
         self.equipment = equipment
         self.image = pygame.image.load(IMAGES_LIST["player"]).convert_alpha()
@@ -223,7 +223,11 @@ class Player(pygame.sprite.Sprite):
         self.key_actions(can_jump)
 
     def draw(self, screen):
-        screen.blit(self.image, (self.rect.x, self.rect.y))
+        player_sprite = self.image
+        if self.game.player.facing == -1:
+            player_sprite = pygame.transform.flip(player_sprite, True, False)
+        
+        screen.blit(player_sprite, (self.rect.x, self.rect.y))
         for armour in reversed(self.equipment.get_armour()):
             armour.get_dressed()
         if self.held_item:
