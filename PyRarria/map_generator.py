@@ -3,7 +3,7 @@ from settings import *
 
 cloud = []
 platformy = []
-powierzchnia = []
+surface = []
 copper = []
 iron = []
 tree = []
@@ -43,7 +43,8 @@ NON_COLLISION_OBJECTS.append("tall_grass")
 NON_COLLISION_OBJECTS.append("mushroom_red")
 NON_COLLISION_OBJECTS.append("mushroom_brown")
 
-def cave_generator(where, depth1, depth2, propability, go_d, go_l, go_r):
+
+def cave_generator(where, depth1, depth2, propability, go_d, go_l, go_r):  # generator cave seeda
     depth = random.randint(depth1, depth2)
     cave = []
     W = where[0]
@@ -69,44 +70,44 @@ def cave_generator(where, depth1, depth2, propability, go_d, go_l, go_r):
             W -= 1
 
 
-def size_machine(power, p1, p2):
+def size_machine(power, p1, p2):  # powiększanie cave seeda
     size = random.randint(1, 100)
-    tmpcave = sasiad(cave_seed, power)
-    tmpcave = sasiad(tmpcave, power)
+    tmpcave = nbh(cave_seed, power)
+    tmpcave = nbh(tmpcave, power)
     if size < p2:
-        tmpcave = sasiad(tmpcave, power)
+        tmpcave = nbh(tmpcave, power)
     if size < p1:
-        tmpcave = sasiad(tmpcave, power)
+        tmpcave = nbh(tmpcave, power)
     for t in tmpcave:
         remove(t[0], t[1])
 
 
-def remove(x, y):  #
-    usun = (x, y)
-    if usun in iron:
-        iron.remove(usun)
-    if usun in copper:
-        copper.remove(usun)
-    if usun in dirt:
-        dirt.remove(usun)
-    if usun in stone:
-        stone.remove(usun)
-    if usun in grass_dirt:
-        grass_dirt.remove(usun)
-    if usun in leaves:
-        leaves.remove(usun)
-    if usun in bone_dirt:
-        bone_dirt.remove(usun)
-    if usun in flint_dirt:
-        flint_dirt.remove(usun)
-    if usun in clay:
-        clay.remove(usun)
-    if usun in chrysoprase_clay:
-        chrysoprase_clay.remove(usun)
+def remove(x, y):
+    to_remove = (x, y)
+    if to_remove in iron:
+        iron.remove(to_remove)
+    if to_remove in copper:
+        copper.remove(to_remove)
+    if to_remove in dirt:
+        dirt.remove(to_remove)
+    if to_remove in stone:
+        stone.remove(to_remove)
+    if to_remove in grass_dirt:
+        grass_dirt.remove(to_remove)
+    if to_remove in leaves:
+        leaves.remove(to_remove)
+    if to_remove in bone_dirt:
+        bone_dirt.remove(to_remove)
+    if to_remove in flint_dirt:
+        flint_dirt.remove(to_remove)
+    if to_remove in clay:
+        clay.remove(to_remove)
+    if to_remove in chrysoprase_clay:
+        chrysoprase_clay.remove(to_remove)
 
 
-def sasiad(L,
-           prop):  # funkcja pobierająca listę kolcków oraz prawdopodbieństwo dostawienia sąsiada z każdej strony każdego klocka na liście
+def nbh(L,
+        prop):  # funkcja pobierająca listę kolcków oraz prawdopodbieństwo dostawienia sąsiada z każdej strony każdego klocka na liście
     list = []
     for i in L:
         tmp = i
@@ -132,6 +133,51 @@ def sasiad(L,
 
         list.append(i)
     return list
+
+
+def surface_generator(anticraziness, flatness, start_height):  # anticrazines odpowiada za szybkość powrotu do płaskiego generowania, flatness odpowiada za rzadość występowania górek i dołków
+    w = 0
+    W = -1
+    H = start_height
+    a = int((100 - flatness) / 2)
+    b = int((100 - anticraziness) / 2)
+    for i in range(map_width):
+
+        x = random.randint(0, 99)
+        W += 1
+
+        if w == 0:
+            if a < x < 2 * a + 1:
+                H += 1
+                w = 1
+            if x > a:
+                H -= 1
+                w = 2
+
+        elif w == 1:
+            H += 1
+            if H > 60:
+                H = 60
+                w = 2
+            else:
+                if b < x < 2 * b + 1:
+                    w = 0
+                if x > 2 * b:
+                    H -= 1
+                    w = 2
+        else:
+            H -= 1
+            if H < 20:
+                H = 20
+                w = 1
+            else:
+                if b < x < 2 * b + 1:
+                    w = 0
+                if x > 2 * b:
+                    H += 1
+                    w = 1
+        surface.append((W, H))
+        grass_dirt.append((W, H))
 
 
 def generuj():
@@ -181,7 +227,7 @@ def generuj():
                 if x > 87:
                     H += 1
                     w = 1
-        powierzchnia.append((W, H))
+        surface.append((W, H))
         grass_dirt.append((W, H))
         for j in range(127):
             x = random.randint(5, 8)
@@ -203,9 +249,9 @@ def generuj():
         x = random.randint(0, len(dirt) - 1)
         x = [((dirt[x][0]), (dirt[x][1]))]
 
-        tmp = (sasiad(x, 90))
+        tmp = (nbh(x, 90))
         for j in range(5):
-            tmp = (sasiad(tmp, 90))
+            tmp = (nbh(tmp, 90))
             for k in tmp:
                 if k not in dirt:
                     tmp.remove(k)
@@ -223,11 +269,11 @@ def generuj():
     # generator RUDY
     tmpruda = []
     for i in range(100):
-        H = random.randrange(powierzchnia[H][1] + 20, 127)  # generowanie rudy tylko na określonej wysokości
+        H = random.randrange(surface[H][1] + 20, 127)  # generowanie rudy tylko na określonej wysokości
         W = random.randrange(0, map_width)
         tmpruda.append((W, H,))
-        tmpruda = sasiad(tmpruda, 70)
-        tmpruda = sasiad(tmpruda, 60)
+        tmpruda = nbh(tmpruda, 70)
+        tmpruda = nbh(tmpruda, 60)
         r = random.randint(0, 99)
         for j in tmpruda:
             if (j[0], j[1],) in stone:
@@ -240,11 +286,13 @@ def generuj():
                     coal_ore.append((j[0], j[1]))
         tmpruda = []
 
-    #generator jaskiń
+    # generator jaskiń
     for i in range(6):  # ile jaskiń
-        where = powierzchnia[random.randint(0, len(powierzchnia) - 1)]
-        cave_generator(where, 50, 70, 5, 70, 33, 33)  # (TUPLE Z KOORDYNATORAMI POCZATKU JASKINI, MIN GŁĘBOKOŚĆ, MAX GŁĘBOKOŚĆ, SZANSA NA ODNOGĘ, SZANSA NA KLOCEK W DÓŁ/LEWO/PRAWO
-    size_machine(40, 20, 5)  # powiększanie jaskini (moc powiększania, szansa na średnie powiększenie, szansa na duże powiększenie)
+        where = surface[random.randint(0, len(surface) - 1)]
+        cave_generator(where, 50, 70, 5, 70, 33,
+                       33)  # (TUPLE Z KOORDYNATORAMI POCZATKU JASKINI, MIN GŁĘBOKOŚĆ, MAX GŁĘBOKOŚĆ, SZANSA NA ODNOGĘ, SZANSA NA KLOCEK W DÓŁ/LEWO/PRAWO
+    size_machine(40, 20,
+                 5)  # powiększanie jaskini (moc powiększania, szansa na średnie powiększenie, szansa na duże powiększenie)
 
     # generator chmur
     tmpcloud = []
@@ -252,8 +300,8 @@ def generuj():
         H = random.randrange(0, 12)  # generowanie rudy tylko na określonej wysokości
         W = random.randrange(0, 255)
         tmpcloud.append((W, H))
-        tmpcloud = sasiad(tmpcloud, 80)
-        tmpcloud = sasiad(tmpcloud, 80)
+        tmpcloud = nbh(tmpcloud, 10)
+        tmpcloud = nbh(tmpcloud, 10)
         for j in tmpcloud:
             if 256 > j[0] > -1 and 13 > j[1] > -1:
                 cloud.append(j)
@@ -316,6 +364,7 @@ def generuj():
                 mushroom_brown.append((i[0], i[1] - 1))
             else:
                 mushroom_red.append((i[0], i[1] - 1))
+
     # generator diamentów
     for i in range(200):
         H = random.randrange(80, 128)  # generowanie diamentów tylko na określonej wysokości
@@ -337,7 +386,6 @@ def generuj():
         for j in range(-1, map_width + 1):
             if j == -1 or j == map_width or i == -1 or i == map_height:
                 glass.append((j, i))
-
 
 def dirtlist():
     return dirt
@@ -471,12 +519,13 @@ def create_world(grid, items_factory):
     for blok in iron_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    mushroom_brown_list = [items_factory.create("mushroom_brown", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in mushroom_brownlist()]
+    mushroom_brown_list = [items_factory.create("mushroom_brown", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for
+                           block in mushroom_brownlist()]
     for blok in mushroom_brown_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
     mushroom_red_list = [items_factory.create("mushroom_red", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for
-                           block in mushroom_redlist()]
+                         block in mushroom_redlist()]
     for blok in mushroom_red_list:
         grid[(blok.position.x, blok.position.y)] = blok
 

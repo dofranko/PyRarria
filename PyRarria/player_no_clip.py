@@ -21,7 +21,7 @@ class Player(pygame.sprite.Sprite):
     #               ^ rect.x, rect.y - pozycja względem monitora
     def __init__(self, game, equipment, health_bar, mana_bar, spells):
         super().__init__()
-        poz_x = powierzchnia[int(len(powierzchnia) / 2)]
+        poz_x = surface[int(len(surface) / 2)]
         poz_y = poz_x[1]*BLOCK_SIZE - 3*BLOCK_SIZE
         poz_x = poz_x[0]*BLOCK_SIZE
         self.game = game

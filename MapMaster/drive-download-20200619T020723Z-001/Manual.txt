@@ -1,0 +1,15 @@
+Jak korzystać?
+
+W pliku "map.txt" zapisujemy układ naszych klocków w następujący sposób:
+
+XXXXX3
+X1X1X3
+XXXXX3
+X222X3
+XXXXX3
+
+gdzie każdy znak (inny od X) reprezentuje plik graficzny .png
+Żeby program działał poprawnie musimy zapisywać w folderze z programem pliki graficzne o nazwie podanej w "map.txt", tzn dla powyższego przykładu potrzebujemy pliki pic1.png, pic2.png, pic3.png.
+
+X oznacza wolne pole o rozmiarach klocka
+
