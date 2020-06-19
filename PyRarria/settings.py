@@ -1,7 +1,7 @@
 # game options/settings
 TITLE = "PyRarria"
-WIDTH = 800
-HEIGHT = 600
+WIDTH = 1370
+HEIGHT = 720
 FPS = 60
 
 # folders

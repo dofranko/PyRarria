@@ -2,8 +2,8 @@ import pygame
 import sys
 
 from settings import *
-from player import *
-#from player_no_clip import *
+#from player import *
+from player_no_clip import *
 from equipment import *
 from spells_icon import *
 from background import *
@@ -143,6 +143,9 @@ class Game:
         """Call a draw for all classes that need it"""
         # Game Loop - draw
         # Kolejność ma znaczenie
+
+        # Wypełnianie "spodu" czarnością
+        self.screen.fill(BLACK)
         self.background.draw()
         self.creatures_engine.draw()
 

@@ -189,7 +189,7 @@ def generuj():
     w = 0
     W = -1
     H = 40
-    for i in range(256):
+    for i in range(map_width):
         x = random.randint(
             0, 99
         )  # generator posiada "współczynnik załamania" ustawiony na 75%, jest to szansa na to, że zmieni się monotoniczność generwanego terenu (jeśli postawi klocek wyżej większa szansa będzie na to, że następny klocek też będzie wyżej)
@@ -244,7 +244,6 @@ def generuj():
             else:
                 break
     # generator gliny
-
     for i in range(3):
         x = random.randint(0, len(dirt) - 1)
         x = [((dirt[x][0]), (dirt[x][1]))]
