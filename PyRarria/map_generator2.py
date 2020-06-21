@@ -2,6 +2,9 @@ import random
 from settings import *
 import time
 
+map_width = 256
+map_height = 128
+
 cloud = []
 platformy = []
 surface = []
@@ -32,8 +35,27 @@ chrysoprase_clay = []
 clay = []
 cave = []
 banned = []
-map_width = 256
-map_height = 128
+ore_dictionary = {
+    'copper': {"min_height": 20,
+               "max_height": map_height,
+               "amount": 50,
+               "size": 5,
+               "propability": 30},
+
+    'iron': {"min_height": 40,
+               "max_height": map_height,
+               "amount": 40,
+               "size": 4,
+               "propability": 50},
+
+    'coal': {"min_height": 50,
+               "max_height": map_height,
+               "amount": 60,
+               "size": 3,
+               "propability": 80}
+}
+ore_dictionary["copper"]["min_height"]
+
 
 non_colision1 = ["log", "leaves"]
 non_colision2 = ["grass"]
@@ -189,6 +211,17 @@ def dirt_generator(height, gradient, gradient_start):
                 dirt.append((i[0], i[1] + j))
             else:
                 stone.append((i[0], i[1] + j))
+    for i in grass_dirt:
+        for j in range(height, map_height):
+            if i[1] + j <= map_height:
+                stone.append((i[0], i[1] + j))
+            else:
+                break
+
+
+def ore_generator(min_height, max_height):
+    pass
+
 
 
 def glass_generator():
