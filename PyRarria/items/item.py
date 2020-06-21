@@ -11,7 +11,7 @@ class Item(pygame.sprite.Sprite):
 
     items_loaded_images = {}
 
-    def __init__(self, x, y, info, game):
+    def __init__(self, x, y, info, game, do_scale=True):
         pygame.sprite.Sprite.__init__(self)
 
         self.name = info.name
@@ -32,7 +32,8 @@ class Item(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        Item.scale_item(self, BLOCK_SIZE // 1.6)
+        if do_scale:
+            Item.scale_item(self, BLOCK_SIZE // 1.6)
 
         self.position = PVector(x, y)
 

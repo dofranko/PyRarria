@@ -9,7 +9,7 @@ vector = pygame.math.Vector2
 
 class Block(Item):
     def __init__(self, x, y, info, game, placed=True):
-        super().__init__(x, y, info, game)
+        super().__init__(x, y, info, game, do_scale=False)
         self.hp = info.attr["hp"]
         self.damage_state = 0
         self.max_hp = self.hp
