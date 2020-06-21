@@ -2,7 +2,7 @@
 import pygame
 import random
 
-from map_generator import *
+from map_generator2 import *
 from settings import *
 from bullet_spells import *
 from fast_spells import *

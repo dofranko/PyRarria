@@ -96,6 +96,7 @@ class Factory:
     ITEMS_DICT["coal_ore"] = ItemInfo("coal_ore", "Wszedzie jej pelno.", "block", -10, {"hp": 30, "probability": 0.5})
     ITEMS_DICT["copper"] = ItemInfo("copper", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
     ITEMS_DICT["log"] = ItemInfo("log", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
+    ITEMS_DICT["cave"] = ItemInfo("cave", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
     ITEMS_DICT["log_hole"] = ItemInfo("log_hole", "Wszedzie jej pelno.", "block", -10, {"hp": 20, "probability": 0.5})
     ITEMS_DICT["leaves"] = ItemInfo("leaves", "Wszedzie jej pelno.", "block", -10, {"hp": 5, "probability": 0.5})
     ITEMS_DICT["apple_leaves"] = ItemInfo(
