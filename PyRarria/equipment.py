@@ -69,7 +69,7 @@ class Equipment:
             new_eq = pygame.sprite.Sprite()
             new_eq.image = self.eq_panel_image
             new_eq.rect = new_eq.image.get_rect()
-            new_eq.rect.x, new_eq.rect.y = (15 * self.base_width - 20, 3 * self.base_height + 5 + j * self.base_height)
+            new_eq.rect.x, new_eq.rect.y = (WIDTH - 3*BLOCK_SIZE - 20, 3 * self.base_height + 5 + j * self.base_height)
             self.armor_eq.add(new_eq)
         self.open_eq_word = self.font.render("Click to unroll your stuff", True, WHITE)
         self.bin_word = self.font.render("Drop to delete a item", True, WHITE)
@@ -203,12 +203,12 @@ class Equipment:
                         item_image = pygame.transform.scale(item_image, (40, 40))
                         screen.blit(
                             item_image,
-                            (15 * self.base_width - 15, 5 + 3 * self.base_height + 5 + (j - 18) * self.base_height),
+                            (WIDTH - 3*BLOCK_SIZE - 15, 5 + 3 * self.base_height + 5 + (j - 18) * self.base_height),
                         )
                         continue
                 screen.blit(
                     self.list_armour[j - 18],
-                    (15 * self.base_width - 13, 3 * self.base_height + 12 + (j - 18) * self.base_height),
+                    (WIDTH - 3*BLOCK_SIZE - 13, 3 * self.base_height + 12 + (j - 18) * self.base_height),
                 )
 
     def draw_moving_item(self, screen):
