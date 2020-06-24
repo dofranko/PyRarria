@@ -18,6 +18,7 @@ class Item(pygame.sprite.Sprite):
         self.description = info.description
         self.variety = info.variety
         self.angle = info.angle
+        self.info = info
 
         self.game = game
         self.damage = 5

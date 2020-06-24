@@ -2,8 +2,9 @@ import pygame
 import sys
 
 from settings import *
-#from player import *
-from player_no_clip import *
+from player import *
+
+# from player_no_clip import *
 from equipment import *
 from spells_icon import *
 from background import *
@@ -31,6 +32,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
         self.pause = False
+        self.handled_event = None
 
     def new_game(self):
         """Start new game"""
@@ -134,6 +136,7 @@ class Game:
                 self.equipment.handle_mouse(event)
                 self.spells.handle_mouse(event)
                 self.player.handle_mouse(event)
+                self.handled_event = event
         keys = pygame.key.get_pressed()
         if keys[pygame.K_p]:
             self.pause = True

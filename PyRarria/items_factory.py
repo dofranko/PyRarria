@@ -4,6 +4,8 @@ from items.armour import *
 from items.block import *
 from items.mineral import *
 from items.ore import *
+from items.placeable import *
+from items.crafting_table import *
 import random
 
 
@@ -113,6 +115,8 @@ class Factory:
     )
 
     ITEMS_DICT["iron_mineral"] = ItemInfo("iron_mineral", "Kryształ żelaza", Mineral, -10, {})
+
+    ITEMS_DICT["crafting_table"] = ItemInfo("crafting_table", "Stół do craftowania", CraftingTable, -10, {"hp": 200})
 
     def __init__(self, game):
         self.game = game

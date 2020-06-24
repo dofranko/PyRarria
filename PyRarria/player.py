@@ -137,6 +137,14 @@ class Player(pygame.sprite.Sprite):
     def handle_mouse(self, event):
         self.handle_mouse_cast_spell(event)
         self.execute_item_action(event)
+        self.use_item(event)
+
+    def use_item(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            for block in self._get_close_blocks():
+                if block.rect.collidepoint(event.pos):
+                    if block.use():
+                        break
 
     def execute_item_action(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
@@ -179,15 +187,6 @@ class Player(pygame.sprite.Sprite):
         Item.scale_item(thrown, BLOCK_SIZE // 1.6)
         self.game.items.add(thrown)
 
-    def scale(self, item, rozm):
-        """Scales image when placed or destroyed"""
-        self.image = pygame.transform.scale(self.image, (rozm, rozm))
-        X = self.rect.x
-        Y = self.rect.y
-        self.rect = self.image.get_rect()
-        self.rect.x = X
-        self.rect.y = Y
-
     def update(self):
         """Update player position, check collisons, collect/throw items, handle keys pressed"""
         # Równania ruchu. Zabawa na własną odpowiedzialność :v
@@ -226,7 +225,7 @@ class Player(pygame.sprite.Sprite):
         player_sprite = self.image
         if self.game.player.facing == -1:
             player_sprite = pygame.transform.flip(player_sprite, True, False)
-        
+
         screen.blit(player_sprite, (self.rect.x, self.rect.y))
         for armour in reversed(self.equipment.get_armour()):
             armour.get_dressed()
@@ -352,9 +351,3 @@ class Player(pygame.sprite.Sprite):
         self.vel.y = -push_vel_y * force
         self.vel.x = push_vel_x * direction * force
 
-
-# Wywolanie akcji przedmiotu
-# if keys[pygame.K_n]:
-#            item = self.equipment.get_active_item()
-#            if item and item.action(mouse_pos, pself.position):
-#                item = self.equipment.remove_item("active")
