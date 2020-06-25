@@ -1,6 +1,6 @@
 import pygame
 import sys
-
+import items.crafting as crafting
 from settings import *
 from player import *
 
@@ -16,6 +16,7 @@ from items.items_generator import *
 from creatures.creatures_engine import CreaturesEngine
 from creatures.vector import PVector
 from map_generator import *
+
 
 vector = pygame.math.Vector2
 
@@ -37,6 +38,7 @@ class Game:
     def new_game(self):
         """Start new game"""
         # start a new game
+        
         generuj()
         self.grid = {}
 
@@ -50,6 +52,7 @@ class Game:
         self.arrows = pygame.sprite.Group()
         self.items_factory = Factory(self)
         self.equipment = Equipment(self)
+        crafting.equipment = self.equipment
         self.spells = Spells(self)
         self.health_bar = HealthBar(self)
         self.mana_bar = ManaBar(self)

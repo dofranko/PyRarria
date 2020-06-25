@@ -180,12 +180,10 @@ class Player(pygame.sprite.Sprite):
     def throw(self):
         """Throwing item from eq"""
         thrown = self.equipment.remove_item("active")
-        if not thrown:
-            return
-
-        thrown.position = vector(self.position.x + 80 * self.facing + 15, self.position.y - 50)
-        Item.scale_item(thrown, BLOCK_SIZE // 1.6)
-        self.game.items.add(thrown)
+        if thrown:
+            thrown.position = vector(self.position.x + 80 * self.facing + 15, self.position.y - 50)
+            Item.scale_item(thrown, BLOCK_SIZE // 1.6)
+            self.game.items.add(thrown)
 
     def update(self):
         """Update player position, check collisons, collect/throw items, handle keys pressed"""

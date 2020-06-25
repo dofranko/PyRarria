@@ -1,4 +1,5 @@
 import pygame
+import items.crafting as crafting
 from settings import *
 from items.item import *
 from items.armour import Helmet, Breastplate, Boots
@@ -121,6 +122,7 @@ class Equipment:
         self.draw_armour(screen)
         self.draw_moving_item(screen)
         self.draw_item_description(screen)
+        self.draw_craftable_items(screen)
 
     def draw_base_eq(self, screen):
         """Draw the visible part of equipment"""
@@ -259,15 +261,21 @@ class Equipment:
                 words = self.font.render(self.armour_description[i - self.eq_size], True, WHITE)
                 screen.blit(words, (x - 120, y - 15))
 
+    def draw_craftable_items(self, screen):
+        if self.is_opened:
+            crafting.draw_craftable_items(screen)
+
     def add_item(self, new_item):
         """Try to add item to eq. Return if item was added"""
         for item in self.collected_items:
             if item and item[0].name == new_item.name:
                 item.append(new_item)
+                crafting.prepare_craftable_items(self)
                 return True
         for i in range(len(self.collected_items)):
             if not bool(self.collected_items[i]):  # if empty
                 self.collected_items[i] = [new_item]
+                crafting.prepare_craftable_items(self)
                 return True
         return False  # EQ is FULL
 
@@ -278,19 +286,20 @@ class Equipment:
         """Try to remove item from eq. Return removed item"""
         if item_name == "active":
             if self.collected_items[self.active_tool_number]:
-                active = self.collected_items[self.active_tool_number].pop(0)
-                return active
+                crafting.prepare_craftable_items(self)
+                return self.collected_items[self.active_tool_number].pop(0)
         else:
             for el in self.collected_items:
                 if el and el[0].name == item_name:
-                    it = el.pop(0)
-                    return it
+                    crafting.prepare_craftable_items(self)
+                    return el.pop(0)
         return None
 
     def open(self):
         """Open eq"""
         self.is_opened = True
         self.change_tool = None
+        crafting.prepare_craftable_items(self)
 
     def close(self):
         """Close eq"""
@@ -390,6 +399,8 @@ class Equipment:
             if self.item_moving is not None:
                 self.eq.x = event.pos[0] + self.offset_x
                 self.eq.y = event.pos[1] + self.offset_y
+
+        crafting.handle_craft_mouse(event, self, self.game.items_factory)
 
     # Funkcja do zamiany eq miejscami
     def change_positions(self, position):
