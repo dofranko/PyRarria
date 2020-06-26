@@ -15,6 +15,7 @@ MINERAL = "resources/images/minerals/"
 SCREENS = "resources/images/screens/"
 SOUNDS = "resources/sounds/"
 CREATURES = "resources/images/creatures/"
+SPECIAL = "resources/images/specials/"
 
 # Player properties
 PLAYER_MOVE = {
@@ -51,10 +52,11 @@ IMAGES_LIST = {
     # GUI
     "heart": IMAGES + "heart.png",
     "mana": IMAGES + "mana.png",
-    # Ekuipment
+    # Equipment
     "eq_square": IMAGES + "eq_square2.png",
     "open_eq": IMAGES + "open_eq2.png",
     "bin": IMAGES + "bin2.png",
+    "crafting_table_square": IMAGES + "crafting_table_square.png",
     # Screens
     "background": {
         "main": BACKGROUND + "background_moving_main.png",
@@ -116,8 +118,10 @@ IMAGES_LIST = {
     "damaged_3": TERRAIN + "damaged_3.png",
     "glass": TERRAIN + "glass.png",
     "cloud": TERRAIN + "cloud.png",
-    # MINERALS
+    # Minerals
     "iron_mineral": MINERAL + "iron_mineral.png",
+    # Special
+    "crafting_table": SPECIAL + "crafting_table.png",
     # END ITEMS
     # Spells
     "smallfire": IMAGES + "smallfire.png",

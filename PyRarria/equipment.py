@@ -1,6 +1,8 @@
 import pygame
+import items.crafting as crafting
 from settings import *
 from items.item import *
+from items.armour import Helmet, Breastplate, Boots
 from copy import copy
 
 vector = pygame.math.Vector2
@@ -43,8 +45,12 @@ class Equipment:
         self.collected_items[3] = [self.game.items_factory.create("black_helmet", 0, 0)]
         self.collected_items[4] = [self.game.items_factory.create("black_breastplate", 0, 0)]
         self.collected_items[5] = [self.game.items_factory.create("black_boots", 0, 0)]
+        self.collected_items[10] = [self.game.items_factory.create("crafting_table", 0, 0)]
         for _ in range(20):
             self.collected_items[2].append(self.game.items_factory.create("dirt", 0, 0))
+
+    def __iter__(self):
+        return iter(self.collected_items)
 
     def __create_eq_GUI(self):
         """"Create base eq gui"""
@@ -69,7 +75,10 @@ class Equipment:
             new_eq = pygame.sprite.Sprite()
             new_eq.image = self.eq_panel_image
             new_eq.rect = new_eq.image.get_rect()
-            new_eq.rect.x, new_eq.rect.y = (15 * self.base_width - 20, 3 * self.base_height + 5 + j * self.base_height)
+            new_eq.rect.x, new_eq.rect.y = (
+                WIDTH - 3 * BLOCK_SIZE - 20,
+                3 * self.base_height + 5 + j * self.base_height,
+            )
             self.armor_eq.add(new_eq)
         self.open_eq_word = self.font.render("Click to unroll your stuff", True, WHITE)
         self.bin_word = self.font.render("Drop to delete a item", True, WHITE)
@@ -113,6 +122,7 @@ class Equipment:
         self.draw_armour(screen)
         self.draw_moving_item(screen)
         self.draw_item_description(screen)
+        self.draw_craftable_items(screen)
 
     def draw_base_eq(self, screen):
         """Draw the visible part of equipment"""
@@ -203,12 +213,12 @@ class Equipment:
                         item_image = pygame.transform.scale(item_image, (40, 40))
                         screen.blit(
                             item_image,
-                            (15 * self.base_width - 15, 5 + 3 * self.base_height + 5 + (j - 18) * self.base_height),
+                            (WIDTH - 3 * BLOCK_SIZE - 15, 5 + 3 * self.base_height + 5 + (j - 18) * self.base_height),
                         )
                         continue
                 screen.blit(
                     self.list_armour[j - 18],
-                    (15 * self.base_width - 13, 3 * self.base_height + 12 + (j - 18) * self.base_height),
+                    (WIDTH - 3 * BLOCK_SIZE - 13, 3 * self.base_height + 12 + (j - 18) * self.base_height),
                 )
 
     def draw_moving_item(self, screen):
@@ -251,39 +261,45 @@ class Equipment:
                 words = self.font.render(self.armour_description[i - self.eq_size], True, WHITE)
                 screen.blit(words, (x - 120, y - 15))
 
+    def draw_craftable_items(self, screen):
+        if self.is_opened:
+            crafting.draw_craftable_items(screen)
+
     def add_item(self, new_item):
         """Try to add item to eq. Return if item was added"""
         for item in self.collected_items:
             if item and item[0].name == new_item.name:
                 item.append(new_item)
+                crafting.prepare_craftable_items(self)
                 return True
         for i in range(len(self.collected_items)):
             if not bool(self.collected_items[i]):  # if empty
                 self.collected_items[i] = [new_item]
+                crafting.prepare_craftable_items(self)
                 return True
         return False  # EQ is FULL
 
     # Usuwa (odejmuje liczbę) item. Można usunąć przez:
     # 1)Podanie "active" - usuwa aktualnie wybrany przedmiot
     # 2)Podanie nazwy przedmiotu - usunie pierwszy
-    # Jeszcze do rozbudowy
     def remove_item(self, item_name):
         """Try to remove item from eq. Return removed item"""
         if item_name == "active":
             if self.collected_items[self.active_tool_number]:
-                active = self.collected_items[self.active_tool_number].pop(0)
-                return active
-        elif isinstance(item_name, Item):
+                crafting.prepare_craftable_items(self)
+                return self.collected_items[self.active_tool_number].pop(0)
+        else:
             for el in self.collected_items:
-                if el[0].name == item_name:
-                    it = el.pop(0)
-                    return it
+                if el and el[0].name == item_name:
+                    crafting.prepare_craftable_items(self)
+                    return el.pop(0)
         return None
 
     def open(self):
         """Open eq"""
         self.is_opened = True
         self.change_tool = None
+        crafting.prepare_craftable_items(self)
 
     def close(self):
         """Close eq"""
@@ -331,12 +347,17 @@ class Equipment:
                 for k, eq in enumerate(self.base_eq):
                     if eq.rect.collidepoint(event.pos) and self.collected_items[k]:
                         i = k
-                for k, eq in enumerate(self.extended_eq, 6):
-                    if eq.rect.collidepoint(event.pos) and self.collected_items[k]:
-                        i = k
-                for k, eq in enumerate(self.armor_eq, self.eq_size):
-                    if eq.rect.collidepoint(event.pos) and self.collected_items[k]:
-                        i = k
+                        break
+                else:
+                    for k, eq in enumerate(self.extended_eq, len(self.base_eq)):
+                        if eq.rect.collidepoint(event.pos) and self.collected_items[k]:
+                            i = k
+                            break
+                    else:
+                        for k, eq in enumerate(self.armor_eq, self.eq_size):
+                            if eq.rect.collidepoint(event.pos) and self.collected_items[k]:
+                                i = k
+                                break
                 if i is not None:
                     self.item_moving = pygame.transform.scale(self.collected_items[i][0].image, (40, 40))
                     if i < len(self.base_eq):
@@ -360,12 +381,17 @@ class Equipment:
                     for i, eq in enumerate(self.base_eq):
                         if eq.rect.collidepoint(event.pos):
                             self.change_positions(i)
-                    for i, eq in enumerate(self.extended_eq, 6):
-                        if eq.rect.collidepoint(event.pos):
-                            self.change_positions(i)
-                    for i, eq in enumerate(self.armor_eq, self.eq_size):
-                        if eq.rect.collidepoint(event.pos):
-                            self.change_positions(i)
+                            break
+                    else:
+                        for i, eq in enumerate(self.extended_eq, len(self.base_eq)):
+                            if eq.rect.collidepoint(event.pos):
+                                self.change_positions(i)
+                                break
+                        else:
+                            for i, eq in enumerate(self.armor_eq, self.eq_size):
+                                if eq.rect.collidepoint(event.pos):
+                                    self.change_positions(i)
+                                    break
                     if self.bin.rect.collidepoint(event.pos):
                         self.collected_items[self.change_tool] = []
                     self.change_tool = None
@@ -373,6 +399,8 @@ class Equipment:
             if self.item_moving is not None:
                 self.eq.x = event.pos[0] + self.offset_x
                 self.eq.y = event.pos[1] + self.offset_y
+
+        crafting.handle_craft_mouse(event, self, self.game.items_factory)
 
     # Funkcja do zamiany eq miejscami
     def change_positions(self, position):
@@ -410,13 +438,13 @@ class Equipment:
         flag = True
         if self.collected_items[new_index]:
             if index == armour_pos:
-                if self.collected_items[new_index][0].get_type() != "helmet":
+                if self.collected_items[new_index][0].get_type() != Helmet:
                     flag = False
             elif index == armour_pos + 1:
-                if self.collected_items[new_index][0].get_type() != "breastplate":
+                if self.collected_items[new_index][0].get_type() != Breastplate:
                     flag = False
             elif index == armour_pos + 2:
-                if self.collected_items[new_index][0].get_type() != "boots":
+                if self.collected_items[new_index][0].get_type() != Boots:
                     flag = False
         if flag:
             if self.collected_items[index]:
