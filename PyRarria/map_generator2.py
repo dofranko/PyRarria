@@ -37,25 +37,26 @@ cave = []
 banned = []
 ore_dictionary = {
     'copper': {"min_height": 20,
-               "max_height": map_height,
+               "max_height": map_height - 1,
                "amount": 50,
-               "size": 5,
-               "propability": 30},
+               "size": 3,
+               "propability": 30,
+               "how_many": 40},
 
     'iron': {"min_height": 40,
-               "max_height": map_height,
-               "amount": 40,
-               "size": 4,
-               "propability": 50},
+             "max_height": map_height - 1,
+             "amount": 40,
+             "size": 3,
+             "propability": 50,
+             "how_many": 30},
 
-    'coal': {"min_height": 50,
-               "max_height": map_height,
-               "amount": 60,
-               "size": 3,
-               "propability": 80}
+    'coal': {"min_height": 10,
+             "max_height": map_height - 1,
+             "amount": 60,
+             "size": 5,
+             "propability": 20,
+             "how_many": 60}
 }
-ore_dictionary["copper"]["min_height"]
-
 
 non_colision1 = ["log", "leaves"]
 non_colision2 = ["grass"]
@@ -78,19 +79,19 @@ def nbh(L,
         l = random.randint(0, 100)
         g = random.randint(0, 100)
         d = random.randint(0, 100)
-        if p < prop:
+        if p < prop and tmp[0] < map_width:
             tmp = (tmp[0] + 1, tmp[1])
             list.append(tmp)
 
-        if l < prop:
+        if l < prop and tmp[0] > 0:
             tmp = (tmp[0] - 1, tmp[1])
             list.append(tmp)
 
-        if d < prop:
+        if d < prop and tmp[1] < map_height:
             tmp = (tmp[0], tmp[1] + 1)
             list.append(tmp)
 
-        if g < prop:
+        if g < prop and tmp[1] > 0:
             tmp = (tmp[0], tmp[1] - 1)
             list.append(tmp)
 
@@ -219,9 +220,55 @@ def dirt_generator(height, gradient, gradient_start):
                 break
 
 
-def ore_generator(min_height, max_height):
-    pass
+def cloud_generator(min_height, max_height, size, propability, how_many):
+    for i in range(how_many):
+        w = random.randint(0, map_width)
+        h = random.randint(max_height, min_height)
+        cloud.append((w, h))
+    for i in range(size):
+        cloud.extend(nbh(cloud, propability))
 
+
+def ore_generator(min_height, max_height, size, propability, how_many, lista):
+    L = random.choices(surface, k=how_many)
+    for i in L:
+        h = random.randint(i[1] + min_height, max_height)
+        lista.append((i[0], h))
+    for i in range(size):
+        # TODO Ciekawostka, jeśli użyjemy tutaj append zamiast extend funkcja zwróci nam listę z pierwszego append'u, nie drugiego
+        lista.extend(nbh(lista, propability))
+
+
+def singleblocks_generator(newlist, oldlist, propability):
+    k = int(len(oldlist) * propability / 100)
+    if k == 0:
+        k = 1
+    newlist.extend(random.sample(oldlist, k))
+
+
+def multiblock_generator(newlist, oldlist, propability, size, nbhpropability):
+    newlist.extend(random.sample(oldlist, int(len(oldlist) * propability / 100)))
+    for i in range(size):
+        tmp = []
+        tmp.extend(nbh(newlist, nbhpropability))
+        for j in tmp:
+            if j in oldlist:
+                newlist.append(j)
+
+
+def littlegrass_generator(propability, grassP, tallgrassP, redmushroomP, mushroomchickenP):
+    tmp = []
+    tmp.extend(random.sample(grass_dirt, int(len(grass_dirt) * propability / 100)))
+    for i in tmp:
+        x = random.randint(0, grassP + tallgrassP + redmushroomP + mushroomchickenP)
+        if x >= 0 and x < grassP:
+            grass.append((i[0], i[1] - 1))
+        elif x >= grassP and x < grassP + tallgrassP:
+            tall_grass.append((i[0], i[1] - 1))
+        elif x >= grassP + tallgrassP and x < grassP + tallgrassP + redmushroomP:
+            mushroom_red.append((i[0], i[1] - 1))
+        else:
+            mushroom_brown.append((i[0], i[1] - 1))
 
 
 def glass_generator():
@@ -258,7 +305,25 @@ def generuj():
                  15)  # powiększanie jaskini (moc powiększania, szansa na średnie powiększenie, szansa na duże powiększenie)
     glass_generator()
     log_generator(5, 10)
+    ore_generator(ore_dictionary['copper']['min_height'], ore_dictionary['copper']['max_height'],
+                  ore_dictionary['copper']['size'], ore_dictionary['copper']['propability'],
+                  ore_dictionary['copper']['how_many'], copper)
+    ore_generator(ore_dictionary['iron']['min_height'], ore_dictionary['iron']['max_height'],
+                  ore_dictionary['iron']['size'], ore_dictionary['iron']['propability'],
+                  ore_dictionary['iron']['how_many'], iron)
+    ore_generator(ore_dictionary['coal']['min_height'], ore_dictionary['coal']['max_height'],
+                  ore_dictionary['coal']['size'], ore_dictionary['coal']['propability'],
+                  ore_dictionary['coal']['how_many'], coal_ore)
     t1 = time.time()
+    cloud_generator(10, 0, 6, 7, 30)
+    singleblocks_generator(bone_dirt, dirt, 2.5)
+    singleblocks_generator(flint_dirt, dirt, 2.5)
+    singleblocks_generator(diamond1, stone, 0.5)
+    singleblocks_generator(diamond2, stone, 0.25)
+    singleblocks_generator(diamond3, stone, 0.125)
+    multiblock_generator(clay, dirt, 0.25, 4, 80)
+    littlegrass_generator(60, 4, 3, 1, 1)
+    singleblocks_generator(chrysoprase_clay, clay, 0.0001)
     print("czas generowania mapy: " + str(t1 - t0)[0:6] + "s")
 
 
@@ -382,17 +447,18 @@ def create_world(grid, items_factory):
     for blok in flint_dirt_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    chrysoprase_clay_list = [items_factory.create("chrysoprase_clay", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for
-                             block in chyrsoplase_claylist()]
-    for blok in chrysoprase_clay_list:
+    stone_list = [items_factory.create("stone", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in stonelist()]
+    for blok in stone_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
     clay_list = [items_factory.create("clay", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in claylist()]
     for blok in clay_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    stone_list = [items_factory.create("stone", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in stonelist()]
-    for blok in stone_list:
+    chrysoprase_clay_list = [items_factory.create("chrysoprase_clay", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE)
+                             for
+                             block in chyrsoplase_claylist()]
+    for blok in chrysoprase_clay_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
     iron_list = [items_factory.create("iron", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in ironlist()]

@@ -484,6 +484,7 @@ def grasslist():
 
 
 def create_world(grid, items_factory):
+    t0 = time.time()
     for i in range(300):
         for j in range(-20, 300):
             grid[(i * BLOCK_SIZE, j * BLOCK_SIZE)] = None
@@ -594,3 +595,5 @@ def create_world(grid, items_factory):
     glass_list = [items_factory.create("glass", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in glasslist()]
     for blok in glass_list:
         grid[(blok.position.x, blok.position.y)] = blok
+    t1 = time.time()
+    print("czas tworzenia świata: " + str(t1 - t0)[0:6] + "s")
