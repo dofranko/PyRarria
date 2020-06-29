@@ -2,7 +2,7 @@ import pygame
 import sys
 import items.crafting as crafting
 from settings import *
-from player import *
+from player_no_clip import *
 
 # from player_no_clip import *
 from equipment import *

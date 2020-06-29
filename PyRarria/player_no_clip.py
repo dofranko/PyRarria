@@ -207,6 +207,8 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += self.vel.x + 0.5 * self.acc.x
         # self.check_collision_horizontally()
 
+        self.rect.x, self.rect.y = (WIDTH /2, HEIGHT / 2)
+
         if abs(self.acc.x) < 1e-5:
             self.acc.x = 0
         if abs(self.vel.x) < 1e-5:
