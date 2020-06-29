@@ -18,6 +18,7 @@ class Item(pygame.sprite.Sprite):
         self.description = info.description
         self.variety = info.variety
         self.angle = info.angle
+        self.info = info
 
         self.game = game
         self.damage = 5
@@ -28,7 +29,7 @@ class Item(pygame.sprite.Sprite):
         self.vel_y = 0
         self.acc_y = 0
 
-        self.image = self.load_image(self.name)
+        self.image = Item.load_image(self.name)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -122,9 +123,10 @@ class Item(pygame.sprite.Sprite):
                 return True
         return False
 
-    def load_image(self, name):
+    @staticmethod
+    def load_image(name):
         if name not in Item.items_loaded_images.keys():
-            Item.items_loaded_images[name] = pygame.image.load(IMAGES_LIST[self.name]).convert_alpha()
+            Item.items_loaded_images[name] = pygame.image.load(IMAGES_LIST[name]).convert_alpha()
         return Item.items_loaded_images[name]
 
     @staticmethod

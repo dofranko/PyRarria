@@ -15,16 +15,23 @@ class Background:
         self.stage_width = MAP_WIDTH  # Szerokość całej planszy.
         self.start_scrolling_position = vector(0, 0)
         self.main_image = pygame.image.load(IMAGES_LIST["background"]["main"]).convert_alpha()
-        self.main_stage = Stage(game, *self.main_image.get_rect().size, slowing_rate=1, image=self.main_image, y_offset = 750)
+        self.main_stage = Stage(
+            game, *self.main_image.get_rect().size, slowing_rate=1, image=self.main_image, y_offset=1000
+        )
         # Dalsze tła (liczba mnoga)
         stage_2 = Stage(
-            game, *self.main_image.get_rect().size, image_source=IMAGES_LIST["background"]["2"], slowing_rate=4, y_offset = -550
+            game,
+            *self.main_image.get_rect().size,
+            image_source=IMAGES_LIST["background"]["2"],
+            slowing_rate=4,
+            y_offset=1600,
         )
         stage_3 = Stage(
             game, *self.main_image.get_rect().size, image_source=IMAGES_LIST["background"]["3"], slowing_rate=5,
         )
         self.stages.append(stage_2)
         self.stages.append(stage_3)
+
     def update_player_and_rect_x(self):
         """Updating main stage position x and player rect x"""
         # Tu ważne: w tym miejscu centrujemy player.rect - nie w jego klasie.
@@ -49,8 +56,6 @@ class Background:
 
     def draw(self):
         """"Draw background"""
-        # Wypełnianie "spodu" czarnością
-        self.game.screen.fill(BLACK)
         # Reversed, bo ostatnie dodane tło ma być 'na spodzie'
         for stage in reversed(self.stages):
             stage.draw()
@@ -62,7 +67,9 @@ class Background:
 class Stage:
     """A class displaying stage of background"""
 
-    def __init__(self, game, background_width, background_height, *, image_source=None, slowing_rate=3, image=None, y_offset = 0):
+    def __init__(
+        self, game, background_width, background_height, *, image_source=None, slowing_rate=3, image=None, y_offset=0
+    ):
         if image_source is None and image is None:
             raise NoImageProvidedError("Neither `image` nor `image_source` attribute provided.")
         self.game = game
@@ -84,27 +91,17 @@ class Stage:
     def draw(self):
         """Drawing stage"""
         """ """
-        pos_x_tmp = self.position.x
-        while pos_x_tmp < 0:
-            pos_x_tmp += 2 * self.width
-        while pos_x_tmp > WIDTH:
-            pos_x_tmp -= 2 * self.width
-
-        self.game.screen.blit(self.image, (pos_x_tmp, self.y_offset + self.position.y))
+        pos_x_tmp = self.position.x % self.width
+        if pos_x_tmp > 0:
+            pos_x_tmp -= self.width
+        self.game.screen.blit(self.image, (pos_x_tmp, self.y_offset / self.slowing_rate + self.position.y))
         img = self.image
-        i = 1
-        while pos_x_tmp - i * self.width >= -self.width:
-            img = pygame.transform.flip(img, True, False)
-            self.game.screen.blit(img, (pos_x_tmp - i * self.width, self.y_offset + self.position.y))
-            i += 1
-
-        img = self.image
-        i = 1
-        
-        while pos_x_tmp + (i + 1) * self.width <= WIDTH + self.width:
-            img = pygame.transform.flip(img, True, False)
-            self.game.screen.blit(img, (pos_x_tmp + i * self.width, self.y_offset + self.position.y))
-            i += 1
+        for i in range(WIDTH):
+            if pos_x_tmp + i * self.width > WIDTH:
+                break
+            self.game.screen.blit(
+                img, (pos_x_tmp + i * self.width, self.y_offset / self.slowing_rate + self.position.y)
+            )
 
 class NoImageProvidedError(Exception):
     pass
