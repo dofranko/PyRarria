@@ -1,0 +1,25 @@
+XX - nothing/cave/air/whatever
+00 - dirt
+01 - grass_dirt
+02 - stone
+03 - coal_ore
+04 - copper_ore 
+05 - iron_ore
+06 - grass
+07 - tall_grass
+08 - mushroom_red
+09 - mushroom_brown (chicken)
+0A - diamond1
+0B - diamond2
+0C - diamond3
+0D - clay
+0E - chrysoprase_clay
+0F - cloud
+10 - log
+11 - log_hole
+11 - leaves
+12 - apple_leaves
+12 - bone_dirt
+13 - flint_dirt
+FF - glass
+

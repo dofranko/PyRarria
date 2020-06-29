@@ -4,7 +4,7 @@ import time
 
 map_width = 256
 map_height = 128
-
+MAP_MATRIX = [[0] * map_width for i in range(map_height)]
 cloud = []
 platformy = []
 surface = []
@@ -35,6 +35,7 @@ chrysoprase_clay = []
 clay = []
 cave = []
 banned = []
+save = open("map_save","w")
 ore_dictionary = {
     'copper': {"min_height": 20,
                "max_height": map_height - 1,
@@ -113,6 +114,7 @@ def surface_generator(min_depth, max_depth, start_height, anticraziness, flatnes
             if a - 1 < x < 2 * a:
                 H += 1
                 grass_dirt.append((W, H))
+                MAP_MATRIX[H][W] = "01"
                 surface.append((W, H))
                 if (len(grass_dirt)) == map_width:
                     break
@@ -122,6 +124,7 @@ def surface_generator(min_depth, max_depth, start_height, anticraziness, flatnes
             elif x < a:
                 H -= 1
                 grass_dirt.append((W, H))
+                MAP_MATRIX[H][W] = "01"
                 surface.append((W, H))
                 if (len(grass_dirt)) == map_width:
                     break
@@ -137,6 +140,7 @@ def surface_generator(min_depth, max_depth, start_height, anticraziness, flatnes
                 if x < b:
                     w = 0
                     grass_dirt.append((W, H))
+                    MAP_MATRIX[H][W] = "01"
                     surface.append((W, H))
                     if (len(grass_dirt)) == map_width:
                         break
@@ -150,11 +154,13 @@ def surface_generator(min_depth, max_depth, start_height, anticraziness, flatnes
                 if x < b:
                     w = 0
                     grass_dirt.append((W, H))
+                    MAP_MATRIX[H][W] = "01"
                     surface.append((W, H))
                     if (len(grass_dirt)) == map_width:
                         break
                     W += 1
         grass_dirt.append((W, H))
+        MAP_MATRIX[H][W] = "01"
         surface.append((W, H))
         if (len(grass_dirt)) == map_width:
             break
@@ -546,3 +552,4 @@ def create_world(grid, items_factory):
         grid[(blok.position.x, blok.position.y)] = blok
     t1 = time.time()
     print("czas tworzenia świata: " + str(t1 - t0)[0:6] + "s")
+    print(MAP_MATRIX)
