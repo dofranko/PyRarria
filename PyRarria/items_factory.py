@@ -113,6 +113,7 @@ class Factory:
     ITEMS_DICT["chrysoprase_clay"] = ItemInfo(
         "chrysoprase_clay", "Wszedzie jej pelno.", Block, -10, {"hp": 1, "probability": 0.0}
     )
+    ITEMS_DICT["cave"] = ItemInfo("cave", "Wszedzie jej pelno.", Block, -10, {"hp": 1, "probability": 0.0})
 
     ITEMS_DICT["iron_mineral"] = ItemInfo("iron_mineral", "Kryształ żelaza", Mineral, -10, {})
 

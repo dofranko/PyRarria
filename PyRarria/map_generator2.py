@@ -36,26 +36,30 @@ clay = []
 cave = []
 banned = []
 ore_dictionary = {
-    'copper': {"min_height": 20,
-               "max_height": map_height - 1,
-               "amount": 50,
-               "size": 3,
-               "propability": 30,
-               "how_many": 40},
-
-    'iron': {"min_height": 40,
-             "max_height": map_height - 1,
-             "amount": 40,
-             "size": 3,
-             "propability": 50,
-             "how_many": 30},
-
-    'coal': {"min_height": 10,
-             "max_height": map_height - 1,
-             "amount": 60,
-             "size": 5,
-             "propability": 20,
-             "how_many": 60}
+    "copper": {
+        "min_height": 20,
+        "max_height": map_height - 1,
+        "amount": 50,
+        "size": 3,
+        "propability": 30,
+        "how_many": 40,
+    },
+    "iron": {
+        "min_height": 40,
+        "max_height": map_height - 1,
+        "amount": 40,
+        "size": 3,
+        "propability": 50,
+        "how_many": 30,
+    },
+    "coal": {
+        "min_height": 10,
+        "max_height": map_height - 1,
+        "amount": 60,
+        "size": 5,
+        "propability": 20,
+        "how_many": 60,
+    },
 }
 
 non_colision1 = ["log", "leaves"]
@@ -70,8 +74,9 @@ NON_COLLISION_OBJECTS.append("mushroom_red")
 NON_COLLISION_OBJECTS.append("mushroom_brown")
 
 
-def nbh(L,
-        prop):  # funkcja pobierająca listę kolcków oraz prawdopodbieństwo dostawienia sąsiada z każdej strony każdego klocka na liście
+def nbh(
+    L, prop
+):  # funkcja pobierająca listę kolcków oraz prawdopodbieństwo dostawienia sąsiada z każdej strony każdego klocka na liście
     list = []
     for i in L:
         tmp = i
@@ -104,7 +109,7 @@ def surface_generator(min_depth, max_depth, start_height, anticraziness, flatnes
     W = -1
     H = start_height
     a = (100 - flatness) / 2
-    b = (100 - anticraziness)
+    b = 100 - anticraziness
     for i in range(map_width):
         x = random.randint(0, 99)
         W += 1
@@ -298,22 +303,39 @@ def generuj():
 
     for i in range(6):  # ile jaskiń
         where = surface[random.randint(0, len(surface) - 1)]
-        cave_generator(where, 80, 200, 5, 70, 33,
-                       33)  # (TUPLE Z KOORDYNATORAMI POCZATKU JASKINI, MIN GŁĘBOKOŚĆ, MAX GŁĘBOKOŚĆ, SZANSA NA ODNOGĘ, SZANSA NA KLOCEK W DÓŁ/LEWO/PRAWO
+        cave_generator(
+            where, 80, 200, 5, 70, 33, 33
+        )  # (TUPLE Z KOORDYNATORAMI POCZATKU JASKINI, MIN GŁĘBOKOŚĆ, MAX GŁĘBOKOŚĆ, SZANSA NA ODNOGĘ, SZANSA NA KLOCEK W DÓŁ/LEWO/PRAWO
 
-    size_machine(40, 40,
-                 15)  # powiększanie jaskini (moc powiększania, szansa na średnie powiększenie, szansa na duże powiększenie)
+    size_machine(
+        40, 40, 15
+    )  # powiększanie jaskini (moc powiększania, szansa na średnie powiększenie, szansa na duże powiększenie)
     glass_generator()
     log_generator(5, 10)
-    ore_generator(ore_dictionary['copper']['min_height'], ore_dictionary['copper']['max_height'],
-                  ore_dictionary['copper']['size'], ore_dictionary['copper']['propability'],
-                  ore_dictionary['copper']['how_many'], copper)
-    ore_generator(ore_dictionary['iron']['min_height'], ore_dictionary['iron']['max_height'],
-                  ore_dictionary['iron']['size'], ore_dictionary['iron']['propability'],
-                  ore_dictionary['iron']['how_many'], iron)
-    ore_generator(ore_dictionary['coal']['min_height'], ore_dictionary['coal']['max_height'],
-                  ore_dictionary['coal']['size'], ore_dictionary['coal']['propability'],
-                  ore_dictionary['coal']['how_many'], coal_ore)
+    ore_generator(
+        ore_dictionary["copper"]["min_height"],
+        ore_dictionary["copper"]["max_height"],
+        ore_dictionary["copper"]["size"],
+        ore_dictionary["copper"]["propability"],
+        ore_dictionary["copper"]["how_many"],
+        copper,
+    )
+    ore_generator(
+        ore_dictionary["iron"]["min_height"],
+        ore_dictionary["iron"]["max_height"],
+        ore_dictionary["iron"]["size"],
+        ore_dictionary["iron"]["propability"],
+        ore_dictionary["iron"]["how_many"],
+        iron,
+    )
+    ore_generator(
+        ore_dictionary["coal"]["min_height"],
+        ore_dictionary["coal"]["max_height"],
+        ore_dictionary["coal"]["size"],
+        ore_dictionary["coal"]["propability"],
+        ore_dictionary["coal"]["how_many"],
+        coal_ore,
+    )
     t1 = time.time()
     cloud_generator(10, 0, 6, 7, 30)
     singleblocks_generator(bone_dirt, dirt, 2.5)
@@ -437,13 +459,15 @@ def create_world(grid, items_factory):
     for blok in dirt_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    bone_dirt_list = [items_factory.create("bone_dirt", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                      bone_dirtlist()]
+    bone_dirt_list = [
+        items_factory.create("bone_dirt", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in bone_dirtlist()
+    ]
     for blok in bone_dirt_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    flint_dirt_list = [items_factory.create("flint_dirt", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                       flint_dirtlist()]
+    flint_dirt_list = [
+        items_factory.create("flint_dirt", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in flint_dirtlist()
+    ]
     for blok in flint_dirt_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
@@ -455,9 +479,10 @@ def create_world(grid, items_factory):
     for blok in clay_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    chrysoprase_clay_list = [items_factory.create("chrysoprase_clay", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE)
-                             for
-                             block in chyrsoplase_claylist()]
+    chrysoprase_clay_list = [
+        items_factory.create("chrysoprase_clay", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE)
+        for block in chyrsoplase_claylist()
+    ]
     for blok in chrysoprase_clay_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
@@ -465,23 +490,29 @@ def create_world(grid, items_factory):
     for blok in iron_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    mushroom_brown_list = [items_factory.create("mushroom_brown", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for
-                           block in mushroom_brownlist()]
+    mushroom_brown_list = [
+        items_factory.create("mushroom_brown", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE)
+        for block in mushroom_brownlist()
+    ]
     for blok in mushroom_brown_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    mushroom_red_list = [items_factory.create("mushroom_red", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for
-                         block in mushroom_redlist()]
+    mushroom_red_list = [
+        items_factory.create("mushroom_red", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE)
+        for block in mushroom_redlist()
+    ]
     for blok in mushroom_red_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    coal_ore_list = [items_factory.create("coal_ore", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                     coal_orelist()]
+    coal_ore_list = [
+        items_factory.create("coal_ore", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in coal_orelist()
+    ]
     for blok in coal_ore_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    copper_list = [items_factory.create("copper", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                   copperlist()]
+    copper_list = [
+        items_factory.create("copper", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in copperlist()
+    ]
     for blok in copper_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
@@ -489,23 +520,27 @@ def create_world(grid, items_factory):
     for blok in log_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    log_hole_list = [items_factory.create("log_hole", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                     log_holelist()]
+    log_hole_list = [
+        items_factory.create("log_hole", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in log_holelist()
+    ]
     for blok in log_hole_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    diamond1_list = [items_factory.create("diamond1", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                     diamond1list()]
+    diamond1_list = [
+        items_factory.create("diamond1", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in diamond1list()
+    ]
     for blok in diamond1_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    diamond2_list = [items_factory.create("diamond2", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                     diamond2list()]
+    diamond2_list = [
+        items_factory.create("diamond2", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in diamond2list()
+    ]
     for blok in diamond2_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    diamond3_list = [items_factory.create("diamond3", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                     diamond3list()]
+    diamond3_list = [
+        items_factory.create("diamond3", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in diamond3list()
+    ]
     for blok in diamond3_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
@@ -517,23 +552,28 @@ def create_world(grid, items_factory):
     for blok in grass_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    grass_dirt_list = [items_factory.create("grass_dirt", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                       grass_dirtlist()]
+    grass_dirt_list = [
+        items_factory.create("grass_dirt", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in grass_dirtlist()
+    ]
     for blok in grass_dirt_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    tall_grass_list = [items_factory.create("tall_grass", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                       tall_grasslist()]
+    tall_grass_list = [
+        items_factory.create("tall_grass", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in tall_grasslist()
+    ]
     for blok in tall_grass_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    leaves_list = [items_factory.create("leaves", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                   leaveslist()]
+    leaves_list = [
+        items_factory.create("leaves", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in leaveslist()
+    ]
     for blok in leaves_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    apple_leaves_list = [items_factory.create("apple_leaves", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                         appleleaveslist()]
+    apple_leaves_list = [
+        items_factory.create("apple_leaves", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE)
+        for block in appleleaveslist()
+    ]
     for blok in apple_leaves_list:
         grid[(blok.position.x, blok.position.y)] = blok
 

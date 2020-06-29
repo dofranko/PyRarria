@@ -32,23 +32,11 @@ class Background:
         self.stages.append(stage_2)
         self.stages.append(stage_3)
 
-    def update_player_and_rect_x(self):
-        """Updating main stage position x and player rect x"""
-        # Tu ważne: w tym miejscu centrujemy player.rect - nie w jego klasie.
-        self.player.rect.x = self.start_scrolling_position.x + WIDTH / 2
-        self.main_stage.position.x = -self.player.position.x
-
-    def update_player_and_rect_y(self):
-        """Updating main stage position y and player rect y"""
-        # Pozycja gracza Y i sceny
-        self.player.rect.y = self.start_scrolling_position.y + HEIGHT / 2
-        self.main_stage.position.y = -self.player.position.y
-
     def update(self):
         """Update main stage's and player's positions"""
         # Pozycja gracza X i sceny:
-        self.update_player_and_rect_x()
-        self.update_player_and_rect_y()
+        self.main_stage.position.x = -self.player.position.x
+        self.main_stage.position.y = -self.player.position.y
 
         # Aktualizacja pozycji dalszych teł (dopełniacz liczby mnogiej ;-; )
         for stage in self.stages:
@@ -92,16 +80,14 @@ class Stage:
         """Drawing stage"""
         """ """
         pos_x_tmp = self.position.x % self.width
-        if pos_x_tmp > 0:
-            pos_x_tmp -= self.width
-        self.game.screen.blit(self.image, (pos_x_tmp, self.y_offset / self.slowing_rate + self.position.y))
-        img = self.image
-        for i in range(WIDTH):
-            if pos_x_tmp + i * self.width > WIDTH:
-                break
+        end = WIDTH // self.width + 1
+        if pos_x_tmp > WIDTH:
+            end = 0
+        for i in range(-1, end):
             self.game.screen.blit(
-                img, (pos_x_tmp + i * self.width, self.y_offset / self.slowing_rate + self.position.y)
+                self.image, (pos_x_tmp + i * self.width, self.y_offset / self.slowing_rate + self.position.y)
             )
+
 
 class NoImageProvidedError(Exception):
     pass

@@ -22,12 +22,12 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, game, equipment, health_bar, mana_bar, spells):
         super().__init__()
         poz_x = surface[int(len(surface) / 2)]
-        poz_y = poz_x[1]*BLOCK_SIZE - 3*BLOCK_SIZE
-        poz_x = poz_x[0]*BLOCK_SIZE
+        poz_y = poz_x[1] * BLOCK_SIZE - 3 * BLOCK_SIZE
+        poz_x = poz_x[0] * BLOCK_SIZE
         self.game = game
         self.equipment = equipment
         self.image = pygame.image.load(IMAGES_LIST["player"]).convert_alpha()
-        self.image = pygame.transform.scale(self.image, ((int(BLOCK_SIZE)), (int(BLOCK_SIZE*2.5))))
+        self.image = pygame.transform.scale(self.image, ((int(BLOCK_SIZE)), (int(BLOCK_SIZE * 2.5))))
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH / 2, 0)
         self.position = vector(poz_x, poz_y)

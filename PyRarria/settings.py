@@ -22,7 +22,7 @@ PLAYER_MOVE = {
     "PLAYER_ACC": 1.2,
     "PLAYER_GRAV": 0.8,
     "PLAYER_FRICTION": -0.2,
-    "JUMP_VEL": -10,
+    "JUMP_VEL": -15,
     "MAX_VEL_Y": 15,
     "FRICTION": -0.12,
 }
@@ -58,11 +58,7 @@ IMAGES_LIST = {
     "bin": IMAGES + "bin2.png",
     "crafting_table_square": IMAGES + "crafting_table_square.png",
     # Screens
-    "background": {
-        "main": BACKGROUND + "BG1.png",
-        "2": BACKGROUND + "BG2.png",
-        "3": BACKGROUND + "BG3.png",
-    },
+    "background": {"main": BACKGROUND + "BG1.png", "2": BACKGROUND + "BG2.png", "3": BACKGROUND + "BG3.png",},
     "start_screen": SCREENS + "start_screen.png",
     "game_over_screen": SCREENS + "game_over_screen.png",
     # START ITEMS

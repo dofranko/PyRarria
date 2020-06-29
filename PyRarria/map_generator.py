@@ -1,6 +1,7 @@
 import random
 from settings import *
 import time
+
 cloud = []
 platformy = []
 surface = []
@@ -106,8 +107,9 @@ def remove(x, y):
         chrysoprase_clay.remove(to_remove)
 
 
-def nbh(L,
-        prop):  # funkcja pobierająca listę kolcków oraz prawdopodbieństwo dostawienia sąsiada z każdej strony każdego klocka na liście
+def nbh(
+    L, prop
+):  # funkcja pobierająca listę kolcków oraz prawdopodbieństwo dostawienia sąsiada z każdej strony każdego klocka na liście
     list = []
     for i in L:
         tmp = i
@@ -135,7 +137,9 @@ def nbh(L,
     return list
 
 
-def surface_generator(anticraziness, flatness, start_height):  # anticrazines odpowiada za szybkość powrotu do płaskiego generowania, flatness odpowiada za rzadość występowania górek i dołków
+def surface_generator(
+    anticraziness, flatness, start_height
+):  # anticrazines odpowiada za szybkość powrotu do płaskiego generowania, flatness odpowiada za rzadość występowania górek i dołków
     w = 0
     W = -1
     H = start_height
@@ -248,9 +252,9 @@ def generuj():
         x = random.randint(0, len(dirt) - 1)
         x = [((dirt[x][0]), (dirt[x][1]))]
 
-        tmp = (nbh(x, 90))
+        tmp = nbh(x, 90)
         for j in range(5):
-            tmp = (nbh(tmp, 90))
+            tmp = nbh(tmp, 90)
             for k in tmp:
                 if k not in dirt:
                     tmp.remove(k)
@@ -288,10 +292,12 @@ def generuj():
     # generator jaskiń
     for i in range(6):  # ile jaskiń
         where = surface[random.randint(0, len(surface) - 1)]
-        cave_generator(where, 50, 70, 5, 70, 33,
-                       33)  # (TUPLE Z KOORDYNATORAMI POCZATKU JASKINI, MIN GŁĘBOKOŚĆ, MAX GŁĘBOKOŚĆ, SZANSA NA ODNOGĘ, SZANSA NA KLOCEK W DÓŁ/LEWO/PRAWO
-    size_machine(40, 20,
-                 5)  # powiększanie jaskini (moc powiększania, szansa na średnie powiększenie, szansa na duże powiększenie)
+        cave_generator(
+            where, 50, 70, 5, 70, 33, 33
+        )  # (TUPLE Z KOORDYNATORAMI POCZATKU JASKINI, MIN GŁĘBOKOŚĆ, MAX GŁĘBOKOŚĆ, SZANSA NA ODNOGĘ, SZANSA NA KLOCEK W DÓŁ/LEWO/PRAWO
+    size_machine(
+        40, 20, 5
+    )  # powiększanie jaskini (moc powiększania, szansa na średnie powiększenie, szansa na duże powiększenie)
 
     # generator chmur
     tmpcloud = []
@@ -334,13 +340,13 @@ def generuj():
         for w in range(-2, 3):
             for h in range(-1, 3):
                 if (
-                        (w != -2 or h != -1)
-                        and (w != 2 or h != -1)
-                        and (w != -2 or h != 2)
-                        and (w != 2 or h != 2)
-                        and 256 > (l[0] + w) > -1
-                        and (l[0] + w, l[1] + h) not in log
-                        and (l[0] + w, l[1] + h) not in log_hole
+                    (w != -2 or h != -1)
+                    and (w != 2 or h != -1)
+                    and (w != -2 or h != 2)
+                    and (w != 2 or h != 2)
+                    and 256 > (l[0] + w) > -1
+                    and (l[0] + w, l[1] + h) not in log
+                    and (l[0] + w, l[1] + h) not in log_hole
                 ):
                     tmpleaves.append((l[0] + w, l[1] + h))
     leaves = tmpleaves
@@ -386,7 +392,9 @@ def generuj():
             if j == -1 or j == map_width or i == -1 or i == map_height:
                 glass.append((j, i))
     t1 = time.time()
-    print("czas generowania: " + str(t1-t0)[0:6]+"s")
+    print("czas generowania: " + str(t1 - t0)[0:6] + "s")
+
+
 def dirtlist():
     return dirt
 
@@ -493,18 +501,22 @@ def create_world(grid, items_factory):
     for blok in dirt_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    bone_dirt_list = [items_factory.create("bone_dirt", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                      bone_dirtlist()]
+    bone_dirt_list = [
+        items_factory.create("bone_dirt", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in bone_dirtlist()
+    ]
     for blok in bone_dirt_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    flint_dirt_list = [items_factory.create("flint_dirt", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                       flint_dirtlist()]
+    flint_dirt_list = [
+        items_factory.create("flint_dirt", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in flint_dirtlist()
+    ]
     for blok in flint_dirt_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    chrysoprase_clay_list = [items_factory.create("chrysoprase_clay", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for
-                             block in chyrsoplase_claylist()]
+    chrysoprase_clay_list = [
+        items_factory.create("chrysoprase_clay", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE)
+        for block in chyrsoplase_claylist()
+    ]
     for blok in chrysoprase_clay_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
@@ -520,23 +532,29 @@ def create_world(grid, items_factory):
     for blok in iron_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    mushroom_brown_list = [items_factory.create("mushroom_brown", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for
-                           block in mushroom_brownlist()]
+    mushroom_brown_list = [
+        items_factory.create("mushroom_brown", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE)
+        for block in mushroom_brownlist()
+    ]
     for blok in mushroom_brown_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    mushroom_red_list = [items_factory.create("mushroom_red", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for
-                         block in mushroom_redlist()]
+    mushroom_red_list = [
+        items_factory.create("mushroom_red", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE)
+        for block in mushroom_redlist()
+    ]
     for blok in mushroom_red_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    coal_ore_list = [items_factory.create("coal_ore", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                     coal_orelist()]
+    coal_ore_list = [
+        items_factory.create("coal_ore", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in coal_orelist()
+    ]
     for blok in coal_ore_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    copper_list = [items_factory.create("copper", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                   copperlist()]
+    copper_list = [
+        items_factory.create("copper", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in copperlist()
+    ]
     for blok in copper_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
@@ -544,23 +562,27 @@ def create_world(grid, items_factory):
     for blok in log_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    log_hole_list = [items_factory.create("log_hole", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                     log_holelist()]
+    log_hole_list = [
+        items_factory.create("log_hole", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in log_holelist()
+    ]
     for blok in log_hole_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    diamond1_list = [items_factory.create("diamond1", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                     diamond1list()]
+    diamond1_list = [
+        items_factory.create("diamond1", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in diamond1list()
+    ]
     for blok in diamond1_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    diamond2_list = [items_factory.create("diamond2", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                     diamond2list()]
+    diamond2_list = [
+        items_factory.create("diamond2", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in diamond2list()
+    ]
     for blok in diamond2_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    diamond3_list = [items_factory.create("diamond3", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                     diamond3list()]
+    diamond3_list = [
+        items_factory.create("diamond3", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in diamond3list()
+    ]
     for blok in diamond3_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
@@ -572,23 +594,28 @@ def create_world(grid, items_factory):
     for blok in grass_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    grass_dirt_list = [items_factory.create("grass_dirt", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                       grass_dirtlist()]
+    grass_dirt_list = [
+        items_factory.create("grass_dirt", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in grass_dirtlist()
+    ]
     for blok in grass_dirt_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    tall_grass_list = [items_factory.create("tall_grass", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                       tall_grasslist()]
+    tall_grass_list = [
+        items_factory.create("tall_grass", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in tall_grasslist()
+    ]
     for blok in tall_grass_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    leaves_list = [items_factory.create("leaves", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                   leaveslist()]
+    leaves_list = [
+        items_factory.create("leaves", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in leaveslist()
+    ]
     for blok in leaves_list:
         grid[(blok.position.x, blok.position.y)] = blok
 
-    apple_leaves_list = [items_factory.create("apple_leaves", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                         appleleaveslist()]
+    apple_leaves_list = [
+        items_factory.create("apple_leaves", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE)
+        for block in appleleaveslist()
+    ]
     for blok in apple_leaves_list:
         grid[(blok.position.x, blok.position.y)] = blok
 

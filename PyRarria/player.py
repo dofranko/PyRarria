@@ -2,7 +2,7 @@
 import pygame
 import random
 
-from map_generator import *
+from map_generator2 import *
 from settings import *
 from bullet_spells import *
 from fast_spells import *
@@ -27,9 +27,11 @@ class Player(pygame.sprite.Sprite):
         self.game = game
         self.equipment = equipment
         self.image = pygame.image.load(IMAGES_LIST["player"]).convert_alpha()
-        self.image = pygame.transform.scale(self.image, ((self.image.get_rect().width)*2,(self.image.get_rect().height)*2))
+        self.image = pygame.transform.scale(
+            self.image, ((self.image.get_rect().width) * 2, (self.image.get_rect().height) * 2)
+        )
         self.rect = self.image.get_rect()
-        self.rect.center = (WIDTH / 2, 0)
+        self.rect.center = (WIDTH / 2, HEIGHT / 2)
         self.position = vector(poz_x, poz_y)
         self.vel = vector(0, 0)
         self.acc = vector(0, PLAYER_MOVE["PLAYER_GRAV"])
@@ -78,7 +80,7 @@ class Player(pygame.sprite.Sprite):
         """
         can_jump = False
         # Gdy porusza się w dół
-        if self.vel.y > 0:
+        if self.vel.y + 0.5 * self.acc.y > 0:
             hits = pygame.sprite.spritecollide(self, self._get_close_blocks(), False)
             if hits:
                 new_position = min([hits[i].position.y for i in range(len(hits))])
@@ -90,7 +92,7 @@ class Player(pygame.sprite.Sprite):
                 can_jump = True
 
         # Gdy porusza się w górę
-        elif self.vel.y < 0:
+        elif self.vel.y + 0.5 * self.acc.y < 0:
             hits = pygame.sprite.spritecollide(self, self._get_close_blocks(), False)
             if hits:
                 new_position = max([hits[i].position.y + hits[i].rect.height + 1 for i in range(len(hits))])
@@ -104,7 +106,7 @@ class Player(pygame.sprite.Sprite):
     def check_collision_horizontally(self):
         """Check collistion left/right and move if collided"""
         # Gdy porusza się w prawo
-        if self.vel.x > 0:
+        if self.vel.x + 0.5 * self.acc.x > 0:
             hits = pygame.sprite.spritecollide(
                 self, self._get_close_blocks(), False
             )  # False -> don't remove from blocks
@@ -114,8 +116,9 @@ class Player(pygame.sprite.Sprite):
                 self.rect.x += new_position - self.position.x
                 self.position.x = new_position
                 self.vel.x = 0
+
         # Gdy porusza się w lewo
-        elif self.vel.x < 0:
+        elif self.vel.x + 0.5 * self.acc.x < 0:
             hits = pygame.sprite.spritecollide(
                 self, self._get_close_blocks(), False
             )  # False -> don't remove from blocks
@@ -123,7 +126,6 @@ class Player(pygame.sprite.Sprite):
                 new_position = max([hits[i].position.x + hits[i].rect.width for i in range(len(hits))])
                 self.rect.x += new_position - self.position.x
                 self.position.x = new_position
-                # self.position.x += -WIDTH // 2  # SPECIAL ALIGN
                 self.vel.x = 0
 
     # Sprawdzanie kolizji boosterów (prostokątów gracza i ich)
@@ -193,16 +195,18 @@ class Player(pygame.sprite.Sprite):
             self.vel.y = PLAYER_MOVE["MAX_VEL_Y"]
 
         # Poruszenie się i sprawdzenie kolizji
-        self.position.y += self.vel.y + 0.5 * self.acc.y
-        self.rect.y += self.vel.y + 0.5 * self.acc.y
+        self.position.y += int(self.vel.y + 0.5 * self.acc.y)
+        self.rect.y += int(self.vel.y + 0.5 * self.acc.y)
         can_jump = self.check_collision_vertically()
 
         self.acc.x += self.vel.x * PLAYER_MOVE["FRICTION"]
         self.vel.x += self.acc.x
 
-        self.position.x += self.vel.x + 0.5 * self.acc.x
-        self.rect.x += self.vel.x + 0.5 * self.acc.x
+        self.position.x += int(self.vel.x + 0.5 * self.acc.x)
+        self.rect.x += int(self.vel.x + 0.5 * self.acc.x)
         self.check_collision_horizontally()
+
+        self.rect.x, self.rect.y = (WIDTH // 2, HEIGHT // 2)
 
         if abs(self.acc.x) < 1e-5:
             self.acc.x = 0
@@ -348,4 +352,3 @@ class Player(pygame.sprite.Sprite):
             force = 0.4
         self.vel.y = -push_vel_y * force
         self.vel.x = push_vel_x * direction * force
-

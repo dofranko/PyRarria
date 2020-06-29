@@ -38,7 +38,7 @@ class Game:
     def new_game(self):
         """Start new game"""
         # start a new game
-        
+
         generuj()
         self.grid = {}
 
