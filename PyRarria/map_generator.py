@@ -1,6 +1,6 @@
 import random
 from settings import *
-
+import time
 cloud = []
 platformy = []
 surface = []
@@ -183,7 +183,7 @@ def surface_generator(anticraziness, flatness, start_height):  # anticrazines od
 def generuj():
     global ruda
     global leaves
-
+    t0 = time.time()
     # generator powierzchni
 
     w = 0
@@ -308,7 +308,7 @@ def generuj():
 
     # generator drzew (pień)
     banned = []
-    for i in range(20):
+    for i in range(50):
         where = grass_dirt[random.randint(0, len(grass_dirt) - 1)]
         W = where[0]
         H = where[1] - 1
@@ -385,7 +385,8 @@ def generuj():
         for j in range(-1, map_width + 1):
             if j == -1 or j == map_width or i == -1 or i == map_height:
                 glass.append((j, i))
-
+    t1 = time.time()
+    print("czas generowania: " + str(t1-t0)[0:6]+"s")
 def dirtlist():
     return dirt
 
@@ -483,6 +484,7 @@ def grasslist():
 
 
 def create_world(grid, items_factory):
+    t0 = time.time()
     for i in range(300):
         for j in range(-20, 300):
             grid[(i * BLOCK_SIZE, j * BLOCK_SIZE)] = None
@@ -593,3 +595,5 @@ def create_world(grid, items_factory):
     glass_list = [items_factory.create("glass", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in glasslist()]
     for blok in glass_list:
         grid[(blok.position.x, blok.position.y)] = blok
+    t1 = time.time()
+    print("czas tworzenia świata: " + str(t1 - t0)[0:6] + "s")

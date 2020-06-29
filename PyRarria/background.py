@@ -94,7 +94,6 @@ class Stage:
         pos_x_tmp = self.position.x % self.width
         if pos_x_tmp > 0:
             pos_x_tmp -= self.width
-
         self.game.screen.blit(self.image, (pos_x_tmp, self.y_offset / self.slowing_rate + self.position.y))
         img = self.image
         for i in range(WIDTH):
@@ -103,7 +102,6 @@ class Stage:
             self.game.screen.blit(
                 img, (pos_x_tmp + i * self.width, self.y_offset / self.slowing_rate + self.position.y)
             )
-
 
 class NoImageProvidedError(Exception):
     pass

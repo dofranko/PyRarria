@@ -15,7 +15,7 @@ from boosters import *
 from items.items_generator import *
 from creatures.creatures_engine import CreaturesEngine
 from creatures.vector import PVector
-from map_generator import *
+from map_generator2 import *
 
 
 vector = pygame.math.Vector2

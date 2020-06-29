@@ -49,8 +49,8 @@ class ItemsEngine:
 
     def spawn(self, name):
         position = vector(
-            random.randint(-SPAWN_DISTANCE.x, SPAWN_DISTANCE.x) + self.player.position.x,
-            random.randint(-SPAWN_DISTANCE.y, SPAWN_DISTANCE.y) + self.player.position.y,
+            random.randint(int(-SPAWN_DISTANCE.x), int(SPAWN_DISTANCE.x)) + self.player.position.x,
+            random.randint(int(-SPAWN_DISTANCE.x), int(SPAWN_DISTANCE.x)) + self.player.position.y,
         )
 
         blank = pygame.sprite.Sprite()

@@ -1,7 +1,7 @@
 # game options/settings
 TITLE = "PyRarria"
-WIDTH = 1370
-HEIGHT = 720
+WIDTH = 1366
+HEIGHT = 768
 FPS = 60
 
 # folders
@@ -22,7 +22,7 @@ PLAYER_MOVE = {
     "PLAYER_ACC": 1.2,
     "PLAYER_GRAV": 0.8,
     "PLAYER_FRICTION": -0.2,
-    "JUMP_VEL": -20,
+    "JUMP_VEL": -10,
     "MAX_VEL_Y": 15,
     "FRICTION": -0.12,
 }
@@ -59,9 +59,9 @@ IMAGES_LIST = {
     "crafting_table_square": IMAGES + "crafting_table_square.png",
     # Screens
     "background": {
-        "main": BACKGROUND + "background_moving_main.png",
-        "2": BACKGROUND + "background_moving_second.png",
-        "3": BACKGROUND + "background_moving_third.png",
+        "main": BACKGROUND + "BG1.png",
+        "2": BACKGROUND + "BG2.png",
+        "3": BACKGROUND + "BG3.png",
     },
     "start_screen": SCREENS + "start_screen.png",
     "game_over_screen": SCREENS + "game_over_screen.png",
@@ -110,6 +110,7 @@ IMAGES_LIST = {
     "diamond2": TERRAIN + "diamond22.png",
     "diamond3": TERRAIN + "diamond32.png",
     "log": TERRAIN + "log.png",
+    "cave": TERRAIN + "cave.png",
     "log_hole": TERRAIN + "log_hole.png",
     "leaves": TERRAIN + "leaves.png",
     "apple_leaves": TERRAIN + "apple_leaves.png",

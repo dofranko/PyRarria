@@ -2,7 +2,7 @@
 import pygame
 import random
 
-from map_generator import *
+from map_generator2 import *
 from settings import *
 from bullet_spells import *
 from fast_spells import *
@@ -27,7 +27,7 @@ class Player(pygame.sprite.Sprite):
         self.game = game
         self.equipment = equipment
         self.image = pygame.image.load(IMAGES_LIST["player"]).convert_alpha()
-        self.image = pygame.transform.scale(self.image, ((int(BLOCK_SIZE*1.5)), (int(BLOCK_SIZE*2.5))))
+        self.image = pygame.transform.scale(self.image, ((int(BLOCK_SIZE)), (int(BLOCK_SIZE*2.5))))
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH / 2, 0)
         self.position = vector(poz_x, poz_y)
