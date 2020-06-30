@@ -2,9 +2,9 @@ import pygame
 import sys
 import items.crafting as crafting
 from settings import *
-#from player import *
+from player import *
 
-from player_no_clip import *
+#from player_no_clip import *
 from equipment import *
 from spells_icon import *
 from background import *
@@ -15,7 +15,7 @@ from boosters import *
 from items.items_generator import *
 from creatures.creatures_engine import CreaturesEngine
 from creatures.vector import PVector
-from map_generator2 import *
+from map_generator import *
 
 
 vector = pygame.math.Vector2
