@@ -1,3 +1,29 @@
-1. -----Aktualizacja rect gracza w player.py a nie w background.py------ DONE
+Ważne rzeczy:
+
+1. Poprawnienie spawnowania się mobów
 2. Przeniesienie skilli freeze i bard z creature_engine.py do spells.py
 3. Przekonać grafika, żeby robił w formacie 24x24 piksele.
+4. Odciążenie CPU na rzecz GPU
+5. Rozpoczęcie prac nad multiplayerem
+6. Dodanie oświetlenia
+7. Ograniczenie widoczności "w głą”" bloków
+8. Dodanie ekranu "stwórz świat" oraz "wczytaj świat"
+9. Dodanie generowania gotowych struktur
+10. Przenieść odpowiedzialnoć w generowaniu gridów/narzędzi/mobów z kodu na pliki tekstowe
+
+Z pierdół:
+
+1. Dodanie łuku dla gracza
+2. Poprawienie AI mobków
+3. Poprawa generatora mapy i systemu zapisu
+4. Dodanie obrażeń od upadku
+5. Ogarnięcie backgroundów
+6. Przenieść ekwipunek pod przycisk "E"
+
+Odległe pomysły:
+
+1. Dodać głód i pragnienie
+2. Dodać wodę oraz jej fizykę
+3. Podział mapy na biomy
+4. Dodać plik z settingsami/configami do generowania mapy
+5. Zapis ekwipunku gracza oraz pobliskich mobów do pliku
