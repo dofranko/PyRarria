@@ -4,7 +4,7 @@ import time
 
 map_width = 256
 map_height = 128
-MAP_MATRIX = [[0] * map_width for i in range(map_height)]
+MAP_MATRIX = [["XX"] * map_height for i in range(map_width)]
 cloud = []
 platformy = []
 surface = []
@@ -35,7 +35,6 @@ chrysoprase_clay = []
 clay = []
 cave = []
 banned = []
-save = open("map_save","w")
 ore_dictionary = {
     'copper': {"min_height": 20,
                "max_height": map_height - 1,
@@ -114,7 +113,7 @@ def surface_generator(min_depth, max_depth, start_height, anticraziness, flatnes
             if a - 1 < x < 2 * a:
                 H += 1
                 grass_dirt.append((W, H))
-                MAP_MATRIX[H][W] = "01"
+                MAP_MATRIX[W][H] = "01"
                 surface.append((W, H))
                 if (len(grass_dirt)) == map_width:
                     break
@@ -124,7 +123,7 @@ def surface_generator(min_depth, max_depth, start_height, anticraziness, flatnes
             elif x < a:
                 H -= 1
                 grass_dirt.append((W, H))
-                MAP_MATRIX[H][W] = "01"
+                MAP_MATRIX[W][H] = "01"
                 surface.append((W, H))
                 if (len(grass_dirt)) == map_width:
                     break
@@ -140,7 +139,7 @@ def surface_generator(min_depth, max_depth, start_height, anticraziness, flatnes
                 if x < b:
                     w = 0
                     grass_dirt.append((W, H))
-                    MAP_MATRIX[H][W] = "01"
+                    MAP_MATRIX[W][H] = "01"
                     surface.append((W, H))
                     if (len(grass_dirt)) == map_width:
                         break
@@ -154,13 +153,13 @@ def surface_generator(min_depth, max_depth, start_height, anticraziness, flatnes
                 if x < b:
                     w = 0
                     grass_dirt.append((W, H))
-                    MAP_MATRIX[H][W] = "01"
+                    MAP_MATRIX[W][H] = "01"
                     surface.append((W, H))
                     if (len(grass_dirt)) == map_width:
                         break
                     W += 1
         grass_dirt.append((W, H))
-        MAP_MATRIX[H][W] = "01"
+        MAP_MATRIX[W][H] = "01"
         surface.append((W, H))
         if (len(grass_dirt)) == map_width:
             break
@@ -173,6 +172,8 @@ def cave_generator(where, depth1, depth2, propability, go_d, go_l, go_r):  # gen
     H = where[1]
     p = 0
     for j in range(depth):
+        if -1 < W < map_width and -1 < H < map_height:
+            MAP_MATRIX[W][H] = "XX"
         cave.append((W, H))
         more = random.randint(1, 100)
         if propability > more:
@@ -203,6 +204,8 @@ def size_machine(power, p1, p2):  # powiększanie cave seeda
     for t in tmpcave:
         if t[1] < map_height + 1 and (-1 < t[0] < map_width + 1):
             cave.append(t)
+            if -1<t[0]<map_width and -1<t[1]<map_height:
+                MAP_MATRIX[t[0]][t[1]] = "XX"
             if t in grass_dirt:
                 grass_dirt.remove(t)
                 banned.append(t)
@@ -212,16 +215,20 @@ def dirt_generator(height, gradient, gradient_start):
     for i in grass_dirt:
         for j in range(1, gradient_start):
             dirt.append((i[0], i[1] + j))
+            MAP_MATRIX[i[0]][i[1] + j] = "00"
         for j in range(gradient_start, height + 1):
             x = random.randint(0, 99)
             if gradient / j * height > x:
                 dirt.append((i[0], i[1] + j))
+                MAP_MATRIX[i[0]][i[1] + j] = "00"
             else:
                 stone.append((i[0], i[1] + j))
+                MAP_MATRIX[i[0]][i[1] + j] = "02"
     for i in grass_dirt:
         for j in range(height, map_height):
-            if i[1] + j <= map_height:
+            if i[1] + j < map_height:
                 stone.append((i[0], i[1] + j))
+                MAP_MATRIX[i[0]][i[1] + j] = "02"
             else:
                 break
 
@@ -331,6 +338,7 @@ def generuj():
     littlegrass_generator(60, 4, 3, 1, 1)
     singleblocks_generator(chrysoprase_clay, clay, 0.0001)
     print("czas generowania mapy: " + str(t1 - t0)[0:6] + "s")
+    #save_world()
 
 
 def dirtlist():
@@ -433,123 +441,62 @@ def grasslist():
     return grass
 
 
+def save_world():
+    save = open("map_save", "w")
+    for j in range(map_height):
+        for i in range(map_width):
+            save.write("%s" % MAP_MATRIX[i][j])
+        save.write("\n")
+
+
 def create_world(grid, items_factory):
     t0 = time.time()
-    for i in range(map_width):
-        for j in range(map_height):
-            grid[(i * BLOCK_SIZE, j * BLOCK_SIZE)] = None
+    MAP = []
+    map_width = 0
+    map_height = 0
+    with open('map_save') as f:
+        lines = f.read().splitlines()
+        for i in lines:
+            map_height += 1
+            line = []
+            for j in range(int(len(i) / 2)):
+                line.append(str(i[2 * j]) + str(i[2 * j + 1]))
+                map_width += 1
+            MAP.append(line)
+    map_width = int(map_width / map_height)
+    for j in range(map_height):
+        for i in range(map_width):
+            if MAP[j][i] == '00':
+                block = items_factory.create("dirt", i * BLOCK_SIZE, j * BLOCK_SIZE)
+                grid[(block.position.x, block.position.y)] = block
+            elif MAP[j][i] == '01':
+                block = items_factory.create("grass_dirt", i * BLOCK_SIZE, j * BLOCK_SIZE)
+                grid[(block.position.x, block.position.y)] = block
+            elif MAP[j][i] == '02':
+                block = items_factory.create("stone", i * BLOCK_SIZE, j * BLOCK_SIZE)
+                grid[(block.position.x, block.position.y)] = block
+            elif MAP[j][i] == '03':
+                block = items_factory.create("coal_ore", i * BLOCK_SIZE, j * BLOCK_SIZE)
+                grid[(block.position.x, block.position.y)] = block
+            elif MAP[j][i] == '04':
+                block = items_factory.create("copper_ore", i * BLOCK_SIZE, j * BLOCK_SIZE)
+                grid[(block.position.x, block.position.y)] = block
+            elif MAP[j][i] == '05':
+                block = items_factory.create("iron_ore", i * BLOCK_SIZE, j * BLOCK_SIZE)
+                grid[(block.position.x, block.position.y)] = block
+            elif MAP[j][i] == '06':
+                block = items_factory.create("grass_dirt", i * BLOCK_SIZE, j * BLOCK_SIZE)
+                grid[(block.position.x, block.position.y)] = block
+            elif MAP[j][i] == '07':
+                block = items_factory.create("grass_dirt", i * BLOCK_SIZE, j * BLOCK_SIZE)
+                grid[(block.position.x, block.position.y)] = block
+            elif MAP[j][i] == 'XX':
+                grid[(i * BLOCK_SIZE, j * BLOCK_SIZE)] = None
+    for j in range(-1, map_height + 1):
+        for i in range(-1, map_width + 1):
+            if i == -1 or i == map_width or j == -1 or j == map_height:
+                block = items_factory.create("glass", i * BLOCK_SIZE, j * BLOCK_SIZE)
+                grid[(block.position.x, block.position.y)] = block
 
-    dirt_list = [items_factory.create("dirt", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in dirtlist()]
-    for blok in dirt_list:
-        grid[(blok.position.x, blok.position.y)] = blok
-
-    bone_dirt_list = [items_factory.create("bone_dirt", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                      bone_dirtlist()]
-    for blok in bone_dirt_list:
-        grid[(blok.position.x, blok.position.y)] = blok
-
-    flint_dirt_list = [items_factory.create("flint_dirt", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                       flint_dirtlist()]
-    for blok in flint_dirt_list:
-        grid[(blok.position.x, blok.position.y)] = blok
-
-    stone_list = [items_factory.create("stone", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in stonelist()]
-    for blok in stone_list:
-        grid[(blok.position.x, blok.position.y)] = blok
-
-    clay_list = [items_factory.create("clay", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in claylist()]
-    for blok in clay_list:
-        grid[(blok.position.x, blok.position.y)] = blok
-
-    chrysoprase_clay_list = [items_factory.create("chrysoprase_clay", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE)
-                             for
-                             block in chyrsoplase_claylist()]
-    for blok in chrysoprase_clay_list:
-        grid[(blok.position.x, blok.position.y)] = blok
-
-    iron_list = [items_factory.create("iron", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in ironlist()]
-    for blok in iron_list:
-        grid[(blok.position.x, blok.position.y)] = blok
-
-    mushroom_brown_list = [items_factory.create("mushroom_brown", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for
-                           block in mushroom_brownlist()]
-    for blok in mushroom_brown_list:
-        grid[(blok.position.x, blok.position.y)] = blok
-
-    mushroom_red_list = [items_factory.create("mushroom_red", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for
-                         block in mushroom_redlist()]
-    for blok in mushroom_red_list:
-        grid[(blok.position.x, blok.position.y)] = blok
-
-    coal_ore_list = [items_factory.create("coal_ore", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                     coal_orelist()]
-    for blok in coal_ore_list:
-        grid[(blok.position.x, blok.position.y)] = blok
-
-    copper_list = [items_factory.create("copper", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                   copperlist()]
-    for blok in copper_list:
-        grid[(blok.position.x, blok.position.y)] = blok
-
-    log_list = [items_factory.create("log", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in loglist()]
-    for blok in log_list:
-        grid[(blok.position.x, blok.position.y)] = blok
-
-    log_hole_list = [items_factory.create("log_hole", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                     log_holelist()]
-    for blok in log_hole_list:
-        grid[(blok.position.x, blok.position.y)] = blok
-
-    diamond1_list = [items_factory.create("diamond1", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                     diamond1list()]
-    for blok in diamond1_list:
-        grid[(blok.position.x, blok.position.y)] = blok
-
-    diamond2_list = [items_factory.create("diamond2", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                     diamond2list()]
-    for blok in diamond2_list:
-        grid[(blok.position.x, blok.position.y)] = blok
-
-    diamond3_list = [items_factory.create("diamond3", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                     diamond3list()]
-    for blok in diamond3_list:
-        grid[(blok.position.x, blok.position.y)] = blok
-
-    cloud_list = [items_factory.create("cloud", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in cloudlist()]
-    for blok in cloud_list:
-        grid[(blok.position.x, blok.position.y)] = blok
-
-    grass_list = [items_factory.create("grass", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in grasslist()]
-    for blok in grass_list:
-        grid[(blok.position.x, blok.position.y)] = blok
-
-    grass_dirt_list = [items_factory.create("grass_dirt", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                       grass_dirtlist()]
-    for blok in grass_dirt_list:
-        grid[(blok.position.x, blok.position.y)] = blok
-
-    tall_grass_list = [items_factory.create("tall_grass", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                       tall_grasslist()]
-    for blok in tall_grass_list:
-        grid[(blok.position.x, blok.position.y)] = blok
-
-    leaves_list = [items_factory.create("leaves", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                   leaveslist()]
-    for blok in leaves_list:
-        grid[(blok.position.x, blok.position.y)] = blok
-
-    apple_leaves_list = [items_factory.create("apple_leaves", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in
-                         appleleaveslist()]
-    for blok in apple_leaves_list:
-        grid[(blok.position.x, blok.position.y)] = blok
-
-    cave_list = [items_factory.create("cave", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in cavelist()]
-    for blok in cave_list:
-        grid[(blok.position.x, blok.position.y)] = blok
-
-    glass_list = [items_factory.create("glass", block[0] * BLOCK_SIZE, block[1] * BLOCK_SIZE) for block in glasslist()]
-    for blok in glass_list:
-        grid[(blok.position.x, blok.position.y)] = blok
     t1 = time.time()
     print("czas tworzenia świata: " + str(t1 - t0)[0:6] + "s")
-    print(MAP_MATRIX)
