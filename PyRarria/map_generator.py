@@ -2,7 +2,7 @@ import random
 from settings import *
 import time
 
-map_width = 256
+map_width = 2560
 map_height = 128
 MAP_MATRIX = [["XX"] * map_height for i in range(map_width)]
 cloud = []
@@ -242,14 +242,14 @@ def cloud_generator(min_height, max_height, size, propability, how_many):
         cloud.extend(nbh(cloud, propability))
 
 
-def ore_generator(min_height, max_height, size, propability, how_many, lista):
-    L = random.choices(surface, k=how_many)
+def ore_generator(ore_dic, lista):
+    L = random.choices(surface, k=ore_dic["how_many"])
     for i in L:
-        h = random.randint(i[1] + min_height, max_height)
+        h = random.randint(i[1] + ore_dic["min_height"], ore_dic["max_height"])
         lista.append((i[0], h))
-    for i in range(size):
+    for i in range(ore_dic["size"]):
         # TODO Ciekawostka, jeśli użyjemy tutaj append zamiast extend funkcja zwróci nam listę z pierwszego append'u, nie drugiego
-        lista.extend(nbh(lista, propability))
+        lista.extend(nbh(lista, ore_dic["propability"]))
 
 
 def singleblocks_generator(newlist, oldlist, propability):
@@ -276,12 +276,16 @@ def littlegrass_generator(propability, grassP, tallgrassP, redmushroomP, mushroo
         x = random.randint(0, grassP + tallgrassP + redmushroomP + mushroomchickenP)
         if x >= 0 and x < grassP:
             grass.append((i[0], i[1] - 1))
+            MAP_MATRIX[i[0]][i[1] - 1] = "06"
         elif x >= grassP and x < grassP + tallgrassP:
             tall_grass.append((i[0], i[1] - 1))
+            MAP_MATRIX[i[0]][i[1] - 1] = "07"
         elif x >= grassP + tallgrassP and x < grassP + tallgrassP + redmushroomP:
             mushroom_red.append((i[0], i[1] - 1))
+            MAP_MATRIX[i[0]][i[1] - 1] = "08"
         else:
             mushroom_brown.append((i[0], i[1] - 1))
+            MAP_MATRIX[i[0]][i[1] - 1] = "09"
 
 
 def glass_generator():
@@ -318,15 +322,9 @@ def generuj():
                  15)  # powiększanie jaskini (moc powiększania, szansa na średnie powiększenie, szansa na duże powiększenie)
     glass_generator()
     log_generator(5, 10)
-    ore_generator(ore_dictionary['copper']['min_height'], ore_dictionary['copper']['max_height'],
-                  ore_dictionary['copper']['size'], ore_dictionary['copper']['propability'],
-                  ore_dictionary['copper']['how_many'], copper)
-    ore_generator(ore_dictionary['iron']['min_height'], ore_dictionary['iron']['max_height'],
-                  ore_dictionary['iron']['size'], ore_dictionary['iron']['propability'],
-                  ore_dictionary['iron']['how_many'], iron)
-    ore_generator(ore_dictionary['coal']['min_height'], ore_dictionary['coal']['max_height'],
-                  ore_dictionary['coal']['size'], ore_dictionary['coal']['propability'],
-                  ore_dictionary['coal']['how_many'], coal_ore)
+    ore_generator(ore_dictionary['copper'], copper)
+    ore_generator(ore_dictionary['iron'], iron)
+    ore_generator(ore_dictionary['coal'], coal_ore)
     t1 = time.time()
     cloud_generator(10, 0, 6, 7, 30)
     singleblocks_generator(bone_dirt, dirt, 2.5)
@@ -338,7 +336,7 @@ def generuj():
     littlegrass_generator(60, 4, 3, 1, 1)
     singleblocks_generator(chrysoprase_clay, clay, 0.0001)
     print("czas generowania mapy: " + str(t1 - t0)[0:6] + "s")
-    #save_world()
+    save_world()
 
 
 def dirtlist():
@@ -464,6 +462,7 @@ def create_world(grid, items_factory):
                 map_width += 1
             MAP.append(line)
     map_width = int(map_width / map_height)
+
     for j in range(map_height):
         for i in range(map_width):
             if MAP[j][i] == '00':
@@ -485,13 +484,20 @@ def create_world(grid, items_factory):
                 block = items_factory.create("iron_ore", i * BLOCK_SIZE, j * BLOCK_SIZE)
                 grid[(block.position.x, block.position.y)] = block
             elif MAP[j][i] == '06':
-                block = items_factory.create("grass_dirt", i * BLOCK_SIZE, j * BLOCK_SIZE)
+                block = items_factory.create("grass", i * BLOCK_SIZE, j * BLOCK_SIZE)
                 grid[(block.position.x, block.position.y)] = block
             elif MAP[j][i] == '07':
-                block = items_factory.create("grass_dirt", i * BLOCK_SIZE, j * BLOCK_SIZE)
+                block = items_factory.create("tall_grass", i * BLOCK_SIZE, j * BLOCK_SIZE)
+                grid[(block.position.x, block.position.y)] = block
+            elif MAP[j][i] == '08':
+                block = items_factory.create("mushroom_red", i * BLOCK_SIZE, j * BLOCK_SIZE)
+                grid[(block.position.x, block.position.y)] = block
+            elif MAP[j][i] == '09':
+                block = items_factory.create("mushroom_brown", i * BLOCK_SIZE, j * BLOCK_SIZE)
                 grid[(block.position.x, block.position.y)] = block
             elif MAP[j][i] == 'XX':
                 grid[(i * BLOCK_SIZE, j * BLOCK_SIZE)] = None
+
     for j in range(-1, map_height + 1):
         for i in range(-1, map_width + 1):
             if i == -1 or i == map_width or j == -1 or j == map_height:
@@ -500,3 +506,25 @@ def create_world(grid, items_factory):
 
     t1 = time.time()
     print("czas tworzenia świata: " + str(t1 - t0)[0:6] + "s")
+#00 - dirt
+#01 - grass_dirt
+#02 - stone
+#03 - coal_ore
+#04 - copper_ore
+#05 - iron_ore
+#06 - grass
+#07 - tall_grass
+#08 - mushroom_red
+#09 - mushroom_brown (chicken)
+#0A - diamond1
+#0B - diamond2
+#0C - diamond3
+#0D - clay
+#0E - chrysoprase_clay
+#0F - cloud
+#10 - log
+#11 - log_hole
+#11 - leaves
+#12 - apple_leaves
+#12 - bone_dirt
+#13 - flint_dirt
